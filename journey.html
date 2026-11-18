@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#03070b">
+<title>Team RISE Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+@property --r{syntax:'<number>';inherits:true;initial-value:0}
+@property --pp{syntax:'<percentage>';inherits:true;initial-value:0%}
+:root{
+  --ease:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.56,.64,1);
+  --sans:"Inter","SF Pro Display",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Instrument Serif","New York",Georgia,serif;
+  --mono:"JetBrains Mono","SF Mono",ui-monospace,Menlo,monospace;
+  --ink:#f4f8f9;--mut:rgba(228,240,243,.68);--dim:rgba(228,240,243,.42);
+  --teal:#46d9d2;--gold:#ffc46b;--brand:#33707f;
+  --acc:color-mix(in oklab,var(--teal),var(--gold) var(--pp));
+  --acc2:color-mix(in oklab,#2a9fd6,#ff8a5b var(--pp));
+  --line:rgba(255,255,255,.13);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#03070b;color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+body{--r:0;--pp:0%;transition:--r 3s cubic-bezier(.45,0,.2,1),--pp 3s cubic-bezier(.45,0,.2,1);perspective:1600px}
+button{font:inherit;color:inherit;cursor:pointer}
+
+/* sky and sunrise */
+#sky{position:fixed;inset:0;z-index:0;background:linear-gradient(180deg,#02050a 0%,#04101a calc(60% - var(--r)*20%),color-mix(in oklab,#0b2433,#3a2230 calc(var(--r)*70%)) 100%)}
+.sun{position:fixed;left:50%;top:calc(116vh - var(--r) * 40vh);width:90vmax;height:90vmax;border-radius:50%;z-index:0;pointer-events:none;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle at 50% 50%,color-mix(in oklab,#ffd59a,#fff3dc calc(var(--r)*60%)) 0%,color-mix(in oklab,#ff8a5b,#ffc46b calc(var(--r)*100%)) 6%,rgba(255,138,91,.30) 16%,rgba(42,159,214,.10) 32%,transparent 50%);
+  opacity:calc(.6 + var(--r)*.4);filter:blur(10px)}
+.horizon{position:fixed;left:0;right:0;bottom:0;height:46vh;z-index:0;pointer-events:none;
+  background:radial-gradient(90% 100% at 50% 100%,color-mix(in oklab,rgba(70,217,210,.20),rgba(255,196,107,.30) calc(var(--r)*100%)) 0%,transparent 70%)}
+canvas#motes{position:fixed;inset:0;width:100vw;height:100vh;z-index:1;pointer-events:none}
+
+/* scenes */
+.scene{position:fixed;inset:0;z-index:5;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;
+  opacity:0;visibility:hidden;transform:translateZ(-500px);filter:blur(20px);
+  transition:opacity .8s var(--ease),transform 1.3s var(--ease),filter .9s var(--ease),visibility 0s linear 1.3s}
+.scene.active{opacity:1;visibility:visible;transform:none;filter:none;transition:opacity .9s var(--ease) .1s,transform 1.4s var(--ease),filter 1s var(--ease) .1s,visibility 0s}
+.scene.leaving{opacity:0;visibility:visible;transform:translateZ(380px);filter:blur(24px);transition:opacity .7s var(--ease),transform 1.1s var(--ease),filter .8s var(--ease),visibility 0s linear 1.1s}
+.wrap{margin:auto;width:100%;max-width:1180px;padding:clamp(72px,9vh,110px) 16px clamp(28px,6vh,72px);text-align:center}
+
+/* entrances */
+.a{opacity:0}
+.active .a{animation:var(--k,rise) var(--t,1.2s) var(--ease) var(--d,0s) both}
+@keyframes rise{from{opacity:0;transform:translateY(46px);filter:blur(14px)}to{opacity:1;transform:none;filter:none}}
+@keyframes bloom{0%{opacity:0;transform:scale(.4);filter:blur(30px) brightness(3)}60%{opacity:1;filter:blur(0) brightness(1.3)}100%{opacity:1;transform:none;filter:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.6)}60%{opacity:1}100%{opacity:1;transform:none}}
+@keyframes track{from{opacity:0;letter-spacing:.9em;filter:blur(10px)}to{opacity:1;filter:none}}
+.split .w{display:inline-block;white-space:nowrap}
+.split em{background:none;-webkit-text-fill-color:currentColor;color:var(--acc);text-shadow:0 0 30px color-mix(in oklab,var(--acc),transparent 55%)}
+.split .ch{display:inline-block;opacity:0;transform-origin:50% 100%}
+.active .split .ch{animation:chIn 1.1s var(--ease) both;animation-delay:calc(var(--d,0s) + var(--i)*30ms)}
+@keyframes chIn{from{opacity:0;transform:translateY(.5em) rotateX(-85deg);filter:blur(12px)}to{opacity:1;transform:none;filter:none}}
+.reveal{opacity:0;transform:translateY(30px) scale(.94);filter:blur(10px);transition:all 1s var(--ease)}
+.reveal.on{opacity:1;transform:none;filter:none}
+
+/* type */
+.eyebrow{font-family:var(--mono);font-weight:500;text-transform:uppercase;letter-spacing:.3em;font-size:clamp(11px,1.3vw,15px);color:var(--acc);display:inline-flex;align-items:center;gap:14px}
+.eyebrow::before,.eyebrow::after{content:"";width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--acc));box-shadow:0 0 10px var(--acc)}
+.eyebrow::after{transform:scaleX(-1)}
+.mega{font-size:clamp(46px,10vw,132px);font-weight:700;letter-spacing:-.05em;line-height:.95;margin:0}
+.h1{font-size:clamp(36px,6.4vw,84px);font-weight:700;letter-spacing:-.04em;line-height:1;margin:0}
+.h2{font-size:clamp(28px,4.4vw,56px);font-weight:650;letter-spacing:-.03em;line-height:1.08;margin:0}
+.lede{font-size:clamp(17px,2.1vw,25px);font-weight:400;color:var(--mut);line-height:1.4;margin:0}
+em,.em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em;color:var(--acc);
+  background:linear-gradient(120deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding:0 .06em}
+.mono{font-family:var(--mono);text-transform:uppercase;letter-spacing:.24em;font-size:12px;color:var(--dim)}
+
+/* glass */
+.glass{position:relative;border-radius:24px;background:linear-gradient(155deg,rgba(255,255,255,.12),rgba(255,255,255,.035) 55%,rgba(255,255,255,.06));
+  border:1px solid var(--line);-webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
+  box-shadow:0 24px 70px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.12)}
+
+/* logo */
+.logo{width:clamp(120px,22vw,220px);height:auto;filter:drop-shadow(0 0 40px color-mix(in oklab,var(--acc),transparent 50%))}
+.logo-big{width:clamp(180px,34vw,340px)}
+.halo{position:relative;display:inline-block}
+.halo::before{content:"";position:absolute;inset:-26%;border-radius:50%;background:radial-gradient(circle,color-mix(in oklab,var(--acc),transparent 55%) 0%,transparent 66%);filter:blur(26px);animation:breathe 4s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.15);opacity:.7}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;padding:16px 32px;font-weight:700;font-size:18px;letter-spacing:.01em;
+  background:linear-gradient(135deg,var(--acc),var(--acc2));color:#03070b;box-shadow:0 12px 36px color-mix(in oklab,var(--acc),transparent 62%);transition:transform .25s var(--spring),box-shadow .25s}
+.btn:hover{transform:translateY(-2px) scale(1.03)}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:rgba(255,255,255,.07);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn svg{width:20px;height:20px}
+
+/* splash */
+#splash .tapline{margin-top:30px;display:inline-flex;align-items:center;gap:12px;padding:14px 26px;border-radius:999px;font-weight:600;font-size:17px}
+#splash .tapline .dot{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#03070b}
+#splash .vol{margin-top:22px;font-size:14px;color:var(--dim);display:flex;align-items:center;justify-content:center;gap:8px}
+#splash{cursor:pointer}
+.pulse{animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 14px rgba(70,217,210,0),0 0 40px color-mix(in oklab,var(--acc),transparent 60%)}}
+
+/* intro lists */
+.items{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:38px;text-align:left}
+.item{display:flex;align-items:center;gap:18px;padding:20px 22px}
+.item .n{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:20px;color:#03070b;
+  background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 0 24px color-mix(in oklab,var(--acc),transparent 50%)}
+.item .t{font-size:clamp(17px,2vw,23px);font-weight:600;line-height:1.25}
+.rule{width:120px;height:3px;border-radius:3px;margin:18px auto 0;background:linear-gradient(90deg,var(--acc),var(--acc2));box-shadow:0 0 18px var(--acc)}
+.caption{margin-top:18px;font-size:clamp(34px,6vw,72px);font-weight:700;letter-spacing:-.035em}
+
+/* challenge */
+.two{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,5vw,70px);align-items:center;text-align:left}
+.pillars{display:flex;gap:16px;margin:30px 0}
+.pillar{flex:1;padding:26px 20px;text-align:center;border-color:color-mix(in oklab,var(--acc),transparent 50%)}
+.pillar .ic{width:58px;height:58px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#03070b}
+.pillar .ic svg{width:28px;height:28px}
+.pillar h3{margin:0;font-size:clamp(20px,2.4vw,28px);font-weight:750;letter-spacing:-.02em}
+.lead{display:flex;gap:14px;align-items:stretch;margin-bottom:30px}
+.lead .bar{width:5px;border-radius:5px;background:linear-gradient(180deg,var(--acc),var(--acc2))}
+.lead p{margin:0;font-size:clamp(18px,2.2vw,25px);color:var(--mut);line-height:1.4}
+.lead strong{color:var(--ink)}
+.orb{position:relative;aspect-ratio:1;width:100%;max-width:440px;margin:auto}
+.orb svg{width:100%;height:100%;overflow:visible}
+
+/* branch */
+.paths{display:flex;flex-direction:column;max-width:460px;margin:0 auto;width:100%}
+.path{display:flex;align-items:center;gap:18px;padding:0 30px;height:clamp(108px,15vh,150px);border-radius:999px;text-align:left;border:1.5px solid color-mix(in oklab,var(--acc),transparent 45%);
+  background:rgba(6,20,30,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 20px 50px rgba(0,0,0,.45);transition:transform .3s var(--spring),background .3s}
+.path+.path{margin-top:-26px}
+.path:hover{transform:scale(1.04);background:rgba(14,40,52,.9);z-index:5;position:relative}
+.path .ic{flex:none;width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#03070b}
+.path .ic svg{width:28px;height:28px}
+.path b{display:block;font-size:22px}
+.path small{display:block;color:var(--mut);font-size:14px;margin-top:2px}
+.foot{max-width:900px;margin:34px auto 0;font-size:12px;line-height:1.55;color:var(--dim)}
+
+/* questions */
+.badge{display:inline-flex;align-items:center;gap:14px;padding:10px 22px;border-radius:999px;font-weight:600;font-size:15px;color:var(--mut);margin-bottom:clamp(26px,5vh,50px)}
+.badge>span{white-space:nowrap}
+.dots{display:flex;gap:6px}
+.dots span{height:8px;width:14px;border-radius:8px;background:rgba(255,255,255,.2);transition:all .5s var(--spring)}
+.dots span.on{background:var(--acc)}
+.dots span.cur{width:28px}
+.qtext{font-size:clamp(26px,4.6vw,58px);font-weight:650;letter-spacing:-.03em;line-height:1.14;margin:0 auto clamp(30px,6vh,60px);max-width:1000px}
+.qtext .wd{display:inline-block;opacity:0;transform:translateY(22px);filter:blur(8px);animation:wd .55s var(--ease) forwards;animation-delay:calc(.15s + var(--i)*45ms)}
+@keyframes wd{to{opacity:1;transform:none;filter:none}}
+.yn{display:flex;gap:clamp(14px,3vw,36px);justify-content:center;flex-wrap:wrap}
+.yn button{min-width:min(280px,100%);flex:0 1 280px;padding:24px 40px;border-radius:22px;font-size:clamp(24px,3vw,36px);font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:14px;
+  border:1px solid var(--line);background:rgba(255,255,255,.07);transition:transform .3s var(--spring),opacity .4s,box-shadow .3s}
+.yn button.yes{border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#03070b;box-shadow:0 14px 40px color-mix(in oklab,var(--acc),transparent 60%)}
+.yn button:hover{transform:translateY(-5px) scale(1.04)}
+.yn button.picked{transform:scale(1.1)}
+.yn button.faded{opacity:.25}
+.yn button .bx{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.18)}
+.yn button svg{width:24px;height:24px}
+
+/* closing */
+.close-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(20px,4vw,48px);align-items:start;text-align:left}
+.form{padding:clamp(20px,3vw,32px)}
+.lbl{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--acc);margin:0 0 10px}
+.grp{margin-bottom:22px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:11px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.05);font-weight:600;font-size:15px;transition:all .2s}
+.chip:hover{border-color:color-mix(in oklab,var(--acc),transparent 40%)}
+.chip.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#03070b;border-color:transparent}
+.chip.day{display:flex;flex-direction:column;align-items:center;min-width:64px;padding:10px 12px}
+.chip.day small{font-size:11px;font-weight:600;opacity:.75;text-transform:uppercase;letter-spacing:.08em}
+.chip.day b{font-size:20px}
+.field{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--ink);font:inherit;font-size:16px;outline:none;transition:border .2s}
+.field:focus{border-color:var(--acc)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.err{color:#ff9b8a;font-size:14px;min-height:20px;margin:8px 0 0}
+.where{margin-top:20px;padding:18px 20px;font-size:15px;color:var(--mut);line-height:1.5}
+.where b{color:var(--ink)}
+
+/* thanks */
+.when{display:inline-block;margin-top:22px;padding:16px 26px;font-size:clamp(17px,2vw,22px)}
+.when b{color:var(--acc)}
+.mini{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* mute */
+#mute{position:fixed;right:16px;top:16px;z-index:20;width:48px;height:48px;border-radius:50%;display:none;place-items:center;border:1px solid var(--line);background:rgba(10,20,28,.6);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+#mute svg{width:22px;height:22px}
+body.started #mute{display:grid}
+#brandtag{position:fixed;left:16px;top:18px;z-index:20;display:none;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
+#brandtag svg{width:30px;height:30px}
+body.started #brandtag{display:flex}
+
+@media (max-width:760px){
+  .items{grid-template-columns:1fr;gap:10px;margin-top:26px}
+  .item{padding:14px 16px}.item .n{width:42px;height:42px;font-size:17px}
+  .two,.close-grid{grid-template-columns:1fr}
+  .two{text-align:center}.lead{text-align:left}
+  .orb{max-width:240px;order:-1}
+  .pillars{gap:10px}.pillar{padding:18px 10px}
+  .row2{grid-template-columns:1fr}
+  .yn button{padding:20px 26px}
+  .badge{gap:8px;padding:9px 14px;font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){
+  .scene,.scene.active,.scene.leaving{transition:opacity .4s!important;transform:none!important;filter:none!important}
+  .active .a,.active .split .ch,.qtext .wd{animation:none!important;opacity:1!important}
+  .reveal{transition:opacity .4s}
+}
+</style>
+</head>
+<body>
+<div id="sky"></div><div class="sun"></div><div class="horizon"></div>
+<canvas id="motes"></canvas>
+
+<div id="brandtag"></div>
+<button id="mute" aria-label="Mute audio"></button>
+
+<!-- 0 splash -->
+<section class="scene" id="splash" role="button" tabindex="0">
+  <div class="wrap">
+    <div class="a halo" style="--k:bloom;--t:1.8s"><span class="logo-slot"></span></div>
+    <h1 class="mega split" data-k="splashHead" style="--d:.5s;margin-top:28px"></h1>
+    <div class="a" style="--d:1.4s"><span class="tapline glass pulse"><span class="dot"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span id="tapText"></span></span></div>
+    <div class="vol a" style="--d:1.7s"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg><span id="volText"></span></div>
+  </div>
+</section>
+
+<!-- 1 logo in / logo out -->
+<section class="scene" id="logo">
+  <div class="wrap">
+    <div class="a halo" style="--k:bloom;--t:2s"><span class="logo-slot big"></span></div>
+    <div class="caption a" style="--d:.8s"><em id="capText"></em></div>
+  </div>
+</section>
+
+<!-- 2 challenges list (income, then savings) -->
+<section class="scene" id="list">
+  <div class="wrap" style="max-width:980px">
+    <div class="a" style="--k:track"><span class="eyebrow" id="listEyebrow"></span></div>
+    <h2 class="h1 a" id="listTitle" style="--d:.15s;margin-top:18px"></h2>
+    <div class="rule a" style="--d:.3s"></div>
+    <div class="items" id="listItems"></div>
+  </div>
+</section>
+
+<!-- 3 welcome -->
+<section class="scene" id="welcome">
+  <div class="wrap">
+    <div class="a halo" style="--k:bloom;--t:1.6s"><span class="logo-slot"></span></div>
+    <h1 class="mega split" id="welHead" style="--d:.7s;margin-top:26px"></h1>
+    <div class="h1 a" style="--d:1.3s;margin-top:10px"><em id="welName"></em></div>
+  </div>
+</section>
+
+<!-- 4 challenge -->
+<section class="scene" id="challenge">
+  <div class="wrap">
+    <div class="two">
+      <div>
+        <h2 class="h2 a" id="chHead"></h2>
+        <div class="pillars">
+          <div class="pillar glass reveal" id="pil1"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div><h3></h3></div>
+          <div class="pillar glass reveal" id="pil2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7c-1-2-3.5-3-7-3C7 4 4 6.5 4 10c0 2.4 1.3 4.2 3 5.3V19h3v-2h4v2h3v-3.2c1.2-.8 2-1.8 2.5-2.8H21V9.5h-1.6"/><circle cx="15.5" cy="9.5" r=".6" fill="currentColor"/></svg></div><h3></h3></div>
+        </div>
+        <div class="lead reveal" id="chLead"><span class="bar"></span><p></p></div>
+        <div class="reveal" id="chBtn"><button class="btn" id="chGo"><span></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+      </div>
+      <div class="orb a" style="--k:bloom;--t:2s;--d:.3s" id="orb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 branch -->
+<section class="scene" id="branch">
+  <div class="wrap">
+    <div class="two">
+      <div>
+        <div class="a" style="--k:track"><span class="eyebrow" id="brEyebrow"></span></div>
+        <h2 class="h1 a" id="brHead" style="--d:.15s;margin-top:18px"></h2>
+        <p class="lede a" id="brSub" style="--d:.4s;margin-top:18px"></p>
+      </div>
+      <div class="paths" id="paths"></div>
+    </div>
+    <p class="foot a" style="--d:1s" data-k="disclaimer"></p>
+  </div>
+</section>
+
+<!-- 6 question -->
+<section class="scene" id="question">
+  <div class="wrap">
+    <div class="badge glass a" style="--k:pop" id="qBadge"></div>
+    <h2 class="qtext" id="qText"></h2>
+    <div class="yn" id="qBtns"></div>
+  </div>
+</section>
+
+<!-- 7 closing -->
+<section class="scene" id="closing">
+  <div class="wrap">
+    <div class="close-grid">
+      <div>
+        <div class="a" style="--k:track"><span class="eyebrow" id="clEyebrow"></span></div>
+        <h2 class="h2 a" id="clHead" style="--d:.15s;margin-top:18px"></h2>
+        <p class="lede a" id="clSub" style="--d:.35s;margin-top:16px"></p>
+        <div class="where glass a" id="clWhere" style="--d:.6s"></div>
+      </div>
+      <div class="form glass a" style="--d:.4s">
+        <div class="grp"><span class="lbl" id="lMode"></span><div class="chips" id="cMode"></div></div>
+        <div class="grp"><span class="lbl" id="lInt"></span><div class="chips" id="cInt"></div></div>
+        <div class="grp"><span class="lbl" id="lDay"></span><div class="chips" id="cDay"></div></div>
+        <div class="grp"><span class="lbl" id="lTime"></span><div class="chips" id="cTime"></div></div>
+        <div class="grp"><span class="lbl" id="lName"></span><input class="field" id="fName" autocomplete="name"></div>
+        <div class="grp row2">
+          <div><span class="lbl" id="lPhone"></span><input class="field" id="fPhone" type="tel" autocomplete="tel"></div>
+          <div><span class="lbl" id="lEmail"></span><input class="field" id="fEmail" type="email" autocomplete="email"></div>
+        </div>
+        <button class="btn" id="send" style="width:100%"></button>
+        <p class="err" id="err"></p>
+      </div>
+    </div>
+    <p class="foot" data-k="disclaimer"></p>
+  </div>
+</section>
+
+<!-- 8 thanks -->
+<section class="scene" id="thanks">
+  <div class="wrap">
+    <div class="a halo" style="--k:bloom;--t:1.8s"><span class="logo-slot"></span></div>
+    <h1 class="mega split" id="tyHead" style="--d:.4s;margin-top:22px"></h1>
+    <div class="when glass a" id="tyWhen" style="--d:1.1s"></div>
+    <p class="lede a" id="tyLine" style="--d:1.4s;margin-top:22px"></p>
+    <div class="mini a" style="--d:1.8s">
+      <button class="btn ghost" id="tyCopy"></button>
+      <button class="btn ghost" id="tyAgain"></button>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ===== Team RISE interactive journey =====
+   Link data rides in the URL hash (base64 JSON), written by index.html:
+   p partner name, c agent code, pp partner cell, n prospect name, ph prospect phone, l language
+*/
+
+/* Times offered on the closing scene. Change these to match your real calendar. */
+const TIMES = {
+  weekday: ['12:00 PM','5:30 PM','6:30 PM','7:30 PM'],
+  sat: ['10:00 AM','11:30 AM','1:00 PM'],
+  sun: ['3:00 PM','5:00 PM','7:00 PM']
+};
+const DAYS_AHEAD = 7;
+
+const LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Team RISE"><defs><clipPath id="rcX"><circle cx="100" cy="100" r="90"/></clipPath><radialGradient id="rcgX" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#3f8c9c"/><stop offset="1" stop-color="#25586a"/></radialGradient></defs><circle cx="100" cy="100" r="99" fill="#fff"/><circle cx="100" cy="100" r="91" fill="url(#rcgX)"/><g clip-path="url(#rcX)"><g fill="#fff"><polygon points="100,122 -49.6,110.5 -44.5,81.7"/><polygon points="100,122 -36.6,60.0 -22.0,34.7"/><polygon points="100,122 -7.2,17.1 15.3,-1.8"/><polygon points="100,122 35.2,-13.3 62.7,-23.3"/><polygon points="100,122 85.4,-27.3 114.6,-27.3"/><polygon points="100,122 137.3,-23.3 164.8,-13.3"/><polygon points="100,122 184.7,-1.8 207.2,17.1"/><polygon points="100,122 222.0,34.7 236.6,60.0"/><polygon points="100,122 244.5,81.7 249.6,110.5"/></g><path d="M-20 205 L100 110 L220 205Z" fill="#fff"/><path d="M62 140 q19 -9 38 -2 t38 -2" stroke="#33707f" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M-20 205 L100 110 L220 205" stroke="#33707f" stroke-width="3" fill="none"/><text x="100" y="181" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="800" fill="#33707f">RISE</text></g></svg>`;
+
+const T = {
+en:{
+  locale:'en-US', speechLang:'en',
+  splashHead:'A short <em>interactive</em> journey',
+  tap:'Tap anywhere to begin', vol:'Turn your volume up for the best experience',
+  brand:'Team RISE',
+  capIn:'Helping Families', capOut:'Making a Difference',
+  sayIn:'Hi there, and welcome. This is Team RISE. We are a professional network that helps families build a stronger financial future. This only takes a few minutes. Let\'s dive in.',
+  listEyebrow:'In our society today',
+  incomeTitle:'Common income <em>challenges</em>',
+  sayIncome:'In our society today, a lot of families run into the same income challenges.',
+  incomeItems:[
+    ['Income that stops when you stop','For most of us, the income stops the day we stop working.'],
+    ['Too little family time','Long hours leave too little time with the people we love.'],
+    ['Dreams put on hold','Too many dreams get pushed to someday.'],
+    ['Heavy debt','And debt keeps a lot of good families stuck.']],
+  savingsTitle:'Common saving <em>challenges</em>',
+  saySavings:'Saving brings its own set of challenges.',
+  savingsItems:[
+    ['Hard to stay consistent','Staying consistent with saving is hard.'],
+    ['Nobody taught us money','Most of us were never taught how money really works.'],
+    ['An uncertain future','That leaves the future feeling uncertain.'],
+    ['Time slipping away','And every year we wait is a year our money is not growing.']],
+  sayOut:'We believe every family deserves a plan. So we made this just for you.',
+  welcome:'Welcome!', friend:'Friend', sayWelcome:n=>`Welcome, ${n}.`,
+  chHead:'Most families today are working hard to...',
+  pillars:['Grow their income','Grow their savings'],
+  chLead:'Team RISE brings <strong>a clear path forward on both.</strong>',
+  sayCh:'Most families today are working hard to grow their income. And to grow their savings. Team RISE brings a clear path forward on both. Tap continue when you are ready.',
+  cont:'Continue',
+  brEyebrow:'Choose your path', brHead:'Pick the one that <em>speaks to you</em> most', brSub:'Tap one to keep going.',
+  sayBranch:'Now it\'s your turn. Pick the one that speaks to you the most.',
+  paths:{income:['Grow income','Build more streams'],savings:['Grow savings','Strengthen your future'],both:['Both','The best of both']},
+  badge:{income:'Grow Income',savings:'Grow Savings',both:'Income and Savings'},
+  counter:(i,n)=>`Question ${i} of ${n}`, yes:'Yes', no:'No',
+  incomeQs:[
+    'If there were a legitimate way to grow your income over the next 12 months, would you want to learn it?',
+    'Do you think having more than one stream of income matters in today\'s economy?',
+    'Would you want to build income that doesn\'t stop when you stop?'],
+  savingsQs:[
+    'Does saving money feel harder today than it used to?',
+    'Do you ever feel your savings are not growing as fast as you\'d like?',
+    'If you could start strengthening your family\'s financial future today, would you be open to learning how?'],
+  clEyebrow:'Your next step', clHead:'Team RISE is helping families <em>every day.</em>',
+  clSub:'Let\'s set up a quick chat so we can show you how it could work for you.',
+  sayCl:'Thank you for your answers. Let\'s set up a quick chat, so we can show you how this could work for your family. Pick the day and time that works best for you, then tap send.',
+  where:p=>`<b>${p}</b> will get your response right away and reach out to confirm.`, whereFallback:'Your Team RISE professional',
+  lMode:'How would you like to chat?', modes:{zoom:'Zoom',person:'In person'},
+  lInt:'What would you like to learn?', ints:{income:'Growing income',savings:'Growing savings',both:'Both'},
+  lDay:'Pick a day', lTime:'Pick a time', lName:'Your name', lPhone:'Phone number', lEmail:'Email (optional)',
+  phName:'Your full name', phPhone:'Your phone number', phEmail:'you@email.com',
+  send:'Send my response', errMsg:'Pick a day and a time, then add your name and phone.',
+  dayNames:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], today:'Today', tomorrow:'Tmrw',
+  tyHead:'Thank <em>you</em>', tyWhen:(p,w)=>`${p} will reach out to confirm your chat on <b>${w}</b>.`,
+  tyLine:'Thanks for your time!', copy:'Copy my response', copied:'Copied', again:'Start over',
+  sayTy:(n,p)=>`Thank you, ${n}. ${p} will be in touch soon to confirm your time. We look forward to talking with you.`,
+  msg:(o)=>`Hi ${o.partnerFirst}, it's ${o.name}. I went through the Team RISE link.\nPath: ${o.path}\nYes answers: ${o.yes} of ${o.total}\nBest time: ${o.when} (${o.mode})${o.email?`\nEmail: ${o.email}`:''}`,
+  disclaimer:'Team RISE is a team of independent financial professionals. This content is for educational purposes only. Nothing presented is professional advice, an offer, a solicitation, or a recommendation of any product, service, company, or business opportunity.'
+},
+es:{
+  locale:'es-US', speechLang:'es',
+  splashHead:'Un breve recorrido <em>interactivo</em>',
+  tap:'Toca la pantalla para comenzar', vol:'Sube el volumen para una mejor experiencia',
+  brand:'Team RISE',
+  capIn:'Ayudando a Familias', capOut:'Marcando la Diferencia',
+  sayIn:'Hola, y bienvenido. Somos Team RISE. Somos una red profesional que ayuda a las familias a construir un futuro financiero más fuerte. Esto solo toma unos minutos. Comencemos.',
+  listEyebrow:'En nuestra sociedad hoy',
+  incomeTitle:'Retos comunes de <em>ingresos</em>',
+  sayIncome:'En nuestra sociedad hoy, muchas familias enfrentan los mismos retos de ingresos.',
+  incomeItems:[
+    ['Ingresos que paran cuando tú paras','Para la mayoría, el ingreso se detiene el día que dejamos de trabajar.'],
+    ['Poco tiempo en familia','Las largas horas dejan poco tiempo con quienes amamos.'],
+    ['Sueños en pausa','Demasiados sueños se quedan para algún día.'],
+    ['Mucha deuda','Y la deuda mantiene estancadas a muchas buenas familias.']],
+  savingsTitle:'Retos comunes de <em>ahorro</em>',
+  saySavings:'Ahorrar también trae sus propios retos.',
+  savingsItems:[
+    ['Difícil ser constante','Ser constante con el ahorro es difícil.'],
+    ['Nadie nos enseñó de dinero','A la mayoría nunca nos enseñaron cómo funciona el dinero.'],
+    ['Un futuro incierto','Eso deja el futuro sintiéndose incierto.'],
+    ['El tiempo se va','Y cada año que esperamos es un año en que nuestro dinero no crece.']],
+  sayOut:'Creemos que cada familia merece un plan. Por eso hicimos esto para ti.',
+  welcome:'¡Bienvenido!', friend:'Amigo', sayWelcome:n=>`Bienvenido, ${n}.`,
+  chHead:'Hoy la mayoría de las familias trabaja duro para...',
+  pillars:['Aumentar sus ingresos','Aumentar sus ahorros'],
+  chLead:'Team RISE ofrece <strong>un camino claro para ambos.</strong>',
+  sayCh:'Hoy la mayoría de las familias trabaja duro para aumentar sus ingresos. Y para aumentar sus ahorros. Team RISE ofrece un camino claro para ambos. Toca continuar cuando estés listo.',
+  cont:'Continuar',
+  brEyebrow:'Elige tu camino', brHead:'Elige el que <em>más te interese</em>', brSub:'Toca uno para continuar.',
+  sayBranch:'Ahora te toca a ti. Elige el que más te interese.',
+  paths:{income:['Aumentar ingresos','Crear más fuentes'],savings:['Aumentar ahorros','Fortalecer tu futuro'],both:['Ambos','Lo mejor de los dos']},
+  badge:{income:'Aumentar Ingresos',savings:'Aumentar Ahorros',both:'Ingresos y Ahorros'},
+  counter:(i,n)=>`Pregunta ${i} de ${n}`, yes:'Sí', no:'No',
+  incomeQs:[
+    'Si existiera una forma legítima de aumentar tus ingresos en los próximos 12 meses, ¿te gustaría aprenderla?',
+    '¿Crees que tener más de una fuente de ingresos es importante en la economía de hoy?',
+    '¿Te gustaría construir ingresos que no se detengan cuando tú te detengas?'],
+  savingsQs:[
+    '¿Sientes que ahorrar dinero es más difícil hoy que antes?',
+    '¿Alguna vez sientes que tus ahorros no crecen tan rápido como quisieras?',
+    'Si pudieras empezar hoy a fortalecer el futuro financiero de tu familia, ¿estarías abierto a aprender cómo?'],
+  clEyebrow:'Tu siguiente paso', clHead:'Team RISE ayuda a familias <em>todos los días.</em>',
+  clSub:'Hagamos una breve charla para mostrarte cómo podría funcionar para ti.',
+  sayCl:'Gracias por tus respuestas. Hagamos una breve charla, para mostrarte cómo esto podría funcionar para tu familia. Elige el día y la hora que mejor te funcionen, y toca enviar.',
+  where:p=>`<b>${p}</b> recibirá tu respuesta enseguida y te contactará para confirmar.`, whereFallback:'Tu profesional de Team RISE',
+  lMode:'¿Cómo prefieres charlar?', modes:{zoom:'Zoom',person:'En persona'},
+  lInt:'¿Qué te gustaría aprender?', ints:{income:'Aumentar ingresos',savings:'Aumentar ahorros',both:'Ambos'},
+  lDay:'Elige un día', lTime:'Elige una hora', lName:'Tu nombre', lPhone:'Teléfono', lEmail:'Correo (opcional)',
+  phName:'Tu nombre completo', phPhone:'Tu número de teléfono', phEmail:'tu@correo.com',
+  send:'Enviar mi respuesta', errMsg:'Elige un día y una hora, y agrega tu nombre y teléfono.',
+  dayNames:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'], today:'Hoy', tomorrow:'Mañana',
+  tyHead:'<em>Gracias</em>', tyWhen:(p,w)=>`${p} te contactará para confirmar tu charla el <b>${w}</b>.`,
+  tyLine:'¡Gracias por tu tiempo!', copy:'Copiar mi respuesta', copied:'Copiado', again:'Empezar de nuevo',
+  sayTy:(n,p)=>`Gracias, ${n}. ${p} se comunicará pronto para confirmar tu hora. Esperamos hablar contigo.`,
+  msg:(o)=>`Hola ${o.partnerFirst}, soy ${o.name}. Vi el enlace de Team RISE.\nCamino: ${o.path}\nRespuestas sí: ${o.yes} de ${o.total}\nMejor hora: ${o.when} (${o.mode})${o.email?`\nCorreo: ${o.email}`:''}`,
+  disclaimer:'Team RISE es un equipo de profesionales financieros independientes. Este contenido es solo para fines educativos. Nada de lo presentado constituye asesoría profesional, oferta, solicitud ni recomendación de ningún producto, servicio, compañía u oportunidad de negocio.'
+}};
+
+/* ---------- link data ---------- */
+function decode(){
+  try{
+    const h = location.hash.slice(1); if(!h) return {};
+    const b = h.replace(/-/g,'+').replace(/_/g,'/');
+    return JSON.parse(decodeURIComponent(escape(atob(b))));
+  }catch(e){ return {}; }
+}
+const cfg = decode();
+const L = T[cfg.l] || T.en;
+document.documentElement.lang = L.speechLang;
+const first = s => (s||'').trim().split(/\s+/)[0] || '';
+const prospectFirst = first(cfg.n);
+const partnerName = (cfg.p||'').trim();
+const partnerShown = partnerName || L.whereFallback;
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const wait = ms => new Promise(r => setTimeout(r, ms));
+let runId = 0;
+const alive = id => id === runId;
+
+function splitText(el, html){
+  el.innerHTML = html;
+  let i = 0;
+  const walk = node => {
+    [...node.childNodes].forEach(n => {
+      if(n.nodeType === 3){
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(word => {
+          if(!word) return;
+          if(/^\s+$/.test(word)){ frag.appendChild(document.createTextNode(' ')); return; }
+          const w = document.createElement('span'); w.className = 'w';
+          [...word].forEach(c => { const ch = document.createElement('span'); ch.className = 'ch'; ch.style.setProperty('--i', i++); ch.textContent = c; w.appendChild(ch); });
+          frag.appendChild(w);
+        });
+        n.replaceWith(frag);
+      } else walk(n);
+    });
+  };
+  walk(el);
+}
+
+/* ---------- sky progress ---------- */
+const ORDER = ['splash','logo','list','welcome','challenge','branch','question','closing','thanks'];
+function setSky(id, extra=0){
+  const p = Math.min(1, (ORDER.indexOf(id) + extra) / (ORDER.length - 1));
+  document.body.style.setProperty('--r', p.toFixed(3));
+  document.body.style.setProperty('--pp', (p*100).toFixed(1)+'%');
+}
+
+/* ---------- scene switching ---------- */
+let current = null;
+function show(id, extra=0){
+  const next = document.getElementById(id);
+  if(current && current !== next){
+    const old = current; old.classList.remove('active'); old.classList.add('leaving');
+    setTimeout(() => old.classList.remove('leaving'), 1200);
+  }
+  if(current === next){ next.classList.remove('active'); void next.offsetWidth; }
+  next.classList.add('active'); next.scrollTop = 0;
+  current = next; setSky(id, extra);
+}
+
+/* ---------- voice ---------- */
+let muted = false, voice = null, sayToken = 0;
+function pickVoice(){
+  const s = window.speechSynthesis; if(!s) return;
+  const vs = s.getVoices().filter(v => v.lang.toLowerCase().startsWith(L.speechLang));
+  const pref = L.speechLang === 'es'
+    ? ['Paulina','Mónica','Monica','Google español de Estados Unidos','Google español','Microsoft Paloma','Microsoft Elvira']
+    : ['Ava (Premium)','Ava (Enhanced)','Samantha (Enhanced)','Google US English','Microsoft Aria','Microsoft Jenny','Ava','Samantha','Allison'];
+  for(const p of pref){ const v = vs.find(v => v.name.includes(p)); if(v){ voice = v; return; } }
+  voice = vs[0] || null;
+}
+if(window.speechSynthesis){ pickVoice(); speechSynthesis.addEventListener?.('voiceschanged', pickVoice); }
+function unlockSpeech(){
+  const s = window.speechSynthesis; if(!s) return;
+  try{ s.resume(); const u = new SpeechSynthesisUtterance(' '); u.volume = 0; s.speak(u); }catch(e){}
+}
+function say(text){
+  const my = ++sayToken;
+  const s = window.speechSynthesis;
+  if(s) s.cancel();
+  const parts = (text.match(/[^.!?¡¿]*[¡¿]?[^.!?]+[.!?]*/g) || [text]).map(t => t.trim()).filter(Boolean);
+  if(!s) return wait(Math.max(1200, text.split(/\s+/).length * 380)).then(() => my === sayToken);
+  return new Promise(res => {
+    let i = 0;
+    const next = () => {
+      if(my !== sayToken) return res(false);
+      if(i >= parts.length) return res(true);
+      const line = parts[i++];
+      const u = new SpeechSynthesisUtterance(line);
+      if(voice) u.voice = voice;
+      u.lang = voice ? voice.lang : L.locale; u.rate = 1; u.pitch = 1; u.volume = muted ? 0 : 1;
+      let done = false, timer = null;
+      const fin = () => { if(done) return; done = true; clearTimeout(timer); setTimeout(next, 160); };
+      u.onend = fin; u.onerror = fin;
+      timer = setTimeout(fin, line.split(/\s+/).length * 650 + 2500);
+      s.speak(u);
+    };
+    next();
+  });
+}
+function hush(){ sayToken++; window.speechSynthesis?.cancel(); }
+
+/* ---------- ambient pad (Web Audio, no files) ---------- */
+let ac = null, padGain = null;
+function startPad(){
+  try{
+    ac = new (window.AudioContext || window.webkitAudioContext)();
+    padGain = ac.createGain(); padGain.gain.value = 0;
+    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 700; lp.Q.value = .5;
+    const lfo = ac.createOscillator(); lfo.frequency.value = .05; const lfoG = ac.createGain(); lfoG.gain.value = 260; lfo.connect(lfoG).connect(lp.frequency); lfo.start();
+    lp.connect(padGain).connect(ac.destination);
+    [110, 164.81, 220, 277.18, 329.63].forEach((f, k) => {
+      [-4, 4].forEach(dt => {
+        const o = ac.createOscillator(); o.type = k < 2 ? 'sine' : 'triangle'; o.frequency.value = f; o.detune.value = dt;
+        const g = ac.createGain(); g.gain.value = k < 2 ? .5 : .16; o.connect(g).connect(lp); o.start();
+      });
+    });
+    padGain.gain.linearRampToValueAtTime(muted ? 0 : .05, ac.currentTime + 4);
+  }catch(e){}
+}
+function setMuted(m){
+  muted = m;
+  if(m) window.speechSynthesis?.cancel();
+  if(padGain && ac) padGain.gain.linearRampToValueAtTime(m ? 0 : .05, ac.currentTime + .6);
+  $('#mute').innerHTML = m
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6M16 9l6 6"/></svg>'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>';
+  $('#mute').setAttribute('aria-label', m ? 'Unmute audio' : 'Mute audio');
+}
+$('#mute').onclick = () => setMuted(!muted);
+
+/* ---------- motes ---------- */
+(function motes(){
+  const c = $('#motes'), x = c.getContext('2d'); let W, H, dpr, P = [];
+  const size = () => { dpr = Math.min(2, devicePixelRatio || 1); W = c.width = innerWidth * dpr; H = c.height = innerHeight * dpr; };
+  size(); addEventListener('resize', size);
+  for(let i = 0; i < 70; i++) P.push({x:Math.random(), y:Math.random(), r:Math.random()*1.6+.4, v:Math.random()*.00025+.00008, p:Math.random()*6.28, g:Math.random() < .45});
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tick = t => {
+    x.clearRect(0, 0, W, H);
+    const r = parseFloat(getComputedStyle(document.body).getPropertyValue('--r')) || 0;
+    for(const m of P){
+      if(!still){ m.y -= m.v; if(m.y < -.02){ m.y = 1.02; m.x = Math.random(); } }
+      const a = .25 + .45 * Math.abs(Math.sin(t/1400 + m.p));
+      x.beginPath(); x.arc(m.x*W + Math.sin(t/3000 + m.p)*12*dpr, m.y*H, m.r*dpr, 0, 6.28);
+      x.fillStyle = m.g ? `rgba(255,${190 + r*20|0},${110 + r*20|0},${a})` : `rgba(120,230,225,${a*(1-r*.5)})`;
+      x.shadowBlur = 8*dpr; x.shadowColor = x.fillStyle; x.fill();
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+})();
+
+/* ---------- static text ---------- */
+let logoN = 0;
+const logo = () => { logoN++; return LOGO.replace(/rcgX/g, 'rcg' + logoN).replace(/rcX/g, 'rc' + logoN); };
+document.querySelectorAll('.logo-slot').forEach(s => { s.innerHTML = logo(); s.firstChild.classList.add('logo'); if(s.classList.contains('big')) s.firstChild.classList.add('logo-big'); });
+$('#brandtag').innerHTML = logo() + '<span>Team RISE</span>';
+splitText($('[data-k="splashHead"]'), L.splashHead);
+$('#tapText').textContent = L.tap; $('#volText').textContent = L.vol;
+document.querySelectorAll('[data-k="disclaimer"]').forEach(e => e.textContent = L.disclaimer);
+document.title = L.brand;
+setMuted(false);
+
+/* ---------- state ---------- */
+const st = { branch:null, answers:[], mode:'zoom', interest:null, day:null, time:null };
+
+/* ---------- flow ---------- */
+async function intro(id){
+  // logo in
+  $('#capText').textContent = L.capIn; show('logo');
+  await wait(900); if(!alive(id)) return;
+  await Promise.all([say(L.sayIn), wait(3500)]); if(!alive(id)) return;
+
+  for(const [k, title, lead, items] of [['income', L.incomeTitle, L.sayIncome, L.incomeItems], ['savings', L.savingsTitle, L.saySavings, L.savingsItems]]){
+    $('#listEyebrow').textContent = L.listEyebrow;
+    $('#listTitle').innerHTML = title;
+    $('#listItems').innerHTML = items.map((it, i) => `<div class="item glass reveal"><span class="n">${i+1}</span><span class="t">${it[0]}</span></div>`).join('');
+    show('list', k === 'income' ? 0 : .5);
+    await wait(700); if(!alive(id)) return;
+    await say(lead); if(!alive(id)) return;
+    const els = [...document.querySelectorAll('#listItems .item')];
+    for(let i = 0; i < items.length; i++){
+      els[i].classList.add('on');
+      await Promise.all([say(items[i][1]), wait(1400)]); if(!alive(id)) return;
+    }
+    await wait(900); if(!alive(id)) return;
+  }
+
+  $('#capText').textContent = L.capOut; show('logo', .2);
+  await wait(800); if(!alive(id)) return;
+  await Promise.all([say(L.sayOut), wait(3000)]); if(!alive(id)) return;
+
+  welcome(id);
+}
+
+async function welcome(id){
+  splitText($('#welHead'), L.welcome);
+  $('#welName').textContent = prospectFirst || L.friend;
+  show('welcome');
+  await wait(1300); if(!alive(id)) return;
+  await Promise.all([say(L.sayWelcome(prospectFirst || L.friend)), wait(3200)]); if(!alive(id)) return;
+  challenge(id);
+}
+
+async function challenge(id){
+  $('#chHead').textContent = L.chHead;
+  $('#pil1 h3').textContent = L.pillars[0]; $('#pil2 h3').textContent = L.pillars[1];
+  $('#chLead p').innerHTML = L.chLead;
+  $('#chGo span').textContent = L.cont;
+  $('#orb').innerHTML = orbSVG();
+  ['#pil1','#pil2','#chLead','#chBtn'].forEach(s => $(s).classList.remove('on'));
+  show('challenge');
+  const parts = L.sayCh.match(/[^.]+\./g) || [L.sayCh];
+  await wait(700); if(!alive(id)) return;
+  await say(parts[0]); if(!alive(id)) return;
+  $('#pil1').classList.add('on'); await Promise.all([say(parts[1]||''), wait(900)]); if(!alive(id)) return;
+  $('#pil2').classList.add('on'); await Promise.all([say(parts[2]||''), wait(900)]); if(!alive(id)) return;
+  $('#chLead').classList.add('on'); $('#chBtn').classList.add('on');
+  await say(parts.slice(3).join(' '));
+}
+$('#chGo').onclick = () => { hush(); branch(runId); };
+
+function orbSVG(){
+  const ring = (r, d, dash, w, o) => `<circle cx="200" cy="200" r="${r}" fill="none" stroke="url(#og)" stroke-width="${w}" stroke-dasharray="${dash}" opacity="${o}"><animateTransform attributeName="transform" type="rotate" from="0 200 200" to="${d*360} 200 200" dur="${40 + r/4}s" repeatCount="indefinite"/></circle>`;
+  return `<svg viewBox="0 0 400 400" aria-hidden="true"><defs><linearGradient id="og" x1="0" x2="1"><stop offset="0" stop-color="var(--acc)" style="stop-color:color-mix(in oklab,#46d9d2,#ffc46b var(--pp))"/><stop offset="1" style="stop-color:color-mix(in oklab,#2a9fd6,#ff8a5b var(--pp))"/></linearGradient><radialGradient id="oc"><stop offset="0" stop-color="#fff3dc" stop-opacity=".9"/><stop offset=".35" stop-color="#ffc46b" stop-opacity=".55"/><stop offset="1" stop-color="#ff8a5b" stop-opacity="0"/></radialGradient></defs>
+  <circle cx="200" cy="200" r="120" fill="url(#oc)"/>
+  ${ring(150, 1, '2 10', 2, .8)}${ring(176, -1, '60 24', 1.5, .5)}${ring(118, -1, '1 6', 3, .7)}
+  <g transform="translate(200 200)"><path d="M-70 40 Q -35 -10 0 10 T 70 -40" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".9" stroke-dasharray="200" stroke-dashoffset="200"><animate attributeName="stroke-dashoffset" from="200" to="0" dur="2.4s" begin=".6s" fill="freeze"/></path><circle cx="70" cy="-40" r="8" fill="#fff"><animate attributeName="opacity" values="0;0;1" keyTimes="0;.9;1" dur="3s" fill="freeze"/></circle></g></svg>`;
+}
+
+const ICONS = {
+  income:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>',
+  savings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>',
+  both:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13M14 5l3 3-3 3"/><path d="M20 16H7M10 13l-3 3 3 3"/></svg>'
+};
+
+async function branch(id){
+  $('#brEyebrow').textContent = L.brEyebrow; $('#brHead').innerHTML = L.brHead; $('#brSub').textContent = L.brSub;
+  $('#paths').innerHTML = ['income','savings','both'].map((k, i) =>
+    `<button class="path a" data-b="${k}" style="--k:pop;--d:${.3 + i*.16}s;z-index:${10-i}"><span class="ic">${ICONS[k]}</span><span><b>${L.paths[k][0]}</b><small>${L.paths[k][1]}</small></span></button>`).join('');
+  document.querySelectorAll('.path').forEach(b => b.onclick = () => { hush(); st.branch = b.dataset.b; st.answers = []; question(runId, 0); });
+  show('branch');
+  await wait(600); if(!alive(id)) return;
+  say(L.sayBranch);
+}
+
+function qList(){
+  return st.branch === 'income' ? L.incomeQs : st.branch === 'savings' ? L.savingsQs : [...L.incomeQs, ...L.savingsQs];
+}
+async function question(id, i){
+  const qs = qList(), n = qs.length;
+  $('#qBadge').innerHTML = `<span>${L.badge[st.branch]}</span><span style="opacity:.3">&bull;</span><span>${L.counter(i+1, n)}</span><span class="dots">${qs.map((_, k) => `<span class="${k <= i ? 'on' : ''} ${k === i ? 'cur' : ''}"></span>`).join('')}</span>`;
+  $('#qText').innerHTML = qs[i].split(' ').map((w, k) => `<span class="wd" style="--i:${k}">${w}</span>`).join(' ');
+  $('#qBtns').innerHTML = `
+    <button class="yes a" style="--k:pop;--d:.6s" data-a="1"><span class="bx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>${L.yes}</button>
+    <button class="no a" style="--k:pop;--d:.75s" data-a="0"><span class="bx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span>${L.no}</button>`;
+  let locked = false;
+  $('#qBtns').querySelectorAll('button').forEach(b => b.onclick = () => {
+    if(locked) return; locked = true; hush();
+    st.answers[i] = b.dataset.a === '1';
+    b.classList.add('picked'); $('#qBtns').querySelectorAll('button').forEach(o => o !== b && o.classList.add('faded'));
+    setTimeout(() => { if(!alive(id)) return; i + 1 < n ? question(id, i + 1) : closing(id); }, 600);
+  });
+  show('question', i / n * .9);
+  await wait(500); if(!alive(id)) return;
+  say(qs[i]);
+}
+
+function chipRow(el, items, key, onPick){
+  el.innerHTML = items.map(([v, label]) => `<button class="chip ${st[key] === v ? 'on' : ''}" data-v="${v}">${label}</button>`).join('');
+  el.querySelectorAll('.chip').forEach(c => c.onclick = () => {
+    st[key] = c.dataset.v; el.querySelectorAll('.chip').forEach(o => o.classList.toggle('on', o === c)); onPick && onPick();
+  });
+}
+function upcomingDays(){
+  const out = [], d0 = new Date(); d0.setHours(0,0,0,0);
+  for(let k = 1; k <= DAYS_AHEAD; k++){ const d = new Date(d0); d.setDate(d0.getDate() + k); out.push(d); }
+  return out;
+}
+function timesFor(dateStr){
+  const d = new Date(dateStr + 'T12:00:00'); const w = d.getDay();
+  return w === 6 ? TIMES.sat : w === 0 ? TIMES.sun : TIMES.weekday;
+}
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+function whenText(){
+  if(!st.day || !st.time) return '';
+  const d = new Date(st.day + 'T12:00:00');
+  return d.toLocaleDateString(L.locale, {weekday:'short', month:'short', day:'numeric'}) + ' · ' + st.time;
+}
+function renderTimes(){
+  const el = $('#cTime');
+  if(!st.day){ el.innerHTML = `<span class="mono">${L.lDay}</span>`; return; }
+  if(st.time && !timesFor(st.day).includes(st.time)) st.time = null;
+  chipRow(el, timesFor(st.day).map(t => [t, t]), 'time');
+}
+async function closing(id){
+  st.interest = st.branch;
+  $('#clEyebrow').textContent = L.clEyebrow; $('#clHead').innerHTML = L.clHead; $('#clSub').textContent = L.clSub;
+  $('#clWhere').innerHTML = L.where(partnerShown);
+  $('#lMode').textContent = L.lMode; $('#lInt').textContent = L.lInt; $('#lDay').textContent = L.lDay; $('#lTime').textContent = L.lTime;
+  $('#lName').textContent = L.lName; $('#lPhone').textContent = L.lPhone; $('#lEmail').textContent = L.lEmail;
+  $('#fName').placeholder = L.phName; $('#fPhone').placeholder = L.phPhone; $('#fEmail').placeholder = L.phEmail;
+  if(!$('#fName').value) $('#fName').value = cfg.n || '';
+  if(!$('#fPhone').value) $('#fPhone').value = cfg.ph || '';
+  $('#send').textContent = L.send; $('#err').textContent = '';
+  chipRow($('#cMode'), [['zoom', L.modes.zoom], ['person', L.modes.person]], 'mode');
+  chipRow($('#cInt'), ['income','savings','both'].map(k => [k, L.ints[k]]), 'interest');
+  const days = upcomingDays();
+  $('#cDay').innerHTML = days.map((d, k) => `<button class="chip day ${st.day === ymd(d) ? 'on' : ''}" data-v="${ymd(d)}"><small>${k === 0 ? L.tomorrow : L.dayNames[d.getDay()]}</small><b>${d.getDate()}</b></button>`).join('');
+  $('#cDay').querySelectorAll('.chip').forEach(c => c.onclick = () => { st.day = c.dataset.v; $('#cDay').querySelectorAll('.chip').forEach(o => o.classList.toggle('on', o === c)); renderTimes(); });
+  renderTimes();
+  show('closing');
+  await wait(700); if(!alive(id)) return;
+  say(L.sayCl);
+}
+
+function buildMsg(){
+  const yes = st.answers.filter(Boolean).length;
+  return L.msg({
+    partnerFirst: first(partnerName) || 'there',
+    name: $('#fName').value.trim(),
+    path: L.paths[st.interest || st.branch][0],
+    yes, total: st.answers.length,
+    when: whenText(), mode: L.modes[st.mode],
+    email: $('#fEmail').value.trim()
+  }) + (cfg.c ? `\n(${cfg.c})` : '');
+}
+$('#send').onclick = () => {
+  const name = $('#fName').value.trim(), phone = $('#fPhone').value.trim();
+  if(!st.day || !st.time || !name || phone.replace(/\D/g,'').length < 7){ $('#err').textContent = L.errMsg; return; }
+  hush();
+  const msg = buildMsg();
+  st.msg = msg;
+  const to = (cfg.pp || '').replace(/[^\d+]/g, '');
+  if(to){
+    const sep = /iPhone|iPad|Macintosh/.test(navigator.userAgent) ? '&' : '?';
+    const a = document.createElement('a'); a.href = `sms:${to}${sep}body=${encodeURIComponent(msg)}`; a.click();
+  }
+  thanks(runId);
+};
+
+async function thanks(id){
+  const pFirst = first(partnerName) || L.whereFallback;
+  splitText($('#tyHead'), L.tyHead);
+  $('#tyWhen').innerHTML = L.tyWhen(pFirst, whenText());
+  $('#tyLine').textContent = L.tyLine;
+  $('#tyCopy').textContent = L.copy; $('#tyAgain').textContent = L.again;
+  show('thanks');
+  await wait(1200); if(!alive(id)) return;
+  say(L.sayTy(first($('#fName').value) || prospectFirst || L.friend, pFirst));
+}
+$('#tyCopy').onclick = async () => {
+  try{ await navigator.clipboard.writeText(st.msg || buildMsg()); $('#tyCopy').textContent = L.copied; setTimeout(() => $('#tyCopy').textContent = L.copy, 1800); }catch(e){}
+};
+$('#tyAgain').onclick = () => { hush(); runId++; Object.assign(st, {branch:null, answers:[], mode:'zoom', interest:null, day:null, time:null}); branch(runId); };
+
+/* ---------- start ---------- */
+let begun = false;
+function begin(){
+  if(begun) return; begun = true;
+  document.body.classList.add('started');
+  unlockSpeech(); startPad();
+  runId++;
+  const skip = new URLSearchParams(location.search).get('start');
+  if(skip === 'branch') branch(runId); else if(skip === 'closing'){ st.branch = 'both'; st.answers = [true,true,false,true,true,true]; closing(runId); }
+  else intro(runId);
+}
+$('#splash').addEventListener('click', begin);
+$('#splash').addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') begin(); });
+show('splash');
+</script>
+</body>
+</html>

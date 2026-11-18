@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#03070b">
+<title>RISE Link Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --ease:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.56,.64,1);
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Instrument Serif",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --ink:#f4f8f9;--mut:rgba(228,240,243,.68);--dim:rgba(228,240,243,.42);
+  --teal:#46d9d2;--gold:#ffc46b;--acc:#7fd6c4;--acc2:#e7a36d;--line:rgba(255,255,255,.13);
+}
+*{box-sizing:border-box}
+html{background:#03070b}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(90% 60% at 50% 115%,rgba(255,170,100,.32) 0%,rgba(255,138,91,.12) 30%,transparent 62%),
+    radial-gradient(60% 40% at 15% 0%,rgba(70,217,210,.12),transparent 70%),
+    linear-gradient(180deg,#02050a 0%,#05111b 60%,#0d2030 100%);background-attachment:fixed}
+button{font:inherit;color:inherit;cursor:pointer}
+.top{display:flex;align-items:center;gap:14px;max-width:1180px;margin:0 auto;padding:22px 16px 6px}
+.top svg{width:46px;height:46px;filter:drop-shadow(0 0 18px rgba(70,217,210,.4))}
+.top .t1{font-weight:800;font-size:20px;letter-spacing:-.02em}
+.top .t2{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
+.top .sp{flex:1}
+.hero{max-width:1180px;margin:0 auto;padding:26px 16px 10px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--teal));box-shadow:0 0 10px var(--teal)}
+h1{font-size:clamp(34px,5.4vw,64px);font-weight:700;letter-spacing:-.045em;line-height:1;margin:14px 0 10px}
+em{font-family:var(--serif);font-style:italic;font-weight:400;background:linear-gradient(120deg,var(--teal),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding:0 .05em}
+.hero p{margin:0;color:var(--mut);font-size:clamp(16px,1.8vw,19px);max-width:720px;line-height:1.5}
+.grid{max-width:1180px;margin:0 auto;padding:22px 16px 60px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start}
+.col{display:grid;gap:20px;min-width:0}
+.glass{position:relative;border-radius:24px;background:linear-gradient(155deg,rgba(255,255,255,.11),rgba(255,255,255,.035) 55%,rgba(255,255,255,.06));
+  border:1px solid var(--line);-webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 24px 70px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.1)}
+.card{padding:clamp(20px,3vw,30px)}
+.card.hot{background:linear-gradient(160deg,rgba(255,196,107,.20),rgba(255,138,91,.08) 45%,rgba(70,217,210,.06));border-color:rgba(255,196,107,.38)}
+.ch{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.ch .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--teal),var(--gold));color:#03070b}
+.ch .ic svg{width:22px;height:22px}
+.ch h2{margin:0;font-size:24px;font-weight:750;letter-spacing:-.02em}
+.sub{margin:0 0 20px;color:var(--mut);font-size:15px}
+label{display:block;font-weight:600;font-size:14px;margin:0 0 7px;color:var(--ink)}
+label small{font-weight:500;color:var(--dim)}
+.f{margin-bottom:15px}
+.in{width:100%;padding:13px 15px;border-radius:13px;border:1px solid var(--line);background:rgba(0,0,0,.28);color:var(--ink);font:inherit;font-size:16px;outline:none;transition:border .2s,box-shadow .2s}
+.in:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(70,217,210,.15)}
+.in::placeholder{color:rgba(228,240,243,.3)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+select.in{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 15px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:0;border-radius:999px;padding:15px 26px;font-weight:700;font-size:16px;
+  background:linear-gradient(135deg,var(--teal),var(--gold));color:#03070b;box-shadow:0 10px 30px rgba(255,196,107,.22);transition:transform .25s var(--spring)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.97)}
+.btn.full{width:100%}
+.btn.ghost{background:rgba(255,255,255,.07);color:var(--ink);border:1px solid var(--line);box-shadow:none;padding:11px 16px;font-size:14px}
+.btn svg{width:18px;height:18px}
+.out{margin-top:18px;display:none}
+.out.on{display:block;animation:rise .7s var(--ease)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.linkrow{display:flex;gap:8px;align-items:stretch}
+.linkrow .in{font-family:var(--mono);font-size:13px;color:var(--teal);min-width:0}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 8px;display:block}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:38px 1fr;gap:12px;padding:12px 0;border-top:1px solid rgba(255,255,255,.07)}
+.steps li:first-child{border-top:0}
+.steps li::before{content:counter(s);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#03070b;background:linear-gradient(135deg,var(--teal),var(--gold))}
+.steps b{display:block;font-size:16px;margin-bottom:3px}
+.steps q{display:block;font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.3;color:var(--ink);quotes:"\201C" "\201D"}
+.steps p{margin:4px 0 0;color:var(--mut);font-size:14px;line-height:1.45}
+.key{margin-top:16px;padding:16px 18px;border-radius:16px;background:rgba(255,196,107,.10);border:1px solid rgba(255,196,107,.35)}
+.key b{color:var(--gold)}
+.key p{margin:6px 0 0;color:var(--mut);font-size:14px;line-height:1.5}
+.textbox{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.5;color:var(--ink);padding:14px 16px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid var(--line);margin-bottom:8px}
+.note{font-size:13px;color:var(--dim);line-height:1.5;margin:14px 0 0}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,40px);opacity:0;padding:12px 20px;border-radius:999px;background:#0e2230;border:1px solid var(--line);font-weight:600;font-size:14px;transition:all .35s var(--ease);z-index:50}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;z-index:40;display:none;place-items:center;background:rgba(2,6,10,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:16px}
+.modal.on{display:grid}
+.modal .glass{padding:26px;text-align:center;max-width:360px;width:100%}
+.qr{background:#fff;border-radius:18px;padding:16px;display:inline-block;margin:14px 0}
+.qr img,.qr canvas{display:block;width:240px!important;height:240px!important}
+.modal h3{margin:0;font-size:20px}
+.modal p{margin:6px 0 0;color:var(--mut);font-size:14px}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:520px){.two{grid-template-columns:1fr}.linkrow{flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="top">
+  <span id="logo"></span>
+  <div><div class="t1">Team RISE</div><div class="t2">Link Studio</div></div>
+  <span class="sp"></span>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Control the point of contact</div>
+  <h1>One link. <em>Their</em> answers.</h1>
+  <p>Call first. Send the link. They go through it, pick what interests them, and send a response straight to your phone with their best day and time.</p>
+</section>
+
+<main class="grid">
+  <div class="col">
+
+    <!-- Fast Start -->
+    <section class="card glass hot">
+      <div class="ch"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span><h2>Fast Start AI</h2></div>
+      <p class="sub">A personal link for one prospect. Built for a new partner's top 25 list.</p>
+      <div class="two">
+        <div class="f"><label for="pName">Partner's full name</label><input class="in" id="pName" placeholder="Jordan Carter" autocomplete="off"></div>
+        <div class="f"><label for="pCode">Partner's agent code</label><input class="in" id="pCode" placeholder="ABC12" autocomplete="off"></div>
+      </div>
+      <div class="f"><label for="pCell">Partner's cell <small>(where responses come in)</small></label><input class="in" id="pCell" type="tel" placeholder="(919) 555-0123" autocomplete="off"></div>
+      <div class="two">
+        <div class="f"><label for="xName">Prospect's full name</label><input class="in" id="xName" placeholder="Maria Lopez" autocomplete="off"></div>
+        <div class="f"><label for="xPhone">Prospect's phone number</label><input class="in" id="xPhone" type="tel" placeholder="(919) 555-0188" autocomplete="off"></div>
+      </div>
+      <div class="f"><label for="lang">Language</label><select class="in" id="lang"><option value="en">English</option><option value="es">Español</option></select></div>
+      <button class="btn full" id="gen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>Generate link</button>
+      <div class="out" id="fsOut">
+        <span class="lbl" style="margin-top:4px">Fast Start link</span>
+        <div class="linkrow"><input class="in" id="fsLink" readonly><button class="btn ghost" data-copy="fsLink">Copy</button></div>
+        <div class="acts">
+          <button class="btn ghost" id="fsText"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Text it to <span id="fsFirst">them</span></button>
+          <button class="btn ghost" data-qr="fsLink"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm8-2h3v3h-3zm5 0h3v3h-3zm-5 5h3v3h-3zm5 0h3v3h-3z"/></svg>QR code</button>
+          <button class="btn ghost" id="fsPreview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Preview</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prospecting (generic) -->
+    <section class="card glass">
+      <div class="ch"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg></span><h2>Prospecting AI</h2></div>
+      <p class="sub">Your everyday link. No name on it, so it works for anyone. Uses the partner info above.</p>
+      <button class="btn full" id="genG">Make my everyday link</button>
+      <div class="out" id="gOut">
+        <div class="linkrow"><input class="in" id="gLink" readonly><button class="btn ghost" data-copy="gLink">Copy</button></div>
+        <div class="acts"><button class="btn ghost" data-qr="gLink">QR code</button><button class="btn ghost" id="gPreview">Preview</button></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="col">
+    <!-- The script -->
+    <section class="card glass">
+      <span class="lbl">The exact script</span>
+      <ol class="steps">
+        <li><div><b>Call first</b><q>Hey <span class="fn">[name]</span>, what's going on? Do you have a couple minutes?</q></div></li>
+        <li><div><b>Set it up</b><q>I'm gonna send you a link. Go through the link, choose what's interesting to you, send me a response.</q></div></li>
+        <li><div><b>Hold the frame</b><q>I'll be waiting.</q></div></li>
+        <li><div><b>Send, hang up, call back</b><p>Send the link while you are still on the phone. Hang up. When their response comes in, call back and lock in the time.</p></div></li>
+      </ol>
+      <div class="key"><b>"Send me a response, I'll be waiting."</b><p>This line is what gets them through the link. Skip it and most people never open it.</p></div>
+    </section>
+
+    <section class="card glass">
+      <span class="lbl">Text version</span>
+      <p class="sub" style="margin-bottom:10px">No answer on the call? Open by text, then send the link once they reply.</p>
+      <div class="textbox" id="opener"></div>
+      <div class="acts" style="margin-top:0"><button class="btn ghost" data-copytext="opener">Copy opener</button></div>
+      <div class="textbox" id="follow" style="margin-top:14px"></div>
+      <div class="acts" style="margin-top:0"><button class="btn ghost" data-copytext="follow">Copy link message</button></div>
+      <p class="note">Text is preferred. Telegram works too: paste the same message.</p>
+    </section>
+  </div>
+</main>
+
+<div class="modal" id="qrModal" role="dialog" aria-modal="true">
+  <div class="glass">
+    <h3>Scan to open</h3>
+    <p id="qrFor"></p>
+    <div class="qr" id="qrBox"></div>
+    <div><button class="btn ghost" id="qrClose">Close</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Team RISE"><defs><clipPath id="rc"><circle cx="100" cy="100" r="90"/></clipPath><radialGradient id="rcg" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#3f8c9c"/><stop offset="1" stop-color="#25586a"/></radialGradient></defs><circle cx="100" cy="100" r="99" fill="#fff"/><circle cx="100" cy="100" r="91" fill="url(#rcg)"/><g clip-path="url(#rc)"><g fill="#fff"><polygon points="100,122 -49.6,110.5 -44.5,81.7"/><polygon points="100,122 -36.6,60.0 -22.0,34.7"/><polygon points="100,122 -7.2,17.1 15.3,-1.8"/><polygon points="100,122 35.2,-13.3 62.7,-23.3"/><polygon points="100,122 85.4,-27.3 114.6,-27.3"/><polygon points="100,122 137.3,-23.3 164.8,-13.3"/><polygon points="100,122 184.7,-1.8 207.2,17.1"/><polygon points="100,122 222.0,34.7 236.6,60.0"/><polygon points="100,122 244.5,81.7 249.6,110.5"/></g><path d="M-20 205 L100 110 L220 205Z" fill="#fff"/><path d="M62 140 q19 -9 38 -2 t38 -2" stroke="#33707f" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M-20 205 L100 110 L220 205" stroke="#33707f" stroke-width="3" fill="none"/><text x="100" y="181" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="800" fill="#33707f">RISE</text></g></svg>`;
+const $ = s => document.querySelector(s);
+$('#logo').innerHTML = LOGO;
+
+const JOURNEY = new URL('journey.html', location.href).href;
+const first = s => (s||'').trim().split(/\s+/)[0] || '';
+const digits = s => (s||'').replace(/[^\d+]/g, '');
+
+function encode(obj){
+  const clean = Object.fromEntries(Object.entries(obj).filter(([, v]) => v));
+  return btoa(unescape(encodeURIComponent(JSON.stringify(clean)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function partner(){ return { p:$('#pName').value.trim(), c:$('#pCode').value.trim(), pp:digits($('#pCell').value) }; }
+
+/* remember partner info on this device */
+const KEEP = ['pName','pCode','pCell','lang'];
+KEEP.forEach(id => {
+  try{ const v = localStorage.getItem('riseLink.' + id); if(v) $('#' + id).value = v; }catch(e){}
+  $('#' + id).addEventListener('input', () => { try{ localStorage.setItem('riseLink.' + id, $('#' + id).value); }catch(e){} });
+});
+
+function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('on'), 1700); }
+async function copy(text){
+  try{ await navigator.clipboard.writeText(text); }
+  catch(e){ const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  toast('Copied');
+}
+
+function messages(){
+  const fn = first($('#xName').value) || '[name]';
+  $('#opener').textContent = `Hey ${fn}, what are you doing right now? Do you have a couple minutes?`;
+  const link = $('#fsLink').value || '[link]';
+  $('#follow').textContent = `${link}\n\nGo through the link, choose what's interesting to you, and send me a response. I'll be waiting.`;
+  document.querySelectorAll('.fn').forEach(e => e.textContent = fn);
+}
+['xName'].forEach(id => $('#' + id).addEventListener('input', messages));
+
+$('#gen').onclick = () => {
+  const p = partner();
+  if(!$('#xName').value.trim()){ toast('Add the prospect\'s name (first name is fine)'); $('#xName').focus(); return; }
+  if(!p.pp){ toast('Add the partner\'s cell so responses reach them'); $('#pCell').focus(); return; }
+  const data = { ...p, n:$('#xName').value.trim(), ph:digits($('#xPhone').value), l:$('#lang').value };
+  $('#fsLink').value = JOURNEY + '#' + encode(data);
+  $('#fsFirst').textContent = first(data.n);
+  $('#fsOut').classList.add('on');
+  messages();
+};
+$('#genG').onclick = () => {
+  const p = partner();
+  if(!p.pp){ toast('Add the partner\'s cell above first'); $('#pCell').focus(); return; }
+  $('#gLink').value = JOURNEY + '#' + encode({ ...p, l:$('#lang').value });
+  $('#gOut').classList.add('on');
+};
+
+$('#fsText').onclick = () => {
+  const to = digits($('#xPhone').value);
+  const body = $('#follow').textContent;
+  const sep = /iPhone|iPad|Macintosh/.test(navigator.userAgent) ? '&' : '?';
+  location.href = `sms:${to}${sep}body=${encodeURIComponent(body)}`;
+};
+$('#fsPreview').onclick = () => window.open($('#fsLink').value, '_blank');
+$('#gPreview').onclick = () => window.open($('#gLink').value, '_blank');
+
+document.addEventListener('click', e => {
+  const c = e.target.closest('[data-copy]'); if(c) copy($('#' + c.dataset.copy).value);
+  const t = e.target.closest('[data-copytext]'); if(t) copy($('#' + t.dataset.copytext).textContent);
+  const q = e.target.closest('[data-qr]');
+  if(q){
+    const url = $('#' + q.dataset.qr).value; if(!url) return;
+    $('#qrBox').innerHTML = '';
+    if(window.QRCode) new QRCode($('#qrBox'), { text:url, width:480, height:480, correctLevel:QRCode.CorrectLevel.L });
+    else $('#qrBox').textContent = 'QR needs an internet connection.';
+    $('#qrFor').textContent = q.dataset.qr === 'fsLink' ? 'Fast Start link for ' + (first($('#xName').value) || 'your prospect') : 'Your everyday link';
+    $('#qrModal').classList.add('on');
+  }
+});
+$('#qrClose').onclick = () => $('#qrModal').classList.remove('on');
+$('#qrModal').onclick = e => { if(e.target.id === 'qrModal') $('#qrModal').classList.remove('on'); };
+messages();
+</script>
+</body>
+</html>
