@@ -1,0 +1,32 @@
+window.RISE_AUDIO = {
+ "en": {
+  "Hi there, and welcome. This is Team RISE. We are a community that helps families build a stronger financial future. This only takes a few minutes. Let's dive in.": "audio/en/9b769dcd223f.mp3",
+  "In our society today, a lot of families run into the same income challenges.": "audio/en/411dea6751f1.mp3",
+  "For most of us, the income stops the day we stop working.": "audio/en/003cea065bad.mp3",
+  "Long hours leave too little time with the people we love.": "audio/en/7e989fdb2d8b.mp3",
+  "Too many dreams get pushed to someday.": "audio/en/1749a98232cf.mp3",
+  "And debt keeps a lot of good families stuck.": "audio/en/bd0737a90b47.mp3",
+  "Saving brings its own set of challenges.": "audio/en/6f2ffaa43ee3.mp3",
+  "Staying consistent with saving is hard.": "audio/en/e68d38870994.mp3",
+  "Most of us were never taught how money really works.": "audio/en/7c7db9e182db.mp3",
+  "That leaves the future feeling uncertain.": "audio/en/48a60c20d6bb.mp3",
+  "And every year we wait is a year our money is not growing.": "audio/en/ca12cdbb7220.mp3",
+  "We believe every family deserves a plan. So we made this just for you.": "audio/en/37b6c60718f1.mp3",
+  "Welcome! We are so glad you are here.": "audio/en/1023de630652.mp3",
+  "Most families today are working hard to grow their income.": "audio/en/783e8fa466eb.mp3",
+  "And to grow their savings.": "audio/en/884bc1b0775a.mp3",
+  "Team RISE brings a clear path forward on both.": "audio/en/720c248b9eba.mp3",
+  "Tap continue when you are ready.": "audio/en/51537193c394.mp3",
+  "Now it's your turn. Pick the one that speaks to you the most.": "audio/en/0b66a6abef74.mp3",
+  "If there were a legitimate way to grow your income over the next 12 months, would you want to learn it?": "audio/en/5312daa5170d.mp3",
+  "Do you think having more than one stream of income matters in today's economy?": "audio/en/5854c85ac69c.mp3",
+  "Would you want to build income that doesn't stop when you stop?": "audio/en/70fd06b96a43.mp3",
+  "Does saving money feel harder today than it used to?": "audio/en/b8aa74e3993d.mp3",
+  "Do you ever feel your savings are not growing as fast as you'd like?": "audio/en/065686436a2a.mp3",
+  "If you could start strengthening your family's financial future today, would you be open to learning how?": "audio/en/02e4a94d3347.mp3",
+  "Thank you for your answers. Let's set up a quick chat, so we can show you how this could work for your family. Pick the day and time that works best for you, then tap send.": "audio/en/201170371820.mp3",
+  "Thank you for your answers. Now pick the day and time that works best for you on the calendar. Your invite with the Zoom link will come by email.": "audio/en/12ccc94f8b2d.mp3",
+  "You are all set. We are looking forward to it. See you soon.": "audio/en/28bb6b1f7d52.mp3",
+  "Thank you. We will be in touch soon to confirm your time. We look forward to talking with you.": "audio/en/2ed9f8bf75c1.mp3"
+ }
+};

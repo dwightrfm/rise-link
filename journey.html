@@ -342,6 +342,7 @@ body.started #brandtag{display:flex}
   </div>
 </section>
 
+<script src="audio/manifest.js"></script>
 <script>
 /* ===== Team RISE interactive journey =====
    Link data rides in the URL hash (base64 JSON), written by index.html:
@@ -369,7 +370,7 @@ en:{
   tap:'Tap anywhere to begin', vol:'Turn your volume up for the best experience',
   brand:'Team RISE',
   capIn:'Helping Families', capOut:'Making a Difference',
-  sayIn:'Hi there, and welcome. This is Team RISE. We are a professional network that helps families build a stronger financial future. This only takes a few minutes. Let\'s dive in.',
+  sayIn:'Hi there, and welcome. This is Team RISE. We are a community that helps families build a stronger financial future. This only takes a few minutes. Let\'s dive in.',
   listEyebrow:'In our society today',
   incomeTitle:'Common income <em>challenges</em>',
   sayIncome:'In our society today, a lot of families run into the same income challenges.',
@@ -386,7 +387,7 @@ en:{
     ['An uncertain future','That leaves the future feeling uncertain.'],
     ['Time slipping away','And every year we wait is a year our money is not growing.']],
   sayOut:'We believe every family deserves a plan. So we made this just for you.',
-  welcome:'Welcome!', friend:'Friend', sayWelcome:n=>`Welcome, ${n}.`,
+  welcome:'Welcome!', friend:'Friend', sayWelcome:n=>`Welcome! We are so glad you are here.`,
   chHead:'Most families today are working hard to...',
   pillars:['Grow their income','Grow their savings'],
   chLead:'Team RISE brings <strong>a clear path forward on both.</strong>',
@@ -417,7 +418,7 @@ en:{
   dayNames:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], today:'Today', tomorrow:'Tmrw',
   tyHead:'Thank <em>you</em>', tyWhen:(p,w)=>`${p} will reach out to confirm your chat on <b>${w}</b>.`,
   tyLine:'Thanks for your time!', copy:'Copy my response', copied:'Copied', again:'Start over',
-  sayTy:(n,p)=>`Thank you, ${n}. ${p} will be in touch soon to confirm your time. We look forward to talking with you.`,
+  sayTy:(n,p)=>`Thank you. We will be in touch soon to confirm your time. We look forward to talking with you.`,
   msg:(o)=>`Hi ${o.partnerFirst}, it's ${o.name}. I went through the Team RISE link.\nPath: ${o.path}\nYes answers: ${o.yes} of ${o.total}\nBest time: ${o.when} (${o.mode})${o.email?`\nEmail: ${o.email}`:''}`,
   whereBook:p=>`Pick a time and it goes straight on the calendar. <b>${p}</b> will see you there.`,
   embedWhere:p=>`Pick a day and time on the calendar. The Zoom link comes in your invite. <b>${p}</b> will see you there.`,
@@ -429,7 +430,7 @@ en:{
   lEmailBook:'Email (for your invite)', sendBook:'Book my time',
   tyBooked:(w)=>`You're booked for <b>${w}</b>.`, tyInvite:'Your calendar invite is on its way to your email.',
   joinZoom:'Save the Zoom link', tellPartner:p=>`Text ${p}`,
-  sayBooked:(n,p)=>`You are all set, ${n}. ${p} is looking forward to it. See you soon.`,
+  sayBooked:(n,p)=>`You are all set. We are looking forward to it. See you soon.`,
   disclaimer:'Team RISE is a team of independent financial professionals. This content is for educational purposes only. Nothing presented is professional advice, an offer, a solicitation, or a recommendation of any product, service, company, or business opportunity.'
 },
 es:{
@@ -438,7 +439,7 @@ es:{
   tap:'Toca la pantalla para comenzar', vol:'Sube el volumen para una mejor experiencia',
   brand:'Team RISE',
   capIn:'Ayudando a Familias', capOut:'Marcando la Diferencia',
-  sayIn:'Hola, y bienvenido. Somos Team RISE. Somos una red profesional que ayuda a las familias a construir un futuro financiero más fuerte. Esto solo toma unos minutos. Comencemos.',
+  sayIn:'Hola, y bienvenido. Somos Team RISE. Somos una comunidad que ayuda a las familias a construir un futuro financiero más fuerte. Esto solo toma unos minutos. Comencemos.',
   listEyebrow:'En nuestra sociedad hoy',
   incomeTitle:'Retos comunes de <em>ingresos</em>',
   sayIncome:'En nuestra sociedad hoy, muchas familias enfrentan los mismos retos de ingresos.',
@@ -455,7 +456,7 @@ es:{
     ['Un futuro incierto','Eso deja el futuro sintiéndose incierto.'],
     ['El tiempo se va','Y cada año que esperamos es un año en que nuestro dinero no crece.']],
   sayOut:'Creemos que cada familia merece un plan. Por eso hicimos esto para ti.',
-  welcome:'¡Bienvenido!', friend:'Amigo', sayWelcome:n=>`Bienvenido, ${n}.`,
+  welcome:'¡Bienvenido!', friend:'Amigo', sayWelcome:n=>`¡Bienvenido! Qué gusto tenerte aquí.`,
   chHead:'Hoy la mayoría de las familias trabaja duro para...',
   pillars:['Aumentar sus ingresos','Aumentar sus ahorros'],
   chLead:'Team RISE ofrece <strong>un camino claro para ambos.</strong>',
@@ -486,7 +487,7 @@ es:{
   dayNames:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'], today:'Hoy', tomorrow:'Mañana',
   tyHead:'<em>Gracias</em>', tyWhen:(p,w)=>`${p} te contactará para confirmar tu charla el <b>${w}</b>.`,
   tyLine:'¡Gracias por tu tiempo!', copy:'Copiar mi respuesta', copied:'Copiado', again:'Empezar de nuevo',
-  sayTy:(n,p)=>`Gracias, ${n}. ${p} se comunicará pronto para confirmar tu hora. Esperamos hablar contigo.`,
+  sayTy:(n,p)=>`Gracias. Nos comunicaremos pronto para confirmar tu hora. Esperamos hablar contigo.`,
   msg:(o)=>`Hola ${o.partnerFirst}, soy ${o.name}. Vi el enlace de Team RISE.\nCamino: ${o.path}\nRespuestas sí: ${o.yes} de ${o.total}\nMejor hora: ${o.when} (${o.mode})${o.email?`\nCorreo: ${o.email}`:''}`,
   whereBook:p=>`Elige una hora y queda en el calendario. <b>${p}</b> te verá allí.`,
   embedWhere:p=>`Elige un día y una hora en el calendario. El enlace de Zoom llega en tu invitación. <b>${p}</b> te verá allí.`,
@@ -498,7 +499,7 @@ es:{
   lEmailBook:'Correo (para tu invitación)', sendBook:'Reservar mi hora',
   tyBooked:(w)=>`Tu charla quedó para el <b>${w}</b>.`, tyInvite:'Tu invitación llegará a tu correo.',
   joinZoom:'Guardar el enlace de Zoom', tellPartner:p=>`Escribirle a ${p}`,
-  sayBooked:(n,p)=>`Todo listo, ${n}. ${p} espera hablar contigo. Hasta pronto.`,
+  sayBooked:(n,p)=>`Todo listo. Esperamos hablar contigo. Hasta pronto.`,
   disclaimer:'Team RISE es un equipo de profesionales financieros independientes. Este contenido es solo para fines educativos. Nada de lo presentado constituye asesoría profesional, oferta, solicitud ni recomendación de ningún producto, servicio, compañía u oportunidad de negocio.'
 }};
 
@@ -582,10 +583,26 @@ function unlockSpeech(){
   const s = window.speechSynthesis; if(!s) return;
   try{ s.resume(); const u = new SpeechSynthesisUtterance(' '); u.volume = 0; s.speak(u); }catch(e){}
 }
+/* recorded voice (Brian, ElevenLabs). Falls back to the browser voice for any line without a recording. */
+const vo = new Audio(); vo.preload = 'auto';
+const clips = (window.RISE_AUDIO && window.RISE_AUDIO[L.speechLang]) || {};
+function playClip(file, my){
+  return new Promise(res => {
+    let done = false;
+    const fin = ok => { if(done) return; done = true; vo.onended = vo.onerror = null; clearTimeout(t); res(ok && my === sayToken); };
+    const t = setTimeout(() => fin(true), 45000);
+    vo.onended = () => fin(true); vo.onerror = () => fin(true);
+    vo.src = file; vo.muted = muted; vo.currentTime = 0;
+    const p = vo.play(); if(p && p.catch) p.catch(() => setTimeout(() => fin(true), 2500));
+    const watch = setInterval(() => { if(my !== sayToken){ clearInterval(watch); fin(false); } if(done) clearInterval(watch); }, 120);
+  });
+}
 function say(text){
   const my = ++sayToken;
   const s = window.speechSynthesis;
   if(s) s.cancel();
+  const clip = clips[(text || '').trim()];
+  if(clip) return playClip(clip, my);
   const parts = (text.match(/[^.!?¡¿]*[¡¿]?[^.!?]+[.!?]*/g) || [text]).map(t => t.trim()).filter(Boolean);
   if(!s) return wait(Math.max(1200, text.split(/\s+/).length * 380)).then(() => my === sayToken);
   return new Promise(res => {
@@ -606,7 +623,7 @@ function say(text){
     next();
   });
 }
-function hush(){ sayToken++; window.speechSynthesis?.cancel(); }
+function hush(){ sayToken++; window.speechSynthesis?.cancel(); try{ vo.pause(); }catch(e){} }
 
 /* ---------- ambient pad (Web Audio, no files) ---------- */
 let ac = null, padGain = null;
@@ -629,6 +646,7 @@ function startPad(){
 function setMuted(m){
   muted = m;
   if(m) window.speechSynthesis?.cancel();
+  try{ vo.muted = m; }catch(e){}
   if(padGain && ac) padGain.gain.linearRampToValueAtTime(m ? 0 : .05, ac.currentTime + .6);
   $('#mute').innerHTML = m
     ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6M16 9l6 6"/></svg>'
@@ -932,6 +950,7 @@ function begin(){
   if(begun) return; begun = true;
   document.body.classList.add('started');
   unlockSpeech(); startPad();
+  try{ vo.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA='; vo.play().catch(() => {}); }catch(e){}
   runId++;
   const skip = new URLSearchParams(location.search).get('start');
   if(skip === 'branch') branch(runId); else if(skip === 'closing'){ st.branch = 'both'; st.answers = [true,true,false,true,true,true]; closing(runId); }
