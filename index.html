@@ -4,7 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#03070b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RISE Link">
 <title>RISE Link Studio</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -14,171 +20,216 @@
   --ease:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.56,.64,1);
   --sans:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
   --serif:"Instrument Serif",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
-  --ink:#f4f8f9;--mut:rgba(228,240,243,.68);--dim:rgba(228,240,243,.42);
-  --teal:#46d9d2;--gold:#ffc46b;--acc:#7fd6c4;--acc2:#e7a36d;--line:rgba(255,255,255,.13);
+  --ink:#f4f8f9;--mut:rgba(228,240,243,.7);--dim:rgba(228,240,243,.44);
+  --teal:#46d9d2;--gold:#ffc46b;--warm:#ff8a5b;--line:rgba(255,255,255,.13);
 }
 *{box-sizing:border-box}
 html{background:#03070b}
-body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;
-  background:
-    radial-gradient(90% 60% at 50% 115%,rgba(255,170,100,.32) 0%,rgba(255,138,91,.12) 30%,transparent 62%),
-    radial-gradient(60% 40% at 15% 0%,rgba(70,217,210,.12),transparent 70%),
-    linear-gradient(180deg,#02050a 0%,#05111b 60%,#0d2030 100%);background-attachment:fixed}
-button{font:inherit;color:inherit;cursor:pointer}
-.top{display:flex;align-items:center;gap:14px;max-width:1180px;margin:0 auto;padding:22px 16px 6px}
-.top svg{width:46px;height:46px;filter:drop-shadow(0 0 18px rgba(70,217,210,.4))}
-.top .t1{font-weight:800;font-size:20px;letter-spacing:-.02em}
-.top .t2{font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
-.top .sp{flex:1}
-.hero{max-width:1180px;margin:0 auto;padding:26px 16px 10px}
-.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:12px}
-.eyebrow::before{content:"";width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--teal));box-shadow:0 0 10px var(--teal)}
-h1{font-size:clamp(34px,5.4vw,64px);font-weight:700;letter-spacing:-.045em;line-height:1;margin:14px 0 10px}
+body{margin:0;min-height:100vh;min-height:100dvh;color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+
+/* sky */
+.sky{position:fixed;inset:0;z-index:-3;background:linear-gradient(180deg,#02050a 0%,#04101a 52%,#132b38 100%)}
+.sun{position:fixed;left:50%;top:104vh;width:110vmax;height:110vmax;border-radius:50%;transform:translate(-50%,-50%);z-index:-2;pointer-events:none;filter:blur(10px);
+  background:radial-gradient(circle,#fff0d6 0%,#ffc46b 5%,rgba(255,138,91,.34) 15%,rgba(42,159,214,.10) 30%,transparent 48%);animation:dawn 9s cubic-bezier(.45,0,.2,1) both}
+@keyframes dawn{from{top:122vh;opacity:.5}to{top:104vh;opacity:1}}
+canvas#motes{position:fixed;inset:0;width:100vw;height:100vh;z-index:-1;pointer-events:none}
+
+/* layout */
+.top{display:flex;align-items:center;gap:12px;max-width:1120px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 16px 4px}
+.top svg{width:44px;height:44px;flex:none;filter:drop-shadow(0 0 18px rgba(70,217,210,.45))}
+.brand b{display:block;font-weight:800;font-size:19px;letter-spacing:-.02em}
+.brand span{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--dim)}
+.sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(255,255,255,.06);border-radius:999px;padding:9px 14px;font-size:14px;font-weight:600;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.pill svg{width:16px;height:16px;filter:none}
+.wrap{max-width:1120px;margin:0 auto;padding:10px 16px 60px}
+.hero{padding:18px 0 22px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:32px;height:1px;background:linear-gradient(90deg,transparent,var(--teal));box-shadow:0 0 10px var(--teal)}
+h1{font-size:clamp(36px,6vw,64px);font-weight:700;letter-spacing:-.045em;line-height:.98;margin:12px 0 10px}
 em{font-family:var(--serif);font-style:italic;font-weight:400;background:linear-gradient(120deg,var(--teal),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding:0 .05em}
-.hero p{margin:0;color:var(--mut);font-size:clamp(16px,1.8vw,19px);max-width:720px;line-height:1.5}
-.grid{max-width:1180px;margin:0 auto;padding:22px 16px 60px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start}
-.col{display:grid;gap:20px;min-width:0}
-.glass{position:relative;border-radius:24px;background:linear-gradient(155deg,rgba(255,255,255,.11),rgba(255,255,255,.035) 55%,rgba(255,255,255,.06));
+.hero p{margin:0;color:var(--mut);font-size:clamp(15px,1.7vw,18px);max-width:620px;line-height:1.5}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:18px;align-items:start}
+.col{display:grid;gap:18px;min-width:0}
+
+/* glass */
+.glass{position:relative;border-radius:24px;background:linear-gradient(155deg,rgba(255,255,255,.12),rgba(255,255,255,.035) 55%,rgba(255,255,255,.06));
   border:1px solid var(--line);-webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 24px 70px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.1)}
-.card{padding:clamp(20px,3vw,30px)}
-.card.hot{background:linear-gradient(160deg,rgba(255,196,107,.20),rgba(255,138,91,.08) 45%,rgba(70,217,210,.06));border-color:rgba(255,196,107,.38)}
-.ch{display:flex;align-items:center;gap:12px;margin-bottom:4px}
-.ch .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--teal),var(--gold));color:#03070b}
-.ch .ic svg{width:22px;height:22px}
-.ch h2{margin:0;font-size:24px;font-weight:750;letter-spacing:-.02em}
-.sub{margin:0 0 20px;color:var(--mut);font-size:15px}
-label{display:block;font-weight:600;font-size:14px;margin:0 0 7px;color:var(--ink)}
+.card{padding:clamp(18px,3vw,28px)}
+.card.hot{background:linear-gradient(160deg,rgba(255,196,107,.18),rgba(255,138,91,.07) 45%,rgba(70,217,210,.06));border-color:rgba(255,196,107,.36)}
+.lbl{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin:0 0 12px}
+h2{margin:0 0 4px;font-size:24px;font-weight:750;letter-spacing:-.02em}
+.sub{margin:0 0 18px;color:var(--mut);font-size:14.5px;line-height:1.45}
+
+/* form */
+label{display:block;font-weight:600;font-size:13.5px;margin:0 0 7px}
 label small{font-weight:500;color:var(--dim)}
-.f{margin-bottom:15px}
-.in{width:100%;padding:13px 15px;border-radius:13px;border:1px solid var(--line);background:rgba(0,0,0,.28);color:var(--ink);font:inherit;font-size:16px;outline:none;transition:border .2s,box-shadow .2s}
-.in:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(70,217,210,.15)}
+.f{margin-bottom:14px}
+.in{width:100%;padding:14px 15px;border-radius:14px;border:1px solid var(--line);background:rgba(0,0,0,.3);color:var(--ink);font-size:17px;outline:none;transition:border .2s,box-shadow .2s}
+.in:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(70,217,210,.16)}
 .in::placeholder{color:rgba(228,240,243,.3)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-select.in{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);background-position:calc(100% - 20px) 55%,calc(100% - 15px) 55%;background-size:5px 5px;background-repeat:no-repeat}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:0;border-radius:999px;padding:15px 26px;font-weight:700;font-size:16px;
-  background:linear-gradient(135deg,var(--teal),var(--gold));color:#03070b;box-shadow:0 10px 30px rgba(255,196,107,.22);transition:transform .25s var(--spring)}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:rgba(0,0,0,.3);border:1px solid var(--line)}
+.seg button{border:0;background:none;padding:8px 16px;border-radius:999px;font-weight:600;font-size:14px;color:var(--mut)}
+.seg button.on{background:linear-gradient(135deg,var(--teal),var(--gold));color:#03070b}
+.from{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:rgba(0,0,0,.22);border:1px dashed rgba(255,255,255,.16);font-size:14px;color:var(--mut);margin:4px 0 18px}
+.from b{color:var(--ink)}
+.from button{margin-left:auto;border:0;background:none;color:var(--teal);font-weight:600;font-size:14px;padding:0}
+.from.warn{border-color:rgba(255,196,107,.6);color:var(--gold)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;padding:16px 26px;font-weight:750;font-size:17px;
+  background:linear-gradient(135deg,var(--teal),var(--gold));color:#03070b;box-shadow:0 12px 34px rgba(255,196,107,.24);transition:transform .25s var(--spring),opacity .2s}
 .btn:hover{transform:translateY(-2px)}
 .btn:active{transform:scale(.97)}
+.btn[disabled]{opacity:.45;pointer-events:none}
 .btn.full{width:100%}
-.btn.ghost{background:rgba(255,255,255,.07);color:var(--ink);border:1px solid var(--line);box-shadow:none;padding:11px 16px;font-size:14px}
-.btn svg{width:18px;height:18px}
-.out{margin-top:18px;display:none}
-.out.on{display:block;animation:rise .7s var(--ease)}
-@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-.linkrow{display:flex;gap:8px;align-items:stretch}
-.linkrow .in{font-family:var(--mono);font-size:13px;color:var(--teal);min-width:0}
-.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 8px;display:block}
+.btn svg{width:20px;height:20px}
+.ghost{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:rgba(255,255,255,.07);border-radius:999px;padding:10px 15px;font-weight:600;font-size:14px;transition:background .2s}
+.ghost:hover{background:rgba(255,255,255,.13)}
+.ghost[disabled]{opacity:.4;pointer-events:none}
+.ghost svg{width:16px;height:16px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.preview{margin-top:16px;padding:14px 16px;border-radius:16px;background:rgba(0,0,0,.28);border:1px solid var(--line);font-size:14.5px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--mut)}
+.preview .u{color:var(--teal);font-family:var(--mono);font-size:12px}
+
+/* script */
 .steps{list-style:none;margin:0;padding:0;counter-reset:s}
-.steps li{counter-increment:s;display:grid;grid-template-columns:38px 1fr;gap:12px;padding:12px 0;border-top:1px solid rgba(255,255,255,.07)}
+.steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:12px;padding:11px 0;border-top:1px solid rgba(255,255,255,.07)}
 .steps li:first-child{border-top:0}
-.steps li::before{content:counter(s);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#03070b;background:linear-gradient(135deg,var(--teal),var(--gold))}
-.steps b{display:block;font-size:16px;margin-bottom:3px}
-.steps q{display:block;font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.3;color:var(--ink);quotes:"\201C" "\201D"}
-.steps p{margin:4px 0 0;color:var(--mut);font-size:14px;line-height:1.45}
-.key{margin-top:16px;padding:16px 18px;border-radius:16px;background:rgba(255,196,107,.10);border:1px solid rgba(255,196,107,.35)}
+.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:14px;color:#03070b;background:linear-gradient(135deg,var(--teal),var(--gold))}
+.steps b{display:block;font-size:15px;margin-bottom:2px}
+.steps q{display:block;font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.3;quotes:"\201C" "\201D"}
+.steps p{margin:3px 0 0;color:var(--mut);font-size:13.5px;line-height:1.45}
+.key{margin-top:14px;padding:14px 16px;border-radius:16px;background:rgba(255,196,107,.1);border:1px solid rgba(255,196,107,.34);font-size:14px;color:var(--mut);line-height:1.5}
 .key b{color:var(--gold)}
-.key p{margin:6px 0 0;color:var(--mut);font-size:14px;line-height:1.5}
-.textbox{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.5;color:var(--ink);padding:14px 16px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid var(--line);margin-bottom:8px}
-.note{font-size:13px;color:var(--dim);line-height:1.5;margin:14px 0 0}
-.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,40px);opacity:0;padding:12px 20px;border-radius:999px;background:#0e2230;border:1px solid var(--line);font-weight:600;font-size:14px;transition:all .35s var(--ease);z-index:50}
+
+/* recent */
+.recent{list-style:none;margin:0;padding:0}
+.recent li{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid rgba(255,255,255,.07)}
+.recent li:first-child{border-top:0}
+.av{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:14px;color:#03070b;background:linear-gradient(135deg,var(--teal),var(--gold))}
+.recent .who{min-width:0;flex:1}
+.recent .who b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent .who small{color:var(--dim);font-size:12.5px}
+.recent .ghost{padding:8px 12px;font-size:13px}
+.empty{color:var(--dim);font-size:14px;margin:0}
+
+/* sheet + modal */
+.veil{position:fixed;inset:0;z-index:40;display:none;place-items:center;background:rgba(2,6,10,.7);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:16px}
+.veil.on{display:grid;animation:fade .25s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.sheet{width:100%;max-width:480px;max-height:calc(100dvh - 32px);overflow:auto;padding:24px;animation:up .4s var(--ease)}
+@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.sheet h3{margin:0 0 4px;font-size:22px}
+.sheet .sub{margin-bottom:16px}
+.qr{background:#fff;border-radius:18px;padding:14px;display:inline-block;margin:12px 0}
+.qr img,.qr canvas{display:block;width:230px!important;height:230px!important}
+.center{text-align:center}
+hr{border:0;border-top:1px solid rgba(255,255,255,.08);margin:18px 0}
+
+.toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translate(-50%,40px);opacity:0;padding:12px 20px;border-radius:999px;background:#0e2230;border:1px solid var(--line);font-weight:600;font-size:14px;transition:all .35s var(--ease);z-index:60;pointer-events:none}
 .toast.on{opacity:1;transform:translate(-50%,0)}
-.modal{position:fixed;inset:0;z-index:40;display:none;place-items:center;background:rgba(2,6,10,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);padding:16px}
-.modal.on{display:grid}
-.modal .glass{padding:26px;text-align:center;max-width:360px;width:100%}
-.qr{background:#fff;border-radius:18px;padding:16px;display:inline-block;margin:14px 0}
-.qr img,.qr canvas{display:block;width:240px!important;height:240px!important}
-.modal h3{margin:0;font-size:20px}
-.modal p{margin:6px 0 0;color:var(--mut);font-size:14px}
-@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
-@media (max-width:520px){.two{grid-template-columns:1fr}.linkrow{flex-direction:column}}
+#install{display:none}
+#install.on{display:inline-flex}
+
+@media (max-width:880px){.grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:480px){.two{grid-template-columns:1fr}.top .pill span{display:none}}
+@media (prefers-reduced-motion:reduce){.sun{animation:none}}
 </style>
 </head>
 <body>
+<div class="sky"></div><div class="sun"></div><canvas id="motes"></canvas>
+
 <header class="top">
   <span id="logo"></span>
-  <div><div class="t1">Team RISE</div><div class="t2">Link Studio</div></div>
+  <div class="brand"><b>Team RISE</b><span>Link Studio</span></div>
   <span class="sp"></span>
+  <button class="pill" id="install"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span>Install</span></button>
+  <button class="pill" id="openMe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span>Your info</span></button>
 </header>
 
-<section class="hero">
-  <div class="eyebrow">Control the point of contact</div>
-  <h1>One link. <em>Their</em> answers.</h1>
-  <p>Call first. Send the link. They go through it, pick what interests them, and send a response straight to your phone with their best day and time.</p>
-</section>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Send the journey</div>
+    <h1>One link. <em>Their</em> answers.</h1>
+    <p>Call first. Plug in their name and number, text the link, hang up. They go through it and book a time on the calendar.</p>
+  </section>
 
-<main class="grid">
-  <div class="col">
-
-    <!-- Fast Start -->
-    <section class="card glass hot">
-      <div class="ch"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span><h2>Fast Start AI</h2></div>
-      <p class="sub">A personal link for one prospect. Built for a new partner's top 25 list.</p>
-      <div class="two">
-        <div class="f"><label for="pName">Partner's full name</label><input class="in" id="pName" placeholder="Jordan Carter" autocomplete="off"></div>
-        <div class="f"><label for="pCode">Partner's agent code</label><input class="in" id="pCode" placeholder="ABC12" autocomplete="off"></div>
-      </div>
-      <div class="f"><label for="pCell">Partner's cell <small>(where responses come in)</small></label><input class="in" id="pCell" type="tel" placeholder="(919) 555-0123" autocomplete="off"></div>
-      <div class="two">
-        <div class="f"><label for="xName">Prospect's full name</label><input class="in" id="xName" placeholder="Maria Lopez" autocomplete="off"></div>
-        <div class="f"><label for="xPhone">Prospect's phone number</label><input class="in" id="xPhone" type="tel" placeholder="(919) 555-0188" autocomplete="off"></div>
-      </div>
-      <div class="f"><label for="lang">Language</label><select class="in" id="lang"><option value="en">English</option><option value="es">Español</option></select></div>
-      <button class="btn full" id="gen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>Generate link</button>
-      <div class="out" id="fsOut">
-        <span class="lbl" style="margin-top:4px">Fast Start link</span>
-        <div class="linkrow"><input class="in" id="fsLink" readonly><button class="btn ghost" data-copy="fsLink">Copy</button></div>
-        <div class="acts">
-          <button class="btn ghost" id="fsText"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Text it to <span id="fsFirst">them</span></button>
-          <button class="btn ghost" data-qr="fsLink"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm8-2h3v3h-3zm5 0h3v3h-3zm-5 5h3v3h-3zm5 0h3v3h-3z"/></svg>QR code</button>
-          <button class="btn ghost" id="fsPreview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Preview</button>
+  <div class="grid">
+    <div class="col">
+      <section class="card glass hot">
+        <span class="lbl">New link</span>
+        <h2>Who are you sending it to?</h2>
+        <p class="sub">First name is enough. Their number lets the text open ready to send.</p>
+        <div class="from" id="from"></div>
+        <div class="two">
+          <div class="f"><label for="xName">Prospect's name</label><input class="in" id="xName" placeholder="Maria Lopez" autocomplete="off" autocapitalize="words"></div>
+          <div class="f"><label for="xPhone">Prospect's phone</label><input class="in" id="xPhone" type="tel" inputmode="tel" placeholder="(919) 555-0188" autocomplete="off"></div>
         </div>
-      </div>
-    </section>
+        <div class="f"><label>Language</label><div class="seg" id="lang"><button data-v="en" class="on">English</button><button data-v="es">Español</button></div></div>
+        <button class="btn full" id="send" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span id="sendLbl">Text the link</span></button>
+        <div class="acts">
+          <button class="ghost" id="copyMsg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copy message</button>
+          <button class="ghost" id="copyLink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>Copy link</button>
+          <button class="ghost" id="qrBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm8-2h3v3h-3zm5 0h3v3h-3zm-5 5h3v3h-3zm5 0h3v3h-3z"/></svg>QR code</button>
+          <button class="ghost" id="peek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Preview</button>
+        </div>
+        <div class="preview" id="msgPreview"></div>
+      </section>
 
-    <!-- Prospecting (generic) -->
-    <section class="card glass">
-      <div class="ch"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8" fill="currentColor"/></svg></span><h2>Prospecting AI</h2></div>
-      <p class="sub">Your everyday link. No name on it, so it works for anyone. Uses the partner info above.</p>
-      <button class="btn full" id="genG">Make my everyday link</button>
-      <div class="out" id="gOut">
-        <div class="linkrow"><input class="in" id="gLink" readonly><button class="btn ghost" data-copy="gLink">Copy</button></div>
-        <div class="acts"><button class="btn ghost" data-qr="gLink">QR code</button><button class="btn ghost" id="gPreview">Preview</button></div>
-      </div>
-    </section>
-  </div>
+      <section class="card glass">
+        <span class="lbl">Sent from this device</span>
+        <ul class="recent" id="recent"></ul>
+      </section>
+    </div>
 
-  <div class="col">
-    <!-- The script -->
-    <section class="card glass">
-      <span class="lbl">The exact script</span>
-      <ol class="steps">
-        <li><div><b>Call first</b><q>Hey <span class="fn">[name]</span>, what's going on? Do you have a couple minutes?</q></div></li>
-        <li><div><b>Set it up</b><q>I'm gonna send you a link. Go through the link, choose what's interesting to you, send me a response.</q></div></li>
-        <li><div><b>Hold the frame</b><q>I'll be waiting.</q></div></li>
-        <li><div><b>Send, hang up, call back</b><p>Send the link while you are still on the phone. Hang up. When their response comes in, call back and lock in the time.</p></div></li>
-      </ol>
-      <div class="key"><b>"Send me a response, I'll be waiting."</b><p>This line is what gets them through the link. Skip it and most people never open it.</p></div>
-    </section>
-
-    <section class="card glass">
-      <span class="lbl">Text version</span>
-      <p class="sub" style="margin-bottom:10px">No answer on the call? Open by text, then send the link once they reply.</p>
-      <div class="textbox" id="opener"></div>
-      <div class="acts" style="margin-top:0"><button class="btn ghost" data-copytext="opener">Copy opener</button></div>
-      <div class="textbox" id="follow" style="margin-top:14px"></div>
-      <div class="acts" style="margin-top:0"><button class="btn ghost" data-copytext="follow">Copy link message</button></div>
-      <p class="note">Text is preferred. Telegram works too: paste the same message.</p>
-    </section>
+    <div class="col">
+      <section class="card glass">
+        <span class="lbl">The exact script</span>
+        <ol class="steps">
+          <li><div><b>Call first</b><q>Hey <span class="fn">[name]</span>, what's going on? Do you have a couple minutes?</q></div></li>
+          <li><div><b>Set it up</b><q>I'm gonna send you a link. Go through the link, choose what's interesting to you, send me a response.</q></div></li>
+          <li><div><b>Hold the frame</b><q>I'll be waiting.</q></div></li>
+          <li><div><b>Send, hang up, call back</b><p>Text the link while you are still on the phone. Hang up. When they book, call back and confirm.</p></div></li>
+        </ol>
+        <div class="key"><b>"Send me a response, I'll be waiting."</b> This line is what gets them through the link. Skip it and most people never open it.</div>
+      </section>
+      <section class="card glass">
+        <span class="lbl">No answer? Text first</span>
+        <div class="preview" id="opener" style="margin-top:0"></div>
+        <div class="acts"><button class="ghost" id="copyOpener">Copy opener</button></div>
+      </section>
+    </div>
   </div>
 </main>
 
-<div class="modal" id="qrModal" role="dialog" aria-modal="true">
-  <div class="glass">
+<!-- your info -->
+<div class="veil" id="meSheet" role="dialog" aria-modal="true" aria-labelledby="meTitle">
+  <div class="sheet glass">
+    <h3 id="meTitle">Your info</h3>
+    <p class="sub">Saved on this device only. Responses come back to this name. For a new partner's Fast Start, put their info here.</p>
+    <div class="f"><label for="pName">Your full name</label><input class="in" id="pName" placeholder="Jordan Carter" autocomplete="name"></div>
+    <div class="two">
+      <div class="f"><label for="pCode">Agent code</label><input class="in" id="pCode" placeholder="ABC12" autocomplete="off" autocapitalize="characters"></div>
+      <div class="f"><label for="pCell">Your cell</label><input class="in" id="pCell" type="tel" inputmode="tel" placeholder="(919) 555-0123" autocomplete="tel"></div>
+    </div>
+    <button class="btn full" id="saveMe">Save</button>
+    <hr>
+    <span class="lbl">Your everyday link (no name on it)</span>
+    <div class="acts" style="margin-top:0"><button class="ghost" id="copyGeneric">Copy everyday link</button><button class="ghost" id="qrGeneric">QR code</button></div>
+  </div>
+</div>
+
+<!-- qr -->
+<div class="veil" id="qrSheet" role="dialog" aria-modal="true">
+  <div class="sheet glass center">
     <h3>Scan to open</h3>
-    <p id="qrFor"></p>
+    <p class="sub" id="qrFor" style="margin:4px 0 0"></p>
     <div class="qr" id="qrBox"></div>
-    <div><button class="btn ghost" id="qrClose">Close</button></div>
+    <div><button class="ghost" data-close>Close</button></div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -189,80 +240,162 @@ const $ = s => document.querySelector(s);
 $('#logo').innerHTML = LOGO;
 
 const JOURNEY = new URL('journey.html', location.href).href;
-const first = s => (s||'').trim().split(/\s+/)[0] || '';
-const digits = s => (s||'').replace(/[^\d+]/g, '');
+const first = s => (s || '').trim().split(/\s+/)[0] || '';
+const digits = s => (s || '').replace(/[^\d+]/g, '');
+const pretty = s => { const d = (s || '').replace(/\D/g, '').replace(/^1(?=\d{10}$)/, ''); return d.length === 10 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : (s || ''); };
+const isApple = /iPhone|iPad|Macintosh/.test(navigator.userAgent);
+
+/* storage (per device) */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem('riseLink.' + k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem('riseLink.' + k, JSON.stringify(v)); }catch(e){} }
+};
+let me = store.get('me', null);
+if(!me){ /* carry over info saved by the first version of this page */
+  const old = k => { try{ return localStorage.getItem('riseLink.' + k) || ''; }catch(e){ return ''; } };
+  if(old('pName') || old('pCell')) me = { p: old('pName'), c: old('pCode'), pp: digits(old('pCell')) };
+}
+me = me || { p:'', c:'', pp:'' };
+let lang = store.get('lang', 'en');
+let recent = store.get('recent', []);
 
 function encode(obj){
   const clean = Object.fromEntries(Object.entries(obj).filter(([, v]) => v));
   return btoa(unescape(encodeURIComponent(JSON.stringify(clean)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
-function partner(){ return { p:$('#pName').value.trim(), c:$('#pCode').value.trim(), pp:digits($('#pCell').value) }; }
+const meReady = () => !!(me.p && me.pp);
+function linkFor(name, phone, l){ return JOURNEY + '#' + encode({ p:me.p, c:me.c, pp:me.pp, n:(name||'').trim(), ph:digits(phone), l }); }
+function genericLink(){ return JOURNEY + '#' + encode({ p:me.p, c:me.c, pp:me.pp, l:lang }); }
+function message(name, url, l){
+  const fn = first(name) || (l === 'es' ? 'amigo' : 'there');
+  return l === 'es'
+    ? `Hola ${fn}, aquí está el enlace:\n${url}\n\nMíralo, elige lo que te interese y envíame una respuesta. Te espero.`
+    : `Hey ${fn}, here's the link:\n${url}\n\nGo through it, choose what's interesting to you, and send me a response. I'll be waiting.`;
+}
+function opener(name){
+  const fn = first(name) || '[name]';
+  return lang === 'es' ? `Hola ${fn}, ¿qué estás haciendo ahora? ¿Tienes un par de minutos?` : `Hey ${fn}, what are you doing right now? Do you have a couple minutes?`;
+}
 
-/* remember partner info on this device */
-const KEEP = ['pName','pCode','pCell','lang'];
-KEEP.forEach(id => {
-  try{ const v = localStorage.getItem('riseLink.' + id); if(v) $('#' + id).value = v; }catch(e){}
-  $('#' + id).addEventListener('input', () => { try{ localStorage.setItem('riseLink.' + id, $('#' + id).value); }catch(e){} });
-});
-
-function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('on'), 1700); }
-async function copy(text){
+function toast(t){ const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove('on'), 1800); }
+async function copy(text, what){
   try{ await navigator.clipboard.writeText(text); }
   catch(e){ const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
-  toast('Copied');
+  toast((what || 'Copied') + ' ✓');
+}
+function sms(to, body){ location.href = `sms:${digits(to)}${isApple ? '&' : '?'}body=${encodeURIComponent(body)}`; }
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* render */
+function render(){
+  const name = $('#xName').value, phone = $('#xPhone').value;
+  $('#from').className = 'from' + (meReady() ? '' : ' warn');
+  $('#from').innerHTML = meReady()
+    ? `Sending as <b>${esc(me.p)}</b>${me.c ? ' · ' + esc(me.c) : ''}<button id="editMe">Edit</button>`
+    : `Add your name and cell first. One time only.<button id="editMe">Add</button>`;
+  $('#editMe').onclick = openMe;
+  const ok = meReady() && first(name);
+  $('#send').disabled = !ok;
+  $('#sendLbl').textContent = first(name) ? `Text the link to ${first(name)}` : 'Text the link';
+  const url = ok ? linkFor(name, phone, lang) : '';
+  const msg = message(name, url || '[link]', lang);
+  $('#msgPreview').innerHTML = esc(msg).replace(esc(url || '[link]'), `<span class="u">${esc(url ? url.slice(0, 64) + '...' : '[link]')}</span>`);
+  ['#copyMsg','#copyLink','#qrBtn','#peek'].forEach(s => $(s).disabled = !ok);
+  $('#opener').textContent = opener(name);
+  document.querySelectorAll('.fn').forEach(e => e.textContent = first(name) || '[name]');
+  document.querySelectorAll('#lang button').forEach(b => b.classList.toggle('on', b.dataset.v === lang));
+  renderRecent();
+}
+function ago(t){
+  const m = Math.round((Date.now() - t) / 60000);
+  if(m < 1) return 'just now'; if(m < 60) return m + ' min ago';
+  const h = Math.round(m / 60); if(h < 24) return h + ' hr ago';
+  return new Date(t).toLocaleDateString(undefined, {month:'short', day:'numeric'});
+}
+function renderRecent(){
+  const ul = $('#recent');
+  if(!recent.length){ ul.innerHTML = '<p class="empty">Links you send show up here, so you know who to call back.</p>'; return; }
+  ul.innerHTML = recent.slice(0, 20).map((r, i) => `<li>
+    <span class="av">${esc((first(r.n)[0] || '?').toUpperCase())}</span>
+    <span class="who"><b>${esc(r.n)}</b><small>${r.ph ? esc(pretty(r.ph)) + ' · ' : ''}${ago(r.t)}${r.l === 'es' ? ' · ES' : ''}</small></span>
+    <button class="ghost" data-again="${i}">Text again</button></li>`).join('');
+  ul.querySelectorAll('[data-again]').forEach(b => b.onclick = () => {
+    const r = recent[+b.dataset.again]; sms(r.ph || '', message(r.n, r.url, r.l));
+  });
+}
+function remember(name, phone){
+  const url = linkFor(name, phone, lang);
+  recent = [{ n:name.trim(), ph:digits(phone), l:lang, url, t:Date.now() }, ...recent.filter(r => !(r.n === name.trim() && r.ph === digits(phone)))].slice(0, 40);
+  store.set('recent', recent);
 }
 
-function messages(){
-  const fn = first($('#xName').value) || '[name]';
-  $('#opener').textContent = `Hey ${fn}, what are you doing right now? Do you have a couple minutes?`;
-  const link = $('#fsLink').value || '[link]';
-  $('#follow').textContent = `${link}\n\nGo through the link, choose what's interesting to you, and send me a response. I'll be waiting.`;
-  document.querySelectorAll('.fn').forEach(e => e.textContent = fn);
+/* actions */
+$('#xName').addEventListener('input', render);
+$('#xPhone').addEventListener('input', render);
+$('#xPhone').addEventListener('blur', () => { $('#xPhone').value = pretty($('#xPhone').value); });
+document.querySelectorAll('#lang button').forEach(b => b.onclick = () => { lang = b.dataset.v; store.set('lang', lang); render(); });
+$('#send').onclick = () => {
+  const name = $('#xName').value, phone = $('#xPhone').value;
+  const url = linkFor(name, phone, lang);
+  remember(name, phone);
+  if(digits(phone).length < 7){ copy(message(name, url, lang), 'No number, so the message is copied'); }
+  else sms(phone, message(name, url, lang));
+  setTimeout(() => { $('#xName').value = ''; $('#xPhone').value = ''; render(); }, 600);
+};
+$('#copyMsg').onclick = () => { const n = $('#xName').value, p = $('#xPhone').value; remember(n, p); copy(message(n, linkFor(n, p, lang), lang), 'Message copied'); render(); };
+$('#copyLink').onclick = () => { const n = $('#xName').value, p = $('#xPhone').value; remember(n, p); copy(linkFor(n, p, lang), 'Link copied'); render(); };
+$('#peek').onclick = () => window.open(linkFor($('#xName').value, $('#xPhone').value, lang), '_blank');
+$('#copyOpener').onclick = () => copy($('#opener').textContent, 'Opener copied');
+
+function showQR(url, label){
+  $('#qrBox').innerHTML = '';
+  if(window.QRCode) new QRCode($('#qrBox'), { text:url, width:460, height:460, correctLevel:QRCode.CorrectLevel.L });
+  else $('#qrBox').textContent = 'QR needs an internet connection.';
+  $('#qrFor').textContent = label; $('#qrSheet').classList.add('on');
 }
-['xName'].forEach(id => $('#' + id).addEventListener('input', messages));
+$('#qrBtn').onclick = () => showQR(linkFor($('#xName').value, $('#xPhone').value, lang), 'Link for ' + first($('#xName').value));
+$('#qrGeneric').onclick = () => { if(!meReady()) return toast('Save your name and cell first'); showQR(genericLink(), 'Your everyday link'); };
+$('#copyGeneric').onclick = () => { if(!meReady()) return toast('Save your name and cell first'); copy(genericLink(), 'Everyday link copied'); };
 
-$('#gen').onclick = () => {
-  const p = partner();
-  if(!$('#xName').value.trim()){ toast('Add the prospect\'s name (first name is fine)'); $('#xName').focus(); return; }
-  if(!p.pp){ toast('Add the partner\'s cell so responses reach them'); $('#pCell').focus(); return; }
-  const data = { ...p, n:$('#xName').value.trim(), ph:digits($('#xPhone').value), l:$('#lang').value };
-  $('#fsLink').value = JOURNEY + '#' + encode(data);
-  $('#fsFirst').textContent = first(data.n);
-  $('#fsOut').classList.add('on');
-  messages();
+function openMe(){ $('#pName').value = me.p; $('#pCode').value = me.c; $('#pCell').value = pretty(me.pp); $('#meSheet').classList.add('on'); setTimeout(() => (me.p ? $('#xName') : $('#pName')).focus(), 50); }
+$('#openMe').onclick = openMe;
+$('#saveMe').onclick = () => {
+  const p = $('#pName').value.trim(), pp = digits($('#pCell').value);
+  if(!p || pp.length < 7){ toast('Add your name and cell'); return; }
+  me = { p, c:$('#pCode').value.trim().toUpperCase(), pp }; store.set('me', me);
+  $('#meSheet').classList.remove('on'); toast('Saved'); render(); $('#xName').focus();
 };
-$('#genG').onclick = () => {
-  const p = partner();
-  if(!p.pp){ toast('Add the partner\'s cell above first'); $('#pCell').focus(); return; }
-  $('#gLink').value = JOURNEY + '#' + encode({ ...p, l:$('#lang').value });
-  $('#gOut').classList.add('on');
-};
+document.querySelectorAll('.veil').forEach(v => v.addEventListener('click', e => { if(e.target === v || e.target.hasAttribute('data-close')) v.classList.remove('on'); }));
+document.addEventListener('keydown', e => { if(e.key === 'Escape') document.querySelectorAll('.veil.on').forEach(v => v.classList.remove('on')); });
 
-$('#fsText').onclick = () => {
-  const to = digits($('#xPhone').value);
-  const body = $('#follow').textContent;
-  const sep = /iPhone|iPad|Macintosh/.test(navigator.userAgent) ? '&' : '?';
-  location.href = `sms:${to}${sep}body=${encodeURIComponent(body)}`;
-};
-$('#fsPreview').onclick = () => window.open($('#fsLink').value, '_blank');
-$('#gPreview').onclick = () => window.open($('#gLink').value, '_blank');
+/* install as an app */
+let installEvt = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; $('#install').classList.add('on'); });
+$('#install').onclick = async () => { if(!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt = null; $('#install').classList.remove('on'); };
+if('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 
-document.addEventListener('click', e => {
-  const c = e.target.closest('[data-copy]'); if(c) copy($('#' + c.dataset.copy).value);
-  const t = e.target.closest('[data-copytext]'); if(t) copy($('#' + t.dataset.copytext).textContent);
-  const q = e.target.closest('[data-qr]');
-  if(q){
-    const url = $('#' + q.dataset.qr).value; if(!url) return;
-    $('#qrBox').innerHTML = '';
-    if(window.QRCode) new QRCode($('#qrBox'), { text:url, width:480, height:480, correctLevel:QRCode.CorrectLevel.L });
-    else $('#qrBox').textContent = 'QR needs an internet connection.';
-    $('#qrFor').textContent = q.dataset.qr === 'fsLink' ? 'Fast Start link for ' + (first($('#xName').value) || 'your prospect') : 'Your everyday link';
-    $('#qrModal').classList.add('on');
-  }
-});
-$('#qrClose').onclick = () => $('#qrModal').classList.remove('on');
-$('#qrModal').onclick = e => { if(e.target.id === 'qrModal') $('#qrModal').classList.remove('on'); };
-messages();
+/* motes */
+(function(){
+  const c = $('#motes'), x = c.getContext('2d'); let W, H, d, P = [];
+  const size = () => { d = Math.min(2, devicePixelRatio || 1); W = c.width = innerWidth * d; H = c.height = innerHeight * d; };
+  size(); addEventListener('resize', size);
+  for(let i = 0; i < 55; i++) P.push({x:Math.random(), y:Math.random(), r:Math.random()*1.5+.4, v:Math.random()*.0002+.00006, p:Math.random()*6.28, g:Math.random() < .45});
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tick = t => {
+    x.clearRect(0, 0, W, H);
+    for(const m of P){
+      if(!still){ m.y -= m.v; if(m.y < -.02){ m.y = 1.02; m.x = Math.random(); } }
+      const a = .2 + .4 * Math.abs(Math.sin(t/1500 + m.p));
+      x.beginPath(); x.arc(m.x*W, m.y*H, m.r*d, 0, 6.28);
+      x.fillStyle = m.g ? `rgba(255,200,120,${a})` : `rgba(120,230,225,${a})`; x.fill();
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+})();
+
+render();
+if(!meReady()) setTimeout(openMe, 500);
 </script>
 </body>
 </html>
