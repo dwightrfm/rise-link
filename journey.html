@@ -346,6 +346,9 @@ const TIMES = {
   sun: ['3:00 PM','5:00 PM','7:00 PM']
 };
 const DAYS_AHEAD = 7;
+/* Live booking: the Google Apps Script web app URL (ends in /exec). Blank = pick from TIMES and text the partner. */
+const BOOKING_URL = (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('booking'))
+  || 'https://script.google.com/macros/s/AKfycbyh9w5kb5VqXxSm4POlLcVfLZAZluyBak0yWVVjOPgc2DnpS7bIMRJC1MCYk0eLKSSqNA/exec';
 
 const LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Team RISE"><defs><clipPath id="rcX"><circle cx="100" cy="100" r="90"/></clipPath><radialGradient id="rcgX" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#3f8c9c"/><stop offset="1" stop-color="#25586a"/></radialGradient></defs><circle cx="100" cy="100" r="99" fill="#fff"/><circle cx="100" cy="100" r="91" fill="url(#rcgX)"/><g clip-path="url(#rcX)"><g fill="#fff"><polygon points="100,122 -49.6,110.5 -44.5,81.7"/><polygon points="100,122 -36.6,60.0 -22.0,34.7"/><polygon points="100,122 -7.2,17.1 15.3,-1.8"/><polygon points="100,122 35.2,-13.3 62.7,-23.3"/><polygon points="100,122 85.4,-27.3 114.6,-27.3"/><polygon points="100,122 137.3,-23.3 164.8,-13.3"/><polygon points="100,122 184.7,-1.8 207.2,17.1"/><polygon points="100,122 222.0,34.7 236.6,60.0"/><polygon points="100,122 244.5,81.7 249.6,110.5"/></g><path d="M-20 205 L100 110 L220 205Z" fill="#fff"/><path d="M62 140 q19 -9 38 -2 t38 -2" stroke="#33707f" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M-20 205 L100 110 L220 205" stroke="#33707f" stroke-width="3" fill="none"/><text x="100" y="181" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="800" fill="#33707f">RISE</text></g></svg>`;
 
@@ -406,6 +409,13 @@ en:{
   tyLine:'Thanks for your time!', copy:'Copy my response', copied:'Copied', again:'Start over',
   sayTy:(n,p)=>`Thank you, ${n}. ${p} will be in touch soon to confirm your time. We look forward to talking with you.`,
   msg:(o)=>`Hi ${o.partnerFirst}, it's ${o.name}. I went through the Team RISE link.\nPath: ${o.path}\nYes answers: ${o.yes} of ${o.total}\nBest time: ${o.when} (${o.mode})${o.email?`\nEmail: ${o.email}`:''}`,
+  whereBook:p=>`Pick a time and it goes straight on the calendar. <b>${p}</b> will see you there.`,
+  loadingTimes:'Finding open times...', noTimes:'No open times right now. Send your response and we will reach out.',
+  booking:'Booking...', taken:'That time was just taken. Pick another one.', bookErr:'Could not book. Please try again.',
+  lEmailBook:'Email (for your invite)', sendBook:'Book my time',
+  tyBooked:(w)=>`You're booked for <b>${w}</b>.`, tyInvite:'Your calendar invite is on its way to your email.',
+  joinZoom:'Save the Zoom link', tellPartner:p=>`Text ${p}`,
+  sayBooked:(n,p)=>`You are all set, ${n}. ${p} is looking forward to it. See you soon.`,
   disclaimer:'Team RISE is a team of independent financial professionals. This content is for educational purposes only. Nothing presented is professional advice, an offer, a solicitation, or a recommendation of any product, service, company, or business opportunity.'
 },
 es:{
@@ -464,6 +474,13 @@ es:{
   tyLine:'¡Gracias por tu tiempo!', copy:'Copiar mi respuesta', copied:'Copiado', again:'Empezar de nuevo',
   sayTy:(n,p)=>`Gracias, ${n}. ${p} se comunicará pronto para confirmar tu hora. Esperamos hablar contigo.`,
   msg:(o)=>`Hola ${o.partnerFirst}, soy ${o.name}. Vi el enlace de Team RISE.\nCamino: ${o.path}\nRespuestas sí: ${o.yes} de ${o.total}\nMejor hora: ${o.when} (${o.mode})${o.email?`\nCorreo: ${o.email}`:''}`,
+  whereBook:p=>`Elige una hora y queda en el calendario. <b>${p}</b> te verá allí.`,
+  loadingTimes:'Buscando horarios...', noTimes:'No hay horarios ahora. Envía tu respuesta y te contactaremos.',
+  booking:'Reservando...', taken:'Esa hora se acaba de ocupar. Elige otra.', bookErr:'No se pudo reservar. Intenta de nuevo.',
+  lEmailBook:'Correo (para tu invitación)', sendBook:'Reservar mi hora',
+  tyBooked:(w)=>`Tu charla quedó para el <b>${w}</b>.`, tyInvite:'Tu invitación llegará a tu correo.',
+  joinZoom:'Guardar el enlace de Zoom', tellPartner:p=>`Escribirle a ${p}`,
+  sayBooked:(n,p)=>`Todo listo, ${n}. ${p} espera hablar contigo. Hasta pronto.`,
   disclaimer:'Team RISE es un equipo de profesionales financieros independientes. Este contenido es solo para fines educativos. Nada de lo presentado constituye asesoría profesional, oferta, solicitud ni recomendación de ningún producto, servicio, compañía u oportunidad de negocio.'
 }};
 
@@ -746,69 +763,112 @@ function chipRow(el, items, key, onPick){
     st[key] = c.dataset.v; el.querySelectorAll('.chip').forEach(o => o.classList.toggle('on', o === c)); onPick && onPick();
   });
 }
-function upcomingDays(){
-  const out = [], d0 = new Date(); d0.setHours(0,0,0,0);
-  for(let k = 1; k <= DAYS_AHEAD; k++){ const d = new Date(d0); d.setDate(d0.getDate() + k); out.push(d); }
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const fmtTime = d => d.toLocaleTimeString(L.locale, {hour:'numeric', minute:'2-digit'});
+
+/* slots: live = { 'yyyy-mm-dd': [{label, iso}] } from the booking script, else built from TIMES */
+let live = null;
+function fallbackSlots(){
+  const out = {}, d0 = new Date(); d0.setHours(0,0,0,0);
+  for(let k = 1; k <= DAYS_AHEAD; k++){
+    const d = new Date(d0); d.setDate(d0.getDate() + k);
+    const w = d.getDay(), list = w === 6 ? TIMES.sat : w === 0 ? TIMES.sun : TIMES.weekday;
+    out[ymd(d)] = list.map(t => ({label:t, iso:''}));
+  }
   return out;
 }
-function timesFor(dateStr){
-  const d = new Date(dateStr + 'T12:00:00'); const w = d.getDay();
-  return w === 6 ? TIMES.sat : w === 0 ? TIMES.sun : TIMES.weekday;
+function slotMap(){ return live || fallbackSlots(); }
+async function loadLive(){
+  if(!BOOKING_URL) return null;
+  try{
+    const r = await fetch(BOOKING_URL + '?action=slots', {cache:'no-store'});
+    const j = await r.json(); if(!j.ok) throw 0;
+    const m = {};
+    j.slots.forEach(s => { const d = new Date(s); (m[ymd(d)] = m[ymd(d)] || []).push({label:fmtTime(d), iso:s}); });
+    return m;
+  }catch(e){ return null; }
 }
-const ymd = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 function whenText(){
   if(!st.day || !st.time) return '';
   const d = new Date(st.day + 'T12:00:00');
   return d.toLocaleDateString(L.locale, {weekday:'short', month:'short', day:'numeric'}) + ' · ' + st.time;
 }
+function renderDays(){
+  const m = slotMap(), keys = Object.keys(m).filter(k => m[k].length).sort();
+  if(!keys.length){ $('#cDay').innerHTML = `<span class="mono">${L.noTimes}</span>`; $('#cTime').innerHTML = ''; return; }
+  if(st.day && !m[st.day]) st.day = null;
+  const tmrw = new Date(); tmrw.setDate(tmrw.getDate() + 1);
+  $('#cDay').innerHTML = keys.map(k => { const d = new Date(k + 'T12:00:00'); return `<button class="chip day ${st.day === k ? 'on' : ''}" data-v="${k}"><small>${k === ymd(tmrw) ? L.tomorrow : k === ymd(new Date()) ? L.today : L.dayNames[d.getDay()]}</small><b>${d.getDate()}</b></button>`; }).join('');
+  $('#cDay').querySelectorAll('.chip').forEach(c => c.onclick = () => { st.day = c.dataset.v; $('#cDay').querySelectorAll('.chip').forEach(o => o.classList.toggle('on', o === c)); renderTimes(); });
+  renderTimes();
+}
 function renderTimes(){
   const el = $('#cTime');
   if(!st.day){ el.innerHTML = `<span class="mono">${L.lDay}</span>`; return; }
-  if(st.time && !timesFor(st.day).includes(st.time)) st.time = null;
-  chipRow(el, timesFor(st.day).map(t => [t, t]), 'time');
+  const list = slotMap()[st.day] || [];
+  if(st.time && !list.some(s => s.label === st.time)) st.time = null;
+  chipRow(el, list.map(s => [s.label, s.label]), 'time');
 }
 async function closing(id){
   st.interest = st.branch;
   $('#clEyebrow').textContent = L.clEyebrow; $('#clHead').innerHTML = L.clHead; $('#clSub').textContent = L.clSub;
-  $('#clWhere').innerHTML = L.where(partnerShown);
+  $('#clWhere').innerHTML = BOOKING_URL ? L.whereBook(partnerShown) : L.where(partnerShown);
   $('#lMode').textContent = L.lMode; $('#lInt').textContent = L.lInt; $('#lDay').textContent = L.lDay; $('#lTime').textContent = L.lTime;
-  $('#lName').textContent = L.lName; $('#lPhone').textContent = L.lPhone; $('#lEmail').textContent = L.lEmail;
+  $('#lName').textContent = L.lName; $('#lPhone').textContent = L.lPhone; $('#lEmail').textContent = BOOKING_URL ? L.lEmailBook : L.lEmail;
   $('#fName').placeholder = L.phName; $('#fPhone').placeholder = L.phPhone; $('#fEmail').placeholder = L.phEmail;
   if(!$('#fName').value) $('#fName').value = cfg.n || '';
   if(!$('#fPhone').value) $('#fPhone').value = cfg.ph || '';
-  $('#send').textContent = L.send; $('#err').textContent = '';
+  $('#send').textContent = BOOKING_URL ? L.sendBook : L.send; $('#send').disabled = false; $('#err').textContent = '';
   chipRow($('#cMode'), [['zoom', L.modes.zoom], ['person', L.modes.person]], 'mode');
   chipRow($('#cInt'), ['income','savings','both'].map(k => [k, L.ints[k]]), 'interest');
-  const days = upcomingDays();
-  $('#cDay').innerHTML = days.map((d, k) => `<button class="chip day ${st.day === ymd(d) ? 'on' : ''}" data-v="${ymd(d)}"><small>${k === 0 ? L.tomorrow : L.dayNames[d.getDay()]}</small><b>${d.getDate()}</b></button>`).join('');
-  $('#cDay').querySelectorAll('.chip').forEach(c => c.onclick = () => { st.day = c.dataset.v; $('#cDay').querySelectorAll('.chip').forEach(o => o.classList.toggle('on', o === c)); renderTimes(); });
-  renderTimes();
+  if(BOOKING_URL){ $('#cDay').innerHTML = `<span class="mono">${L.loadingTimes}</span>`; $('#cTime').innerHTML = ''; }
+  else renderDays();
   show('closing');
-  await wait(700); if(!alive(id)) return;
+  if(BOOKING_URL){ live = await loadLive(); if(!alive(id)) return; renderDays(); }
+  await wait(400); if(!alive(id)) return;
   say(L.sayCl);
 }
 
-function buildMsg(){
-  const yes = st.answers.filter(Boolean).length;
-  return L.msg({
+function summary(){
+  return {
     partnerFirst: first(partnerName) || 'there',
     name: $('#fName').value.trim(),
     path: L.paths[st.interest || st.branch][0],
-    yes, total: st.answers.length,
+    yes: st.answers.filter(Boolean).length, total: st.answers.length,
     when: whenText(), mode: L.modes[st.mode],
     email: $('#fEmail').value.trim()
-  }) + (cfg.c ? `\n(${cfg.c})` : '');
+  };
 }
-$('#send').onclick = () => {
+function buildMsg(){ return L.msg(summary()) + (cfg.c ? `\n(${cfg.c})` : ''); }
+function textPartner(){
+  const to = (cfg.pp || '').replace(/[^\d+]/g, ''); if(!to) return;
+  const sep = /iPhone|iPad|Macintosh/.test(navigator.userAgent) ? '&' : '?';
+  const a = document.createElement('a'); a.href = `sms:${to}${sep}body=${encodeURIComponent(st.msg || buildMsg())}`; a.click();
+}
+$('#send').onclick = async () => {
   const name = $('#fName').value.trim(), phone = $('#fPhone').value.trim();
   if(!st.day || !st.time || !name || phone.replace(/\D/g,'').length < 7){ $('#err').textContent = L.errMsg; return; }
-  hush();
-  const msg = buildMsg();
-  st.msg = msg;
-  const to = (cfg.pp || '').replace(/[^\d+]/g, '');
-  if(to){
-    const sep = /iPhone|iPad|Macintosh/.test(navigator.userAgent) ? '&' : '?';
-    const a = document.createElement('a'); a.href = `sms:${to}${sep}body=${encodeURIComponent(msg)}`; a.click();
+  hush(); $('#err').textContent = '';
+  st.msg = buildMsg(); st.booked = null;
+  const slot = (slotMap()[st.day] || []).find(s => s.label === st.time);
+  if(live && slot && slot.iso){
+    $('#send').disabled = true; $('#send').textContent = L.booking;
+    try{
+      const s = summary();
+      const r = await fetch(BOOKING_URL, {method:'POST', body:JSON.stringify({
+        start:slot.iso, name, phone, email:s.email, mode:st.mode, path:s.path, yes:s.yes, total:s.total,
+        partner:partnerName, code:cfg.c || '', lang:L.speechLang })});
+      const j = await r.json();
+      if(!j.ok){
+        $('#send').disabled = false; $('#send').textContent = L.sendBook;
+        if(j.code === 'slot_taken'){ $('#err').textContent = L.taken; live = await loadLive() || live; renderDays(); }
+        else $('#err').textContent = j.error || L.bookErr;
+        return;
+      }
+      st.booked = j;
+    }catch(e){ $('#send').disabled = false; $('#send').textContent = L.sendBook; $('#err').textContent = L.bookErr; return; }
+  } else {
+    textPartner();
   }
   thanks(runId);
 };
@@ -816,17 +876,25 @@ $('#send').onclick = () => {
 async function thanks(id){
   const pFirst = first(partnerName) || L.whereFallback;
   splitText($('#tyHead'), L.tyHead);
-  $('#tyWhen').innerHTML = L.tyWhen(pFirst, whenText());
-  $('#tyLine').textContent = L.tyLine;
-  $('#tyCopy').textContent = L.copy; $('#tyAgain').textContent = L.again;
+  const b = st.booked;
+  $('#tyWhen').innerHTML = b ? L.tyBooked(whenText()) : L.tyWhen(pFirst, whenText());
+  $('#tyLine').textContent = b ? ($('#fEmail').value.trim() ? L.tyInvite : L.tyLine) : L.tyLine;
+  if(b && b.zoom){ $('#tyCopy').textContent = L.joinZoom; $('#tyCopy').dataset.mode = 'zoom'; }
+  else if(b && cfg.pp){ $('#tyCopy').textContent = L.tellPartner(first(partnerName) || 'them'); $('#tyCopy').dataset.mode = 'text'; }
+  else { $('#tyCopy').textContent = L.copy; $('#tyCopy').dataset.mode = 'copy'; }
+  $('#tyAgain').textContent = L.again;
   show('thanks');
   await wait(1200); if(!alive(id)) return;
-  say(L.sayTy(first($('#fName').value) || prospectFirst || L.friend, pFirst));
+  const n = first($('#fName').value) || prospectFirst || L.friend;
+  say(b ? L.sayBooked(n, pFirst) : L.sayTy(n, pFirst));
 }
 $('#tyCopy').onclick = async () => {
+  const m = $('#tyCopy').dataset.mode;
+  if(m === 'zoom' && st.booked && st.booked.zoom){ window.open(st.booked.zoom, '_blank'); return; }
+  if(m === 'text'){ textPartner(); return; }
   try{ await navigator.clipboard.writeText(st.msg || buildMsg()); $('#tyCopy').textContent = L.copied; setTimeout(() => $('#tyCopy').textContent = L.copy, 1800); }catch(e){}
 };
-$('#tyAgain').onclick = () => { hush(); runId++; Object.assign(st, {branch:null, answers:[], mode:'zoom', interest:null, day:null, time:null}); branch(runId); };
+$('#tyAgain').onclick = () => { hush(); runId++; Object.assign(st, {branch:null, answers:[], mode:'zoom', interest:null, day:null, time:null, booked:null}); branch(runId); };
 
 /* ---------- start ---------- */
 let begun = false;
