@@ -171,6 +171,11 @@ em,.em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing
 .field:focus{border-color:var(--acc)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .err{color:#ff9b8a;font-size:14px;min-height:20px;margin:8px 0 0}
+[hidden]{display:none!important}
+.embed{padding:10px;overflow:hidden}
+.embed iframe{display:block;width:100%;height:min(680px,72vh);border:0;border-radius:16px;background:#fff}
+.embed-actions{padding:14px 6px 4px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.embed-actions small{color:var(--dim);font-size:13px}
 .where{margin-top:20px;padding:18px 20px;font-size:15px;color:var(--mut);line-height:1.5}
 .where b{color:var(--ink)}
 
@@ -314,6 +319,10 @@ body.started #brandtag{display:flex}
         <button class="btn" id="send" style="width:100%"></button>
         <p class="err" id="err"></p>
       </div>
+      <div class="embed glass a" id="bookEmbed" style="--d:.4s" hidden>
+        <iframe id="bookFrame" title="Pick a time"></iframe>
+        <div class="embed-actions"><button class="btn" id="doneBook"></button><small id="doneHint"></small></div>
+      </div>
     </div>
     <p class="foot" data-k="disclaimer"></p>
   </div>
@@ -347,8 +356,9 @@ const TIMES = {
 };
 const DAYS_AHEAD = 7;
 /* Live booking: the Google Apps Script web app URL (ends in /exec). Blank = pick from TIMES and text the partner. */
-const BOOKING_URL = (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('booking'))
-  || 'https://script.google.com/macros/s/AKfycbyh9w5kb5VqXxSm4POlLcVfLZAZluyBak0yWVVjOPgc2DnpS7bIMRJC1MCYk0eLKSSqNA/exec';
+const BOOKING_URL = (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('booking')) || '';
+/* Google booking page ("Dwight's Appointments"), shown inside the closing scene. Its Zoom is the Team RISE virtual office. */
+const BOOKING_PAGE = BOOKING_URL ? '' : 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pxtieLq2QfkNKyiC_5ZwWt352jxmTHSk1narSebHl5IDbcqC3RGdK4JwquGaxwjMAF5HjSdJg?gv=true';
 
 const LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Team RISE"><defs><clipPath id="rcX"><circle cx="100" cy="100" r="90"/></clipPath><radialGradient id="rcgX" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#3f8c9c"/><stop offset="1" stop-color="#25586a"/></radialGradient></defs><circle cx="100" cy="100" r="99" fill="#fff"/><circle cx="100" cy="100" r="91" fill="url(#rcgX)"/><g clip-path="url(#rcX)"><g fill="#fff"><polygon points="100,122 -49.6,110.5 -44.5,81.7"/><polygon points="100,122 -36.6,60.0 -22.0,34.7"/><polygon points="100,122 -7.2,17.1 15.3,-1.8"/><polygon points="100,122 35.2,-13.3 62.7,-23.3"/><polygon points="100,122 85.4,-27.3 114.6,-27.3"/><polygon points="100,122 137.3,-23.3 164.8,-13.3"/><polygon points="100,122 184.7,-1.8 207.2,17.1"/><polygon points="100,122 222.0,34.7 236.6,60.0"/><polygon points="100,122 244.5,81.7 249.6,110.5"/></g><path d="M-20 205 L100 110 L220 205Z" fill="#fff"/><path d="M62 140 q19 -9 38 -2 t38 -2" stroke="#33707f" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M-20 205 L100 110 L220 205" stroke="#33707f" stroke-width="3" fill="none"/><text x="100" y="181" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="800" fill="#33707f">RISE</text></g></svg>`;
 
@@ -410,6 +420,10 @@ en:{
   sayTy:(n,p)=>`Thank you, ${n}. ${p} will be in touch soon to confirm your time. We look forward to talking with you.`,
   msg:(o)=>`Hi ${o.partnerFirst}, it's ${o.name}. I went through the Team RISE link.\nPath: ${o.path}\nYes answers: ${o.yes} of ${o.total}\nBest time: ${o.when} (${o.mode})${o.email?`\nEmail: ${o.email}`:''}`,
   whereBook:p=>`Pick a time and it goes straight on the calendar. <b>${p}</b> will see you there.`,
+  embedWhere:p=>`Pick a day and time on the calendar. The Zoom link comes in your invite. <b>${p}</b> will see you there.`,
+  doneBook:'I booked my time', doneHint:'Tap this after you confirm on the calendar.', onCal:'booked on the calendar',
+  tyEmbedWhen:'You\'re on the calendar.', tyEmbed:'Your invite with the Zoom link is on its way to your email.',
+  sayClEmbed:'Thank you for your answers. Now pick the day and time that works best for you on the calendar. Your invite with the Zoom link will come by email.',
   loadingTimes:'Finding open times...', noTimes:'No open times right now. Send your response and we will reach out.',
   booking:'Booking...', taken:'That time was just taken. Pick another one.', bookErr:'Could not book. Please try again.',
   lEmailBook:'Email (for your invite)', sendBook:'Book my time',
@@ -475,6 +489,10 @@ es:{
   sayTy:(n,p)=>`Gracias, ${n}. ${p} se comunicará pronto para confirmar tu hora. Esperamos hablar contigo.`,
   msg:(o)=>`Hola ${o.partnerFirst}, soy ${o.name}. Vi el enlace de Team RISE.\nCamino: ${o.path}\nRespuestas sí: ${o.yes} de ${o.total}\nMejor hora: ${o.when} (${o.mode})${o.email?`\nCorreo: ${o.email}`:''}`,
   whereBook:p=>`Elige una hora y queda en el calendario. <b>${p}</b> te verá allí.`,
+  embedWhere:p=>`Elige un día y una hora en el calendario. El enlace de Zoom llega en tu invitación. <b>${p}</b> te verá allí.`,
+  doneBook:'Ya reservé mi hora', doneHint:'Toca aquí después de confirmar en el calendario.', onCal:'reservado en el calendario',
+  tyEmbedWhen:'Ya estás en el calendario.', tyEmbed:'Tu invitación con el enlace de Zoom llegará a tu correo.',
+  sayClEmbed:'Gracias por tus respuestas. Ahora elige en el calendario el día y la hora que mejor te funcionen. Tu invitación con el enlace de Zoom llegará por correo.',
   loadingTimes:'Buscando horarios...', noTimes:'No hay horarios ahora. Envía tu respuesta y te contactaremos.',
   booking:'Reservando...', taken:'Esa hora se acaba de ocupar. Elige otra.', bookErr:'No se pudo reservar. Intenta de nuevo.',
   lEmailBook:'Correo (para tu invitación)', sendBook:'Reservar mi hora',
@@ -812,6 +830,16 @@ function renderTimes(){
 async function closing(id){
   st.interest = st.branch;
   $('#clEyebrow').textContent = L.clEyebrow; $('#clHead').innerHTML = L.clHead; $('#clSub').textContent = L.clSub;
+  if(BOOKING_PAGE){
+    $('.form').hidden = true; $('#bookEmbed').hidden = false;
+    if(!$('#bookFrame').getAttribute('src')) $('#bookFrame').src = BOOKING_PAGE;
+    $('#doneBook').textContent = L.doneBook; $('#doneHint').textContent = L.doneHint;
+    $('#clWhere').innerHTML = L.embedWhere(partnerShown);
+    show('closing');
+    await wait(700); if(!alive(id)) return;
+    say(L.sayClEmbed);
+    return;
+  }
   $('#clWhere').innerHTML = BOOKING_URL ? L.whereBook(partnerShown) : L.where(partnerShown);
   $('#lMode').textContent = L.lMode; $('#lInt').textContent = L.lInt; $('#lDay').textContent = L.lDay; $('#lTime').textContent = L.lTime;
   $('#lName').textContent = L.lName; $('#lPhone').textContent = L.lPhone; $('#lEmail').textContent = BOOKING_URL ? L.lEmailBook : L.lEmail;
@@ -835,7 +863,7 @@ function summary(){
     name: $('#fName').value.trim(),
     path: L.paths[st.interest || st.branch][0],
     yes: st.answers.filter(Boolean).length, total: st.answers.length,
-    when: whenText(), mode: L.modes[st.mode],
+    when: whenText() || L.onCal, mode: L.modes[st.mode],
     email: $('#fEmail').value.trim()
   };
 }
@@ -845,6 +873,7 @@ function textPartner(){
   const sep = /iPhone|iPad|Macintosh/.test(navigator.userAgent) ? '&' : '?';
   const a = document.createElement('a'); a.href = `sms:${to}${sep}body=${encodeURIComponent(st.msg || buildMsg())}`; a.click();
 }
+$('#doneBook').onclick = () => { hush(); st.embedDone = true; st.msg = buildMsg(); thanks(runId); };
 $('#send').onclick = async () => {
   const name = $('#fName').value.trim(), phone = $('#fPhone').value.trim();
   if(!st.day || !st.time || !name || phone.replace(/\D/g,'').length < 7){ $('#err').textContent = L.errMsg; return; }
@@ -877,16 +906,17 @@ async function thanks(id){
   const pFirst = first(partnerName) || L.whereFallback;
   splitText($('#tyHead'), L.tyHead);
   const b = st.booked;
-  $('#tyWhen').innerHTML = b ? L.tyBooked(whenText()) : L.tyWhen(pFirst, whenText());
-  $('#tyLine').textContent = b ? ($('#fEmail').value.trim() ? L.tyInvite : L.tyLine) : L.tyLine;
-  if(b && b.zoom){ $('#tyCopy').textContent = L.joinZoom; $('#tyCopy').dataset.mode = 'zoom'; }
+  $('#tyWhen').innerHTML = st.embedDone ? L.tyEmbedWhen : b ? L.tyBooked(whenText()) : L.tyWhen(pFirst, whenText());
+  $('#tyLine').textContent = st.embedDone ? L.tyEmbed : b ? ($('#fEmail').value.trim() ? L.tyInvite : L.tyLine) : L.tyLine;
+  if(st.embedDone && cfg.pp){ $('#tyCopy').textContent = L.tellPartner(first(partnerName) || 'them'); $('#tyCopy').dataset.mode = 'text'; }
+  else if(b && b.zoom){ $('#tyCopy').textContent = L.joinZoom; $('#tyCopy').dataset.mode = 'zoom'; }
   else if(b && cfg.pp){ $('#tyCopy').textContent = L.tellPartner(first(partnerName) || 'them'); $('#tyCopy').dataset.mode = 'text'; }
   else { $('#tyCopy').textContent = L.copy; $('#tyCopy').dataset.mode = 'copy'; }
   $('#tyAgain').textContent = L.again;
   show('thanks');
   await wait(1200); if(!alive(id)) return;
   const n = first($('#fName').value) || prospectFirst || L.friend;
-  say(b ? L.sayBooked(n, pFirst) : L.sayTy(n, pFirst));
+  say(b || st.embedDone ? L.sayBooked(n, pFirst) : L.sayTy(n, pFirst));
 }
 $('#tyCopy').onclick = async () => {
   const m = $('#tyCopy').dataset.mode;
@@ -894,7 +924,7 @@ $('#tyCopy').onclick = async () => {
   if(m === 'text'){ textPartner(); return; }
   try{ await navigator.clipboard.writeText(st.msg || buildMsg()); $('#tyCopy').textContent = L.copied; setTimeout(() => $('#tyCopy').textContent = L.copy, 1800); }catch(e){}
 };
-$('#tyAgain').onclick = () => { hush(); runId++; Object.assign(st, {branch:null, answers:[], mode:'zoom', interest:null, day:null, time:null, booked:null}); branch(runId); };
+$('#tyAgain').onclick = () => { hush(); runId++; Object.assign(st, {branch:null, answers:[], mode:'zoom', interest:null, day:null, time:null, booked:null, embedDone:false}); branch(runId); };
 
 /* ---------- start ---------- */
 let begun = false;
