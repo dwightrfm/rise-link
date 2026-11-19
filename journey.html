@@ -589,10 +589,10 @@ const clips = (window.RISE_AUDIO && window.RISE_AUDIO[L.speechLang]) || {};
 function playClip(file, my){
   return new Promise(res => {
     let done = false;
-    const fin = ok => { if(done) return; done = true; vo.onended = vo.onerror = null; clearTimeout(t); res(ok && my === sayToken); };
+    const fin = ok => { if(done) return; done = true; vo.onended = vo.onerror = null; clearTimeout(t); if(my === sayToken) setDuck(false); res(ok && my === sayToken); };
     const t = setTimeout(() => fin(true), 45000);
     vo.onended = () => fin(true); vo.onerror = () => fin(true);
-    vo.src = file; vo.muted = muted; vo.currentTime = 0;
+    setDuck(true); vo.src = file; vo.muted = muted; vo.currentTime = 0;
     const p = vo.play(); if(p && p.catch) p.catch(() => setTimeout(() => fin(true), 2500));
     const watch = setInterval(() => { if(my !== sayToken){ clearInterval(watch); fin(false); } if(done) clearInterval(watch); }, 120);
   });
@@ -623,31 +623,38 @@ function say(text){
     next();
   });
 }
-function hush(){ sayToken++; window.speechSynthesis?.cancel(); try{ vo.pause(); }catch(e){} }
+function hush(){ sayToken++; window.speechSynthesis?.cancel(); try{ vo.pause(); }catch(e){} setDuck(false); }
 
-/* ---------- ambient pad (Web Audio, no files) ---------- */
-let ac = null, padGain = null;
+/* ---------- music bed: "Close To You" by leberch (Pixabay Content License) ---------- */
+const MUSIC_SRC = 'audio/music/close-to-you.mp3', MUSIC_VOL = .32, MUSIC_DUCK = .13, XFADE = 4;
+let ac = null, musicGain = null, musicBuf = null, speaking = false;
+const musicLevel = () => muted ? 0 : speaking ? MUSIC_DUCK : MUSIC_VOL;
+function setDuck(on){ speaking = on; if(musicGain && ac) musicGain.gain.setTargetAtTime(musicLevel(), ac.currentTime, .35); }
+function loopFrom(when){
+  if(!musicBuf || !ac) return;
+  const src = ac.createBufferSource(), g = ac.createGain(), T = musicBuf.duration;
+  src.buffer = musicBuf; src.connect(g).connect(musicGain);
+  g.gain.setValueAtTime(0, when); g.gain.linearRampToValueAtTime(1, when + XFADE);
+  g.gain.setValueAtTime(1, when + T - XFADE); g.gain.linearRampToValueAtTime(0, when + T);
+  src.start(when); src.stop(when + T + .1);
+  const next = when + T - XFADE;
+  setTimeout(() => loopFrom(next), Math.max(0, (next - ac.currentTime - 3) * 1000));
+}
 function startPad(){
   try{
     ac = new (window.AudioContext || window.webkitAudioContext)();
-    padGain = ac.createGain(); padGain.gain.value = 0;
-    const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 700; lp.Q.value = .5;
-    const lfo = ac.createOscillator(); lfo.frequency.value = .05; const lfoG = ac.createGain(); lfoG.gain.value = 260; lfo.connect(lfoG).connect(lp.frequency); lfo.start();
-    lp.connect(padGain).connect(ac.destination);
-    [110, 164.81, 220, 277.18, 329.63].forEach((f, k) => {
-      [-4, 4].forEach(dt => {
-        const o = ac.createOscillator(); o.type = k < 2 ? 'sine' : 'triangle'; o.frequency.value = f; o.detune.value = dt;
-        const g = ac.createGain(); g.gain.value = k < 2 ? .5 : .16; o.connect(g).connect(lp); o.start();
-      });
-    });
-    padGain.gain.linearRampToValueAtTime(muted ? 0 : .05, ac.currentTime + 4);
+    musicGain = ac.createGain(); musicGain.gain.value = 0; musicGain.connect(ac.destination);
+    fetch(MUSIC_SRC).then(r => r.arrayBuffer()).then(b => new Promise((ok, no) => ac.decodeAudioData(b, ok, no))).then(buf => {
+      musicBuf = buf; loopFrom(ac.currentTime + .05);
+      musicGain.gain.setTargetAtTime(musicLevel(), ac.currentTime, .8);
+    }).catch(() => {});
   }catch(e){}
 }
 function setMuted(m){
   muted = m;
   if(m) window.speechSynthesis?.cancel();
   try{ vo.muted = m; }catch(e){}
-  if(padGain && ac) padGain.gain.linearRampToValueAtTime(m ? 0 : .05, ac.currentTime + .6);
+  if(musicGain && ac) musicGain.gain.setTargetAtTime(musicLevel(), ac.currentTime, .2);
   $('#mute').innerHTML = m
     ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6M16 9l6 6"/></svg>'
     : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>';
