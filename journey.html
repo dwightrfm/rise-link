@@ -203,6 +203,30 @@ body.started #brandtag{display:flex}
   .yn button{padding:20px 26px}
   .badge{gap:8px;padding:9px 14px;font-size:13px}
 }
+/* Maria's story */
+.sent{margin:8px 0 0;font-size:15px;color:var(--dim)}
+#story .wrap{padding-top:clamp(64px,8vh,96px)}
+.board{width:100%;aspect-ratio:360/280;border-radius:24px;overflow:hidden;border:1px solid var(--line);
+  background:radial-gradient(120% 90% at 50% 0%,#12304a,#0a1726 72%);box-shadow:0 24px 70px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.08)}
+.board svg{display:block;width:100%;height:100%;transition:opacity .35s}
+.board svg.wipe{opacity:0}
+.board .el{transition:opacity 1.4s ease}
+.board .faded{opacity:.16}.board .gone{opacity:0}
+.board .ln{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1;opacity:0;animation:stDraw var(--t,.55s) ease-out var(--d,0s) forwards}
+.board .fl{opacity:0;animation:stFade .3s ease var(--d,0s) forwards}
+.board .tx{opacity:0;font-family:var(--sans);animation:stWrite var(--t,1s) ease-out var(--d,0s) forwards}
+.board .glow{animation:stGlow 1.6s ease-in-out infinite alternate}
+@keyframes stDraw{0%{stroke-dashoffset:1;opacity:0}2%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
+@keyframes stFade{to{opacity:1}}
+@keyframes stWrite{0%{opacity:0;clip-path:inset(-30% 100% -30% 0)}8%{opacity:1}100%{opacity:1;clip-path:inset(-30% 0 -30% 0)}}
+@keyframes stGlow{from{filter:drop-shadow(0 0 0 rgba(255,196,107,0))}to{filter:drop-shadow(0 0 6px rgba(255,196,107,.9))}}
+.cap{margin:16px auto 0;max-width:520px;min-height:7em;font-size:clamp(17px,4.6vw,21px);line-height:1.45;font-weight:500;color:var(--ink);text-wrap:pretty}
+#stCont{margin-top:10px}#stCont:not(.on){pointer-events:none}
+#skip{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:30;display:none;background:none;border:0;padding:10px;font-size:14px;color:var(--dim);text-decoration:underline;text-underline-offset:3px}
+body.storying #skip{display:block}
+@media (prefers-reduced-motion:reduce){
+  .board .ln,.board .fl,.board .tx{animation-duration:.01s!important}
+}
 @media (prefers-reduced-motion:reduce){
   .scene,.scene.active,.scene.leaving{transition:opacity .4s!important;transform:none!important;filter:none!important}
   .active .a,.active .split .ch,.qtext .wd{animation:none!important;opacity:1!important}
@@ -222,6 +246,8 @@ body.started #brandtag{display:flex}
   <div class="wrap">
     <div class="a halo" style="--k:bloom;--t:1.8s"><span class="logo-slot"></span></div>
     <h1 class="mega split" data-k="splashHead" style="--d:.5s;margin-top:28px"></h1>
+    <p class="lede a" id="forYou" style="--d:1s;margin-top:14px"></p>
+    <p class="sent a" id="sentBy" style="--d:1.15s"></p>
     <div class="a" style="--d:1.4s"><span class="tapline glass pulse"><span class="dot"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span id="tapText"></span></span></div>
     <div class="vol a" style="--d:1.7s"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg><span id="volText"></span></div>
   </div>
@@ -244,6 +270,16 @@ body.started #brandtag{display:flex}
     <div class="items" id="listItems"></div>
   </div>
 </section>
+
+<!-- 1b Maria's story: a whiteboard drawing, drawn line by line -->
+<section class="scene" id="story">
+  <div class="wrap" style="max-width:560px">
+    <div class="board"><svg id="boardSvg" viewBox="0 0 360 280" aria-hidden="true"></svg></div>
+    <p class="cap" id="cap" aria-live="polite"></p>
+    <div class="reveal" id="stCont"><button class="btn" id="stGo"><span id="stGoT"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+  </div>
+</section>
+<button id="skip" type="button"></button>
 
 <!-- 3 welcome -->
 <section class="scene" id="welcome">
@@ -387,6 +423,17 @@ en:{
     ['An uncertain future','That leaves the future feeling uncertain.'],
     ['Time slipping away','And every year we wait is a year our money is not growing.']],
   sayOut:'We believe every family deserves a plan. So we made this just for you.',
+  hi:n=>`Hi, <em>${n}</em>.`, forYou:'This is for you.', sentBy:p=>`Sent with care by ${p}`,
+  story:[
+    "This is Maria. It's 3:15 on a Tuesday, and she's asking permission to leave work early. Again.",
+    "Maria has a good job. She likes her job. The job just owns her clock. Every hour of her week is already sold before the week starts.",
+    "So the school play gets the empty seat. Dinner starts without her. And the game: she catches the last two minutes, in her work clothes.",
+    "Now the question nobody wants to sit with. If those checks stopped for three months… would her family be okay? For most families Maria knows, the honest answer is no.",
+    "It doesn't have to be a new job. It can start as one small stream of income that doesn't need her hours, one that grows while she's where she actually wants to be.",
+    "Same job. Same Maria. Just a bigger life around it. That's what we help families build, one step at a time.",
+    "If any of this felt familiar, it's worth 15 minutes to see what it could look like for your family. Pick a time below. No pressure. Just a look."],
+  meet:n=>`${n}, meet Maria.`, meetNo:'Meet Maria.', goodJob:'GOOD JOB', month:i=>`Month ${i}`,
+  bigger:'Same job. Bigger life.', worth:'Worth 15 minutes?', pick:'Pick a time ↓', skip:'Skip intro',
   welcome:'Welcome!', friend:'Friend', sayWelcome:n=>`Welcome! We are so glad you are here.`,
   chHead:'Most families today are working hard to...',
   pillars:['Grow their income','Grow their savings'],
@@ -456,6 +503,17 @@ es:{
     ['Un futuro incierto','Eso deja el futuro sintiéndose incierto.'],
     ['El tiempo se va','Y cada año que esperamos es un año en que nuestro dinero no crece.']],
   sayOut:'Creemos que cada familia merece un plan. Por eso hicimos esto para ti.',
+  hi:n=>`Hola, <em>${n}</em>.`, forYou:'Esto es para ti.', sentBy:p=>`Enviado con cariño por ${p}`,
+  story:[
+    "Esta es María. Son las 3:15 de un martes, y está pidiendo permiso para salir temprano del trabajo. Otra vez.",
+    "María tiene un buen trabajo. Le gusta su trabajo. Pero el trabajo es dueño de su reloj. Cada hora de su semana ya está vendida antes de que la semana empiece.",
+    "Así que en la obra de la escuela queda un asiento vacío. La cena empieza sin ella. Y el partido: alcanza a ver los últimos dos minutos, con la ropa del trabajo.",
+    "Ahora, la pregunta que nadie quiere enfrentar. Si esos cheques se detuvieran por tres meses… ¿estaría bien su familia? Para la mayoría de las familias que María conoce, la respuesta honesta es no.",
+    "No tiene que ser un nuevo trabajo. Puede empezar como una pequeña fuente de ingresos que no necesita sus horas, una que crece mientras ella está donde de verdad quiere estar.",
+    "El mismo trabajo. La misma María. Solo una vida más grande a su alrededor. Eso es lo que ayudamos a las familias a construir, paso a paso.",
+    "Si algo de esto te sonó familiar, vale la pena tomar 15 minutos para ver cómo podría verse para tu familia. Elige una hora abajo. Sin presión. Solo un vistazo."],
+  meet:n=>`${n}, te presento a María.`, meetNo:'Te presento a María.', goodJob:'BUEN TRABAJO', month:i=>`Mes ${i}`,
+  bigger:'Mismo trabajo. Vida más grande.', worth:'¿Valen 15 minutos?', pick:'Elige una hora ↓', skip:'Saltar intro',
   welcome:'¡Bienvenido!', friend:'Amigo', sayWelcome:n=>`¡Bienvenido! Qué gusto tenerte aquí.`,
   chHead:'Hoy la mayoría de las familias trabaja duro para...',
   pillars:['Aumentar sus ingresos','Aumentar sus ahorros'],
@@ -547,7 +605,7 @@ function splitText(el, html){
 }
 
 /* ---------- sky progress ---------- */
-const ORDER = ['splash','logo','list','welcome','challenge','branch','question','closing','thanks'];
+const ORDER = ['splash','story','logo','list','welcome','challenge','branch','question','closing','thanks'];
 function setSky(id, extra=0){
   const p = Math.min(1, (ORDER.indexOf(id) + extra) / (ORDER.length - 1));
   document.body.style.setProperty('--r', p.toFixed(3));
@@ -689,7 +747,11 @@ let logoN = 0;
 const logo = () => { logoN++; return LOGO.replace(/rcgX/g, 'rcg' + logoN).replace(/rcX/g, 'rc' + logoN); };
 document.querySelectorAll('.logo-slot').forEach(s => { s.innerHTML = logo(); s.firstChild.classList.add('logo'); if(s.classList.contains('big')) s.firstChild.classList.add('logo-big'); });
 $('#brandtag').innerHTML = logo() + '<span>Team RISE</span>';
-splitText($('[data-k="splashHead"]'), L.splashHead);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+splitText($('[data-k="splashHead"]'), prospectFirst ? L.hi(esc(prospectFirst)) : L.splashHead);
+$('#forYou').textContent = prospectFirst ? L.forYou : '';
+$('#sentBy').textContent = partnerName ? L.sentBy(partnerName) : '';
+$('#skip').textContent = L.skip; $('#stGoT').textContent = L.cont;
 $('#tapText').textContent = L.tap; $('#volText').textContent = L.vol;
 document.querySelectorAll('[data-k="disclaimer"]').forEach(e => e.textContent = L.disclaimer);
 document.title = L.brand;
@@ -699,7 +761,154 @@ setMuted(false);
 const st = { branch:null, answers:[], mode:'zoom', interest:null, day:null, time:null };
 
 /* ---------- flow ---------- */
-async function intro(id){
+/* ---------- Maria's story: a whiteboard drawing, about 60 seconds ---------- */
+const CHALK = '#f4f8f9', GOLD = '#ffc46b', TEAL = '#46d9d2', RED = '#ff7b6b', LEAF = '#7bd88f', BOARD = '#0d2235';
+const circ = (cx, cy, r) => `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${2*r} 0a${r} ${r} 0 1 0 ${-2*r} 0`;
+const oval = (cx, cy, rx, ry) => `M${cx - rx} ${cy}a${rx} ${ry} 0 1 0 ${2*rx} 0a${rx} ${ry} 0 1 0 ${-2*rx} 0`;
+const box = (x, y, w, h) => `M${x} ${y}h${w}v${h}h${-w}Z`;
+/* one drawing = strokes drawn one after another. A stroke is a path string, or {d, c color, w width, t seconds},
+   {fill, d} for a quick fill, or {txt, x, y, size, c, serif} for words that write themselves. */
+function draw(strokes, o = {}){
+  let d = o.d0 || 0;
+  return `<g class="el ${o.cls || ''}">` + strokes.map(s => {
+    if(typeof s === 'string') s = {d:s};
+    const t = s.t || o.t || .5, at = d.toFixed(2);
+    if(s.fill) return `<path class="fl" d="${s.d}" fill="${s.fill}" style="--d:${at}s"/>`;
+    d += t * .7 + (o.gap ?? .03);
+    if(s.txt != null) return `<text class="tx" x="${s.x}" y="${s.y}" text-anchor="middle" font-size="${s.size || 20}" fill="${s.c || CHALK}"`
+      + (s.serif ? ` style="--d:${at}s;--t:${t}s;font-family:var(--serif);font-style:italic;font-weight:400"` : ` font-weight="700" style="--d:${at}s;--t:${t}s"`) + `>${s.txt}</text>`;
+    return `<path class="ln" pathLength="1" d="${s.d}" stroke="${s.c || CHALK}" stroke-width="${s.w || 2.6}" style="--d:${at}s;--t:${t}s"/>`;
+  }).join('') + `</g>`;
+}
+/* stick figure. x = center, y = feet. o: s scale, flip, hair 'pony'|'kid', dress, badge, phone, bag, up, sit, smile (true, false = frown, null = none) */
+function fig(x, y, o = {}){
+  const s = o.s || 1, f = o.flip ? -1 : 1;
+  const X = dx => +(x + dx * s * f).toFixed(1), Y = dy => +(y + dy * s).toFixed(1), q = v => +(v * s).toFixed(1);
+  const out = [circ(X(0), Y(-99), q(11))];
+  if(o.hair === 'pony') out.push(`M${X(-11)} ${Y(-101)}Q${X(-3)} ${Y(-116)} ${X(11)} ${Y(-103)}q${q(6)*f} ${q(4)} ${q(3)*f} ${q(15)}`);
+  if(o.hair === 'kid') out.push(`M${X(-10)} ${Y(-104)}q${q(10)*f} ${q(-12)} ${q(20)*f} 0`);
+  out.push({d:`M${X(-4)} ${Y(-101)}h.1M${X(4)} ${Y(-101)}h.1`, w:q(3.2), t:.15});
+  if(o.smile !== null) out.push({d:o.smile === false ? `M${X(-4)} ${Y(-93)}q${q(4)*f} ${q(-4)} ${q(8)*f} 0` : `M${X(-4.5)} ${Y(-95)}q${q(4.5)*f} ${q(5)} ${q(9)*f} 0`, w:q(2), t:.2});
+  if(o.sit){
+    out.push(`M${X(0)} ${Y(-88)}L${X(0)} ${Y(-46)}L${X(18)} ${Y(-46)}L${X(19)} ${Y(-1)}`);
+    out.push(o.up ? `M${X(-14)} ${Y(-114)}L${X(0)} ${Y(-80)}L${X(14)} ${Y(-114)}` : `M${X(0)} ${Y(-80)}L${X(14)} ${Y(-64)}L${X(28)} ${Y(-66)}`);
+  } else {
+    if(o.dress) out.push(`M${X(0)} ${Y(-88)}L${X(0)} ${Y(-80)}M${X(-2)} ${Y(-80)}L${X(-14)} ${Y(-44)}L${X(14)} ${Y(-44)}L${X(2)} ${Y(-80)}Z`, `M${X(-6)} ${Y(-44)}L${X(-8)} ${Y(-1)}M${X(6)} ${Y(-44)}L${X(8)} ${Y(-1)}`);
+    else out.push(`M${X(0)} ${Y(-88)}L${X(0)} ${Y(-48)}`, `M${X(0)} ${Y(-48)}L${X(-9)} ${Y(-1)}M${X(0)} ${Y(-48)}L${X(9)} ${Y(-1)}`);
+    out.push(o.up ? `M${X(-16)} ${Y(-114)}L${X(0)} ${Y(-82)}L${X(16)} ${Y(-114)}`
+      : o.phone ? `M${X(0)} ${Y(-82)}L${X(-15)} ${Y(-58)}M${X(0)} ${Y(-82)}L${X(16)} ${Y(-88)}L${X(10)} ${Y(-100)}`
+      : `M${X(-15)} ${Y(-58)}L${X(0)} ${Y(-82)}L${X(15)} ${Y(-58)}`);
+  }
+  if(o.phone) out.push({d:box(Math.min(X(8), X(14)), Y(-108), q(6), q(12)), c:TEAL, w:2});
+  if(o.badge) out.push({d:`M${X(-5)} ${Y(-88)}L${X(0)} ${Y(-74)}L${X(5)} ${Y(-88)}`, c:TEAL, w:1.6, t:.25}, {d:box(X(0) - q(4), Y(-74), q(8), q(10)), c:TEAL, w:2, t:.25});
+  if(o.bag) out.push({d:`${box(Math.min(X(-26), X(-14)), Y(-60), q(12), q(14))}M${X(-23)} ${Y(-60)}q${q(3)*f} ${q(-6)} ${q(6)*f} 0`, c:GOLD, w:2});
+  return out;
+}
+const chair = (x, y, flip) => { const f = flip ? -1 : 1, X = dx => x + dx * f;
+  return [`M${X(-6)} ${y - 46}H${X(20)}`, `M${X(-6)} ${y - 46}V${y - 86}`, `M${X(-4)} ${y - 46}V${y}M${X(18)} ${y - 46}V${y}`]; };
+function clock(cx, cy, r, h, m, c = CHALK){
+  const pt = (deg, len) => `${(cx + len * Math.sin(deg * Math.PI / 180)).toFixed(1)} ${(cy - len * Math.cos(deg * Math.PI / 180)).toFixed(1)}`;
+  return [{d:circ(cx, cy, r), c, w:r > 40 ? 4 : 2.6},
+    {d:[0, 90, 180, 270].map(a => `M${pt(a, r * .8)}L${pt(a, r * .94)}`).join(''), c, w:2, t:.25},
+    {d:`M${cx} ${cy}L${pt((h % 12) * 30 + m * .5, r * .5)}`, c, w:3, t:.25},
+    {d:`M${cx} ${cy}L${pt(m * 6, r * .78)}`, c, w:2.2, t:.25}];
+}
+const gold = list => list.map(d => ({d, c:GOLD, w:3.2}));
+const fitSize = (txt, max, width) => Math.min(max, Math.floor(width / (txt.length * .56)));
+const monthPage = i => draw([{fill:BOARD, d:box(196 + i*10, 20 + i*8, 118, 82)}, box(196 + i*10, 20 + i*8, 118, 82), `M${196 + i*10} ${40 + i*8}h118`,
+  {d:`M${222 + i*10} ${14 + i*8}v12M${288 + i*10} ${14 + i*8}v12`, w:3, t:.2}, {txt:L.month(i + 1), x:255 + i*10, y:82 + i*8, size:19, c:GOLD, t:.6}]);
+const qmark = (x, y) => draw([{txt:'?', x, y, size:46, c:RED, t:.5}]);
+
+/* SCENE TIMINGS live here. dur = seconds on screen (a scene never ends before Brian finishes its line).
+   Each drawing starts at "at" x dur. Scene 4 is the slow one on purpose. */
+const STORY = [
+  {dur:7.2, els:[
+    [0,   () => draw([...clock(60, 66, 30, 3, 15), {txt:'3:15', x:60, y:118, size:20, c:GOLD}])],
+    [.28, () => draw([`M10 232H350`, `M196 232V104H344V232`, `M186 108L270 56L354 108`, circ(270, 84, 7), box(252, 172, 34, 60), {d:'M281 204h.1', w:3.5, t:.1}, box(212, 128, 26, 22), box(302, 128, 26, 22)], {t:.4})],
+    [.46, () => draw([{txt:prospectFirst ? L.meet(esc(prospectFirst)) : L.meetNo, x:180, y:28, size:20, c:GOLD, serif:true, t:.9}, ...fig(150, 232, {dress:true, hair:'pony', badge:true, phone:true, smile:false})], {t:.22})],
+    [.78, () => draw(['M128 74h44a8 8 0 0 1 8 8v16a8 8 0 0 1 -8 8h-14l-6 10l-2 -10h-22a8 8 0 0 1 -8 -8v-16a8 8 0 0 1 8 -8z', {txt:'?', x:150, y:97, size:20, c:GOLD, t:.3}])]]},
+  {dur:8.4, els:[
+    [0,   () => draw([`M10 240H350`, `M118 176H290`, `M128 176V240M280 176V240`, box(200, 124, 56, 42), `M228 166V176`], {t:.4})],
+    [.2,  () => draw([...chair(110, 240), ...fig(110, 240, {sit:true, hair:'pony', badge:true, smile:true})], {t:.22})],
+    [.42, () => draw([`M75 34L115 14L155 34`, box(30, 34, 170, 44), {txt:L.goodJob, x:115, y:64, size:fitSize(L.goodJob, 22, 156), c:GOLD, t:.8}])],
+    [.62, () => draw(clock(180, 138, 104, 9, 0, GOLD).slice(0, 2), {t:.9}) + draw(clock(180, 138, 104, 9, 0, GOLD).slice(2), {cls:'hands', d0:.9})],
+    [.84, svg => { svg.querySelector('.hands')?.classList.add('gone');
+      return draw([[110, 77], [145, 98], [180, 104], [215, 98], [250, 77]].map(([x, h]) => ({d:`M${x} ${138 - h}V${138 + h}`, c:RED, w:5})), {t:.4, gap:0}); }]]},
+  {dur:9.1, els:[
+    [0,   () => draw([`M40 14H320`, `M40 14Q80 70 56 150`, `M320 14Q280 70 304 150`, `M14 150H346`, ...fig(180, 150, {s:.6, hair:'kid', up:true}), ...clock(338, 30, 14, 6, 0)], {t:.22})],
+    [.11, () => draw([...chair(100, 262), ...fig(100, 262, {sit:true, smile:true}), ...chair(240, 262), ...fig(240, 262, {sit:true, hair:'pony', smile:true})], {t:.22})],
+    [.21, () => draw(gold(chair(170, 262)), {cls:'glow', t:.4})],
+    [.33, 'clear'],
+    [.34, () => draw([`M10 250H350`, `M80 190H280`, `M90 190V250M270 190V250`, oval(130, 184, 18, 5), oval(180, 184, 18, 5), oval(230, 184, 18, 5), ...clock(338, 30, 14, 6, 30)], {t:.22})],
+    [.44, () => draw([...chair(50, 250), ...fig(50, 250, {sit:true, smile:null}), ...chair(312, 250, true), ...fig(312, 250, {sit:true, flip:true, s:.72, hair:'kid', smile:false})], {t:.22})],
+    [.53, () => draw(gold([`M162 189V128M198 189V128M162 128H198M162 150H198`]), {cls:'glow', t:.5})],
+    [.63, 'clear'],
+    [.64, () => draw([`M10 232H350`, `M300 232V160H350`, `M300 160L350 176`, `M314 166V232M330 170V232`, box(24, 22, 96, 44), {txt:'0:02', x:72, y:54, size:24, c:GOLD, t:.4}, ...fig(232, 232, {s:.62, hair:'kid', up:true}), circ(264, 224, 7), ...clock(338, 30, 14, 7, 58)], {t:.22})],
+    [.79, () => draw([{d:'M40 152h-16M40 170h-22M40 188h-16', c:'rgba(244,248,249,.5)', t:.3}, ...fig(76, 232, {dress:true, hair:'pony', badge:true, bag:true, smile:false})], {t:.22})]]},
+  {dur:12.2, els:[
+    [0,   () => draw([box(20, 26, 150, 72), {txt:'$', x:46, y:74, size:32, c:GOLD}, 'M74 50H156M74 66H148', {d:'M112 86q6 -8 10 0t10 0t10 0', t:.4}], {cls:'check', t:.5})],
+    [.17, svg => { svg.querySelector('.check')?.classList.add('faded'); }],
+    [.26, () => monthPage(0)],
+    [.38, () => monthPage(1)],
+    [.5,  () => monthPage(2)],
+    [.6,  () => draw([`M10 254H350`, `M30 254V214L62 188L94 214V254Z`, `M56 254V234H70V254`,
+      `M124 246V228L140 212H196L212 228H226V246Z`, circ(146, 248, 8), circ(204, 248, 8),
+      `M244 204H260L270 238H320L330 212H264`, circ(280, 248, 6), circ(312, 248, 6)], {t:.4})],
+    [.71, () => qmark(62, 180)],
+    [.81, () => qmark(176, 200)],
+    [.9,  () => qmark(288, 196)]]},
+  {dur:9.4, els:[
+    [0,   () => draw([box(20, 30, 110, 54), {txt:'$', x:40, y:67, size:24, c:GOLD}, 'M62 50H118M62 64H108'], {t:.4})],
+    [.1,  () => draw([`M140 150L146 176H178L184 150Z`, `M136 150H188`, {d:'M162 150C160 120 168 100 162 58', c:LEAF, w:3.2, t:2.4}], {t:.4})],
+    [.28, () => draw([`M200 18H350`, `M212 18Q236 60 222 112`, `M340 18Q316 60 330 112`, `M204 112H346`, ...fig(276, 112, {s:.5, hair:'kid', up:true}), `M196 254H350`], {t:.22})],
+    [.44, () => draw([...chair(250, 254), ...fig(250, 254, {sit:true, hair:'pony', smile:true})], {t:.22})],
+    [.58, () => draw([{d:'M163 124q-22 -6 -26 -24q20 0 26 24', c:LEAF, w:2.8, t:.7}])],
+    [.7,  () => draw([{d:'M164 100q22 -8 28 -28q-22 2 -28 28', c:LEAF, w:2.8, t:.7}])],
+    [.82, () => draw([{d:circ(162, 48, 10), c:GOLD, w:2.8}, {txt:'$', x:162, y:54, size:14, c:GOLD, t:.3}])]]},
+  {dur:6.8, els:[
+    [0,   () => draw([...clock(66, 62, 28, 3, 15), {txt:'3:15', x:66, y:112, size:20, c:GOLD}])],
+    [.15, () => draw([`M10 250H350`, `M130 250V96H344V250`, `M120 100L237 40L354 100`, circ(237, 72, 7)], {t:.45})],
+    [.33, () => draw([`M150 124H324`, `M156 104Q166 116 160 124M318 104Q308 116 314 124`, ...chair(196, 250), ...fig(196, 250, {sit:true, hair:'pony', smile:true}), ...chair(262, 250), ...fig(262, 250, {sit:true, s:.72, hair:'kid', smile:true}),
+      {d:'M240 150c-4 -6 -12 -2 -8 4l8 8l8 -8c4 -6 -4 -10 -8 -4', c:RED, w:2.4, t:.4}], {t:.22})],
+    [.62, () => draw([{txt:L.bigger, x:180, y:274, size:fitSize(L.bigger, 24, 340), c:GOLD, serif:true, t:1.4}])]]},
+  {dur:9.2, hold:true, els:[
+    [0,   () => draw([{txt:L.worth, x:180, y:58, size:fitSize(L.worth, 34, 330), c:GOLD, serif:true, t:1.3}])],
+    [.16, () => draw([box(92, 84, 176, 132), `M92 108H268`, {d:'M124 78V92M236 78V92', w:3, t:.2},
+      {d:[1, 2, 3, 4, 5, 6].map(k => `M${(92 + 176 / 7 * k).toFixed(1)} 108V216`).join('') + [1, 2, 3].map(k => `M92 ${108 + 27 * k}H268`).join(''), w:1.6, t:.9}], {t:.5})],
+    [.36, () => draw([{d:'M168 150c0 -14 26 -16 28 -2c2 14 -24 18 -30 6c-3 -7 2 -14 10 -16', c:GOLD, w:3.2, t:.8}], {cls:'glow'})],
+    [.5,  () => draw([{txt:L.pick, x:180, y:256, size:20, c:TEAL, t:.8}])]]}
+];
+
+function leaveStory(){ hush(); runId++; document.body.classList.remove('storying'); branch(runId); }
+$('#skip').onclick = leaveStory;
+$('#stGo').onclick = leaveStory;
+
+async function story(id, from = 0){
+  const svg = $('#boardSvg');
+  $('#stCont').classList.remove('on'); svg.innerHTML = ''; $('#cap').textContent = '';
+  document.body.classList.add('storying');
+  show('story');
+  for(let s = from; s < STORY.length; s++){
+    const sc = STORY[s];
+    if(svg.childNodes.length){ svg.classList.add('wipe'); await wait(240); if(!alive(id)) return; }
+    svg.innerHTML = ''; svg.classList.remove('wipe');
+    $('#cap').textContent = L.story[s];
+    setSky('story', s / STORY.length * .9);
+    const t0 = performance.now(), spoken = say(L.story[s]);
+    for(const [at, f] of sc.els){
+      const ms = t0 + at * sc.dur * 1000 - performance.now();
+      if(ms > 0) await wait(ms); if(!alive(id)) return;
+      if(f === 'clear'){ svg.classList.add('wipe'); await wait(330); if(!alive(id)) return; svg.innerHTML = ''; svg.classList.remove('wipe'); continue; }
+      const out = f(svg); if(typeof out === 'string') svg.insertAdjacentHTML('beforeend', out);
+    }
+    await Promise.all([spoken, wait(Math.max(0, t0 + sc.dur * 1000 - performance.now()))]); if(!alive(id)) return;
+    if(!sc.hold) await wait(120);
+  }
+  $('#stCont').classList.add('on'); document.body.classList.remove('storying');
+}
+
+/* the old narrated slideshow (logo and lists) is no longer played; Maria's story replaces it */
+async function introOld(id){
   // logo in
   $('#capText').textContent = L.capIn; show('logo');
   await wait(900); if(!alive(id)) return;
@@ -726,6 +935,8 @@ async function intro(id){
 
   welcome(id);
 }
+
+async function intro(id){ story(id); }
 
 async function welcome(id){
   splitText($('#welHead'), L.welcome);
@@ -949,7 +1160,7 @@ $('#tyCopy').onclick = async () => {
   if(m === 'text'){ textPartner(); return; }
   try{ await navigator.clipboard.writeText(st.msg || buildMsg()); $('#tyCopy').textContent = L.copied; setTimeout(() => $('#tyCopy').textContent = L.copy, 1800); }catch(e){}
 };
-$('#tyAgain').onclick = () => { hush(); runId++; Object.assign(st, {branch:null, answers:[], mode:'zoom', interest:null, day:null, time:null, booked:null, embedDone:false}); branch(runId); };
+$('#tyAgain').onclick = () => { hush(); runId++; Object.assign(st, {branch:null, answers:[], mode:'zoom', interest:null, day:null, time:null, booked:null, embedDone:false}); intro(runId); };
 
 /* ---------- start ---------- */
 let begun = false;
@@ -961,6 +1172,7 @@ function begin(){
   runId++;
   const skip = new URLSearchParams(location.search).get('start');
   if(skip === 'branch') branch(runId); else if(skip === 'closing'){ st.branch = 'both'; st.answers = [true,true,false,true,true,true]; closing(runId); }
+  else if(skip === 'story') story(runId, Math.max(0, Math.min(6, (+new URLSearchParams(location.search).get('s') || 1) - 1)));
   else intro(runId);
 }
 $('#splash').addEventListener('click', begin);
