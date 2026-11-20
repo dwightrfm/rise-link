@@ -770,7 +770,7 @@ const box = (x, y, w, h) => `M${x} ${y}h${w}v${h}h${-w}Z`;
    {fill, d} for a quick fill, or {txt, x, y, size, c, serif} for words that write themselves. */
 function draw(strokes, o = {}){
   let d = o.d0 || 0;
-  return `<g class="el ${o.cls || ''}">` + strokes.map(s => {
+  return `<g class="el ${o.set ? 'set ' : ''}${o.cls || ''}">` + strokes.map(s => {
     if(typeof s === 'string') s = {d:s};
     const t = s.t || o.t || .5, at = d.toFixed(2);
     if(s.fill) return `<path class="fl" d="${s.d}" fill="${s.fill}" style="--d:${at}s"/>`;
@@ -816,7 +816,7 @@ function clock(cx, cy, r, h, m, c = CHALK){
 const gold = list => list.map(d => ({d, c:GOLD, w:3.2}));
 const fitSize = (txt, max, width) => Math.min(max, Math.floor(width / (txt.length * .56)));
 const monthPage = i => draw([{fill:BOARD, d:box(196 + i*10, 20 + i*8, 118, 82)}, box(196 + i*10, 20 + i*8, 118, 82), `M${196 + i*10} ${40 + i*8}h118`,
-  {d:`M${222 + i*10} ${14 + i*8}v12M${288 + i*10} ${14 + i*8}v12`, w:3, t:.2}, {txt:L.month(i + 1), x:255 + i*10, y:82 + i*8, size:19, c:GOLD, t:.6}]);
+  {d:`M${222 + i*10} ${14 + i*8}v12M${288 + i*10} ${14 + i*8}v12`, w:3, t:.2}, {txt:L.month(i + 1), x:255 + i*10, y:82 + i*8, size:19, c:GOLD, t:.6}], {set:true});
 const qmark = (x, y) => draw([{txt:'?', x, y, size:46, c:RED, t:.5}]);
 
 /* SCENE TIMINGS live here. dur = seconds on screen (a scene never ends before Brian finishes its line).
@@ -824,26 +824,26 @@ const qmark = (x, y) => draw([{txt:'?', x, y, size:46, c:RED, t:.5}]);
 const STORY = [
   {dur:7.2, els:[
     [0,   () => draw([...clock(60, 66, 30, 3, 15), {txt:'3:15', x:60, y:118, size:20, c:GOLD}])],
-    [.28, () => draw([`M10 232H350`, `M196 232V104H344V232`, `M186 108L270 56L354 108`, circ(270, 84, 7), box(252, 172, 34, 60), {d:'M281 204h.1', w:3.5, t:.1}, box(212, 128, 26, 22), box(302, 128, 26, 22)], {t:.4})],
+    [.28, () => draw([`M10 232H350`, `M196 232V104H344V232`, `M186 108L270 56L354 108`, circ(270, 84, 7), box(252, 172, 34, 60), {d:'M281 204h.1', w:3.5, t:.1}, box(212, 128, 26, 22), box(302, 128, 26, 22)], {set:true})],
     [.46, () => draw([{txt:prospectFirst ? L.meet(esc(prospectFirst)) : L.meetNo, x:180, y:28, size:20, c:GOLD, serif:true, t:.9}, ...fig(150, 232, {dress:true, hair:'pony', badge:true, phone:true, smile:false})], {t:.22})],
     [.78, () => draw(['M128 74h44a8 8 0 0 1 8 8v16a8 8 0 0 1 -8 8h-14l-6 10l-2 -10h-22a8 8 0 0 1 -8 -8v-16a8 8 0 0 1 8 -8z', {txt:'?', x:150, y:97, size:20, c:GOLD, t:.3}])]]},
   {dur:8.4, els:[
-    [0,   () => draw([`M10 240H350`, `M118 176H290`, `M128 176V240M280 176V240`, box(200, 124, 56, 42), `M228 166V176`], {t:.4})],
+    [0,   () => draw([`M10 240H350`, `M118 176H290`, `M128 176V240M280 176V240`, box(200, 124, 56, 42), `M228 166V176`], {set:true})],
     [.2,  () => draw([...chair(110, 240), ...fig(110, 240, {sit:true, hair:'pony', badge:true, smile:true})], {t:.22})],
-    [.42, () => draw([`M75 34L115 14L155 34`, box(30, 34, 170, 44), {txt:L.goodJob, x:115, y:64, size:fitSize(L.goodJob, 22, 156), c:GOLD, t:.8}])],
+    [.42, () => draw([`M75 34L115 14L155 34`, box(30, 34, 170, 44)], {set:true}) + draw([{txt:L.goodJob, x:115, y:64, size:fitSize(L.goodJob, 22, 156), c:GOLD}])],
     [.62, () => draw(clock(180, 138, 104, 9, 0, GOLD).slice(0, 2), {t:.9}) + draw(clock(180, 138, 104, 9, 0, GOLD).slice(2), {cls:'hands', d0:.9})],
     [.84, svg => { svg.querySelector('.hands')?.classList.add('gone');
-      return draw([[110, 77], [145, 98], [180, 104], [215, 98], [250, 77]].map(([x, h]) => ({d:`M${x} ${138 - h}V${138 + h}`, c:RED, w:5})), {t:.4, gap:0}); }]]},
+      return draw([[110, 77], [145, 98], [180, 104], [215, 98], [250, 77]].map(([x, h]) => ({d:`M${x} ${138 - h}V${138 + h}`, c:RED, w:5})), {set:true}); }]]},
   {dur:9.1, els:[
-    [0,   () => draw([`M40 14H320`, `M40 14Q80 70 56 150`, `M320 14Q280 70 304 150`, `M14 150H346`, ...fig(180, 150, {s:.6, hair:'kid', up:true}), ...clock(338, 30, 14, 6, 0)], {t:.22})],
-    [.11, () => draw([...chair(100, 262), ...fig(100, 262, {sit:true, smile:true}), ...chair(240, 262), ...fig(240, 262, {sit:true, hair:'pony', smile:true})], {t:.22})],
+    [0,   () => draw([`M40 14H320`, `M40 14Q80 70 56 150`, `M320 14Q280 70 304 150`, `M14 150H346`, ...clock(338, 30, 14, 6, 0), ...fig(180, 150, {s:.6, hair:'kid', up:true})], {set:true})],
+    [.11, () => draw([...chair(100, 262), ...chair(240, 262), ...fig(100, 262, {sit:true, smile:true}), ...fig(240, 262, {sit:true, hair:'pony', smile:true})], {set:true})],
     [.21, () => draw(gold(chair(170, 262)), {cls:'glow', t:.4})],
     [.33, 'clear'],
-    [.34, () => draw([`M10 250H350`, `M80 190H280`, `M90 190V250M270 190V250`, oval(130, 184, 18, 5), oval(180, 184, 18, 5), oval(230, 184, 18, 5), ...clock(338, 30, 14, 6, 30)], {t:.22})],
-    [.44, () => draw([...chair(50, 250), ...fig(50, 250, {sit:true, smile:null}), ...chair(312, 250, true), ...fig(312, 250, {sit:true, flip:true, s:.72, hair:'kid', smile:false})], {t:.22})],
+    [.34, () => draw([`M10 250H350`, `M80 190H280`, `M90 190V250M270 190V250`, oval(130, 184, 18, 5), oval(180, 184, 18, 5), oval(230, 184, 18, 5), ...clock(338, 30, 14, 6, 30)], {set:true})],
+    [.44, () => draw([...chair(50, 250), ...chair(312, 250, true), ...fig(50, 250, {sit:true, smile:null}), ...fig(312, 250, {sit:true, flip:true, s:.72, hair:'kid', smile:false})], {set:true})],
     [.53, () => draw(gold([`M162 189V128M198 189V128M162 128H198M162 150H198`]), {cls:'glow', t:.5})],
     [.63, 'clear'],
-    [.64, () => draw([`M10 232H350`, `M300 232V160H350`, `M300 160L350 176`, `M314 166V232M330 170V232`, box(24, 22, 96, 44), {txt:'0:02', x:72, y:54, size:24, c:GOLD, t:.4}, ...fig(232, 232, {s:.62, hair:'kid', up:true}), circ(264, 224, 7), ...clock(338, 30, 14, 7, 58)], {t:.22})],
+    [.64, () => draw([`M10 232H350`, `M300 232V160H350`, `M300 160L350 176`, `M314 166V232M330 170V232`, box(24, 22, 96, 44), {txt:'0:02', x:72, y:54, size:24, c:GOLD}, ...clock(338, 30, 14, 7, 58), ...fig(232, 232, {s:.62, hair:'kid', up:true}), circ(264, 224, 7)], {set:true})],
     [.79, () => draw([{d:'M40 152h-16M40 170h-22M40 188h-16', c:'rgba(244,248,249,.5)', t:.3}, ...fig(76, 232, {dress:true, hair:'pony', badge:true, bag:true, smile:false})], {t:.22})]]},
   {dur:12.2, els:[
     [0,   () => draw([box(20, 26, 150, 72), {txt:'$', x:46, y:74, size:32, c:GOLD}, 'M74 50H156M74 66H148', {d:'M112 86q6 -8 10 0t10 0t10 0', t:.4}], {cls:'check', t:.5})],
@@ -851,7 +851,7 @@ const STORY = [
     [.26, () => monthPage(0)],
     [.38, () => monthPage(1)],
     [.5,  () => monthPage(2)],
-    [.6,  () => draw([`M10 254H350`, `M30 254V214L62 188L94 214V254Z`, `M56 254V234H70V254`,
+    [.6,  () => draw([{d:`M10 254H350`, t:.3}, `M30 254V214L62 188L94 214V254Z`, `M56 254V234H70V254`,
       `M124 246V228L140 212H196L212 228H226V246Z`, circ(146, 248, 8), circ(204, 248, 8),
       `M244 204H260L270 238H320L330 212H264`, circ(280, 248, 6), circ(312, 248, 6)], {t:.4})],
     [.71, () => qmark(62, 180)],
@@ -860,24 +860,67 @@ const STORY = [
   {dur:9.4, els:[
     [0,   () => draw([box(20, 30, 110, 54), {txt:'$', x:40, y:67, size:24, c:GOLD}, 'M62 50H118M62 64H108'], {t:.4})],
     [.1,  () => draw([`M140 150L146 176H178L184 150Z`, `M136 150H188`, {d:'M162 150C160 120 168 100 162 58', c:LEAF, w:3.2, t:2.4}], {t:.4})],
-    [.28, () => draw([`M200 18H350`, `M212 18Q236 60 222 112`, `M340 18Q316 60 330 112`, `M204 112H346`, ...fig(276, 112, {s:.5, hair:'kid', up:true}), `M196 254H350`], {t:.22})],
+    [.28, () => draw([`M200 18H350`, `M212 18Q236 60 222 112`, `M340 18Q316 60 330 112`, `M204 112H346`, `M196 254H350`], {set:true}) + draw(fig(276, 112, {s:.5, hair:'kid', up:true}))],
     [.44, () => draw([...chair(250, 254), ...fig(250, 254, {sit:true, hair:'pony', smile:true})], {t:.22})],
     [.58, () => draw([{d:'M163 124q-22 -6 -26 -24q20 0 26 24', c:LEAF, w:2.8, t:.7}])],
     [.7,  () => draw([{d:'M164 100q22 -8 28 -28q-22 2 -28 28', c:LEAF, w:2.8, t:.7}])],
     [.82, () => draw([{d:circ(162, 48, 10), c:GOLD, w:2.8}, {txt:'$', x:162, y:54, size:14, c:GOLD, t:.3}])]]},
   {dur:6.8, els:[
     [0,   () => draw([...clock(66, 62, 28, 3, 15), {txt:'3:15', x:66, y:112, size:20, c:GOLD}])],
-    [.15, () => draw([`M10 250H350`, `M130 250V96H344V250`, `M120 100L237 40L354 100`, circ(237, 72, 7)], {t:.45})],
-    [.33, () => draw([`M150 124H324`, `M156 104Q166 116 160 124M318 104Q308 116 314 124`, ...chair(196, 250), ...fig(196, 250, {sit:true, hair:'pony', smile:true}), ...chair(262, 250), ...fig(262, 250, {sit:true, s:.72, hair:'kid', smile:true}),
+    [.15, () => draw([`M10 250H350`, `M130 250V96H344V250`, `M120 100L237 40L354 100`, circ(237, 72, 7), `M150 124H324`, `M156 104Q166 116 160 124M318 104Q308 116 314 124`], {set:true})],
+    [.33, () => draw([...chair(196, 250), ...chair(262, 250)], {set:true}) + draw([ ...fig(196, 250, {sit:true, hair:'pony', smile:true}), ...fig(262, 250, {sit:true, s:.72, hair:'kid', smile:true}),
       {d:'M240 150c-4 -6 -12 -2 -8 4l8 8l8 -8c4 -6 -4 -10 -8 -4', c:RED, w:2.4, t:.4}], {t:.22})],
     [.62, () => draw([{txt:L.bigger, x:180, y:274, size:fitSize(L.bigger, 24, 340), c:GOLD, serif:true, t:1.4}])]]},
   {dur:9.2, hold:true, els:[
     [0,   () => draw([{txt:L.worth, x:180, y:58, size:fitSize(L.worth, 34, 330), c:GOLD, serif:true, t:1.3}])],
     [.16, () => draw([box(92, 84, 176, 132), `M92 108H268`, {d:'M124 78V92M236 78V92', w:3, t:.2},
-      {d:[1, 2, 3, 4, 5, 6].map(k => `M${(92 + 176 / 7 * k).toFixed(1)} 108V216`).join('') + [1, 2, 3].map(k => `M92 ${108 + 27 * k}H268`).join(''), w:1.6, t:.9}], {t:.5})],
+      {d:[1, 2, 3, 4, 5, 6].map(k => `M${(92 + 176 / 7 * k).toFixed(1)} 108V216`).join('') + [1, 2, 3].map(k => `M92 ${108 + 27 * k}H268`).join(''), w:1.6, t:.9}], {set:true})],
     [.36, () => draw([{d:'M168 150c0 -14 26 -16 28 -2c2 14 -24 18 -30 6c-3 -7 2 -14 10 -16', c:GOLD, w:3.2, t:.8}], {cls:'glow'})],
     [.5,  () => draw([{txt:L.pick, x:180, y:256, size:20, c:TEAL, t:.8}])]]}
 ];
+
+/* DRAWING PACE. One line at a time, at a steady hand speed, so the picture builds while Brian talks
+   and is complete before he finishes the scene's line.
+   SPEED   = chalk speed in drawing units per second (the board is 360 units wide).
+   MIN_T   = shortest time for one tiny line (eyes, ticks). TEXT_T = seconds per letter when words write themselves.
+   SET_T   = scenery (marked set:true) sketches in all at once over this many seconds.
+   HOLD_T  = pause on a beat (the clock hands turning to bars, the paycheck fading).
+   DONE    = share of the scene by which the picture must be finished. If a scene has more chalk than fits,
+             it speeds up just enough to finish by then. */
+const PACE = {SPEED:230, MIN_T:.12, TEXT_T:.1, SET_T:1.1, HOLD_T:.6, DONE:.92};
+const SVGNS = 'http://www.w3.org/2000/svg';
+let scratch = null;
+function inkTime(g){
+  if(g.classList.contains('set')) return {t:PACE.SET_T, parts:[...g.querySelectorAll('.ln,.tx,.fl')].map(e => [e, 0])};
+  const parts = [...g.querySelectorAll('.ln,.tx,.fl')].map(e => [e,
+    e.classList.contains('fl') ? 0 : e.classList.contains('tx') ? Math.max(.35, e.textContent.length * PACE.TEXT_T) : Math.max(PACE.MIN_T, e.getTotalLength() / PACE.SPEED)]);
+  return {t:parts.reduce((a, [, t]) => a + t, 0), parts};
+}
+function planScene(sc){
+  if(!scratch){ scratch = document.createElementNS(SVGNS, 'svg'); scratch.setAttribute('viewBox', '0 0 360 280'); scratch.style.cssText = 'position:fixed;left:-9999px;top:0;width:360px;height:280px;visibility:hidden'; document.body.appendChild(scratch); }
+  let total = 0;
+  for(const [, f] of sc.els){
+    if(f === 'clear'){ total += .35; continue; }
+    scratch.innerHTML = ''; const out = f(scratch);
+    if(typeof out !== 'string'){ total += PACE.HOLD_T; continue; }
+    scratch.innerHTML = out; total += [...scratch.children].reduce((a, g) => a + inkTime(g).t, 0);
+  }
+  scratch.innerHTML = '';
+  return Math.max(1, total / (sc.dur * PACE.DONE));   // 1 = steady speed; above 1 = this scene had to hurry
+}
+function inkIn(nodes, fast){
+  let d = 0;
+  nodes.forEach(g => {
+    const {t, parts} = inkTime(g), set = g.classList.contains('set');
+    parts.forEach(([e, dur]) => {
+      e.style.setProperty('--d', (set ? d : d) .toFixed(2) + 's');
+      e.style.setProperty('--t', ((set ? PACE.SET_T : dur) / fast).toFixed(2) + 's');
+      if(!set) d += dur / fast;
+    });
+    if(set) d += PACE.SET_T / fast;
+  });
+  return d;
+}
 
 function leaveStory(){ hush(); runId++; document.body.classList.remove('storying'); branch(runId); }
 $('#skip').onclick = leaveStory;
@@ -894,12 +937,17 @@ async function story(id, from = 0){
     svg.innerHTML = ''; svg.classList.remove('wipe');
     $('#cap').textContent = L.story[s];
     setSky('story', s / STORY.length * .9);
+    const fast = planScene(sc);
     const t0 = performance.now(), spoken = say(L.story[s]);
-    for(const [at, f] of sc.els){
-      const ms = t0 + at * sc.dur * 1000 - performance.now();
+    let cursor = 0;
+    for(const [, f] of sc.els){
+      const ms = t0 + cursor * 1000 - performance.now();
       if(ms > 0) await wait(ms); if(!alive(id)) return;
-      if(f === 'clear'){ svg.classList.add('wipe'); await wait(330); if(!alive(id)) return; svg.innerHTML = ''; svg.classList.remove('wipe'); continue; }
-      const out = f(svg); if(typeof out === 'string') svg.insertAdjacentHTML('beforeend', out);
+      if(f === 'clear'){ svg.classList.add('wipe'); await wait(330); if(!alive(id)) return; svg.innerHTML = ''; svg.classList.remove('wipe'); cursor += .35; continue; }
+      const before = svg.children.length, out = f(svg);
+      if(typeof out !== 'string'){ cursor += PACE.HOLD_T / fast; continue; }
+      svg.insertAdjacentHTML('beforeend', out);
+      cursor += inkIn([...svg.children].slice(before), fast);
     }
     await Promise.all([spoken, wait(Math.max(0, t0 + sc.dur * 1000 - performance.now()))]); if(!alive(id)) return;
     if(!sc.hold) await wait(120);
