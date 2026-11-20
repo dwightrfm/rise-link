@@ -23,17 +23,6 @@ window.RISE_AUDIO = {
   "Now the question nobody wants to sit with. If those checks stopped for three months… would her family be okay? For most families Maria knows, the honest answer is no.": "audio/en/0866bab5ee35.mp3",
   "It doesn't have to be a new job. It can start as one small stream of income that doesn't need her hours, one that grows while she's where she actually wants to be.": "audio/en/38688ffe9bd0.mp3",
   "Same job. Same Maria. Just a bigger life around it. That's what we help families build, one step at a time.": "audio/en/6f470d79c52d.mp3",
-  "If any of this felt familiar, it's worth 15 minutes to see what it could look like for your family. Pick a time below. No pressure. Just a look.": "audio/en/9e4fc1ac0826.mp3",
-  "Now it's your turn. Pick the one that speaks to you the most.": "audio/en/0b66a6abef74.mp3",
-  "If there were a legitimate way to grow your income over the next 12 months, would you want to learn it?": "audio/en/5312daa5170d.mp3",
-  "Do you think having more than one stream of income matters in today's economy?": "audio/en/5854c85ac69c.mp3",
-  "Would you want to build income that doesn't stop when you stop?": "audio/en/70fd06b96a43.mp3",
-  "Does saving money feel harder today than it used to?": "audio/en/b8aa74e3993d.mp3",
-  "Do you ever feel your savings are not growing as fast as you'd like?": "audio/en/065686436a2a.mp3",
-  "If you could start strengthening your family's financial future today, would you be open to learning how?": "audio/en/02e4a94d3347.mp3",
-  "Thank you for your answers. Let's set up a quick chat, so we can show you how this could work for your family. Pick the day and time that works best for you, then tap send.": "audio/en/201170371820.mp3",
-  "Thank you for your answers. Now pick the day and time that works best for you on the calendar. Your invite with the Zoom link will come by email.": "audio/en/12ccc94f8b2d.mp3",
-  "You are all set. We are looking forward to it. See you soon.": "audio/en/28bb6b1f7d52.mp3",
-  "Thank you. We will be in touch soon to confirm your time. We look forward to talking with you.": "audio/en/2ed9f8bf75c1.mp3"
+  "If any of this felt familiar, it's worth 30 minutes to see what it could look like for your family. Pick a time below. No pressure. Just a look.": "audio/en/40e3a722885a.mp3"
  }
 };
