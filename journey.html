@@ -403,9 +403,9 @@ en:{
     "Here's the question most people never sit with. If the paychecks stopped for three months, would we be okay? For most households, the honest answer is no.",
     "Most of us were never taught how money really works. So saving is hard, debt piles up, and every year we wait is a year our money isn't growing.",
     "It doesn't have to mean a new job. It can start with a clear plan, and one small stream of income that doesn't need your hours. More time. More choices.",
-    "That's what Team RISE helps people build, one step at a time. If any of this sounded familiar, it's worth {min} minutes to see what it could look like for you. Pick a time below. No pressure. Just a look."],
+    "That's what Team RISE helps people build, one step at a time. If any of this sounded familiar, it's worth {min} minutes to see what it could look like for you. Tap continue for four quick questions, then pick your time. No pressure. Just a look."],
   most:'Most people…', goodJob:'GOOD JOB', month:i=>`Month ${i}`, someday:'SOMEDAY', money101:'MONEY 101', debt:'DEBT',
-  bigger:'More time. More choices.', worth:'Worth {min} minutes?', pick:'Pick a time ↓', skip:'Skip intro',
+  bigger:'More time. More choices.', worth:'Worth {min} minutes?', pick:'4 quick taps, then a time', skip:'Skip intro',
   welcome:'Welcome!', friend:'Friend', sayWelcome:n=>`Welcome! We are so glad you are here.`,
   chHead:'Most families today are working hard to...',
   pillars:['Grow their income','Grow their savings'],
@@ -503,9 +503,9 @@ es:{
     "Esta es la pregunta que casi nadie se hace. Si los cheques se detuvieran por tres meses, ¿estaríamos bien? Para la mayoría de los hogares, la respuesta honesta es no.",
     "A la mayoría nunca nos enseñaron cómo funciona el dinero. Así que ahorrar cuesta, las deudas crecen, y cada año que esperamos es un año en que nuestro dinero no crece.",
     "No tiene que ser un nuevo trabajo. Puede empezar con un plan claro, y una pequeña fuente de ingresos que no necesita tus horas. Más tiempo. Más opciones.",
-    "Eso es lo que Team RISE ayuda a construir, paso a paso. Si algo de esto te sonó familiar, vale la pena tomar {min} minutos para ver cómo podría verse para ti. Elige una hora abajo. Sin presión. Solo un vistazo."],
+    "Eso es lo que Team RISE ayuda a construir, paso a paso. Si algo de esto te sonó familiar, vale la pena tomar {min} minutos para ver cómo podría verse para ti. Toca continuar para cuatro preguntas rápidas, y luego elige tu hora. Sin presión. Solo un vistazo."],
   most:'La mayoría…', goodJob:'BUEN TRABAJO', month:i=>`Mes ${i}`, someday:'ALGÚN DÍA', money101:'DINERO 101', debt:'DEUDA',
-  bigger:'Más tiempo. Más opciones.', worth:'¿Valen {min} minutos?', pick:'Elige una hora ↓', skip:'Saltar intro',
+  bigger:'Más tiempo. Más opciones.', worth:'¿Valen {min} minutos?', pick:'4 toques y eliges tu hora', skip:'Saltar intro',
   welcome:'¡Bienvenido!', friend:'Amigo', sayWelcome:n=>`¡Bienvenido! Qué gusto tenerte aquí.`,
   chHead:'Hoy la mayoría de las familias trabaja duro para...',
   pillars:['Aumentar sus ingresos','Aumentar sus ahorros'],
@@ -907,7 +907,7 @@ const STORY = [
     [.74, () => draw([{d:circ(162, 48, 10), c:GOLD, w:2.8}, {txt:'$', x:162, y:54, size:14, c:GOLD, t:.3}])],
     [.8,  () => draw([{txt:L.bigger, x:180, y:274, size:fitSize(L.bigger, 24, 340), c:GOLD, serif:true, t:1.2}])]]},
   /* 7 worth a look: the calendar, one circled day */
-  {dur:13.4, hold:true, els:[
+  {dur:15.4, hold:true, els:[
     [0,   () => draw([{txt:fillMin(L.worth), x:180, y:58, size:fitSize(fillMin(L.worth), 34, 330), c:GOLD, serif:true, t:1.3}])],
     [.16, () => draw([box(92, 84, 176, 132), `M92 108H268`, {d:'M124 78V92M236 78V92', w:3, t:.2},
       {d:[1, 2, 3, 4, 5, 6].map(k => `M${(92 + 176 / 7 * k).toFixed(1)} 108V216`).join('') + [1, 2, 3].map(k => `M92 ${108 + 27 * k}H268`).join(''), w:1.6, t:.9}], {set:true})],
