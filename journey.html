@@ -186,7 +186,7 @@ body.started #brandtag{display:flex}
   .orb{max-width:240px;order:-1}
   .pillars{gap:10px}.pillar{padding:18px 10px}
 }
-/* Maria's story */
+/* the whiteboard story */
 .sent{margin:8px 0 0;font-size:15px;color:var(--dim)}
 #story .wrap{padding-top:clamp(64px,8vh,96px)}
 .board{width:100%;aspect-ratio:360/280;border-radius:24px;overflow:hidden;border:1px solid var(--line);
@@ -254,7 +254,7 @@ body.storying #skip{display:block}
   </div>
 </section>
 
-<!-- 1b Maria's story: a whiteboard drawing, drawn line by line -->
+<!-- 1b the "most people" story: a whiteboard drawing, drawn line by line -->
 <section class="scene" id="story">
   <div class="wrap" style="max-width:560px">
     <div class="board"><svg id="boardSvg" viewBox="0 0 360 280" aria-hidden="true"></svg></div>
@@ -362,7 +362,7 @@ const RISE_CONFIG = {
   },
   analyticsEndpoint: "" // Empty = no network calls. Events still collect in window.__riseEvents.
 };
-// NARRATION: the English voice (Brian, ElevenLabs) was recorded saying meetingMinutes = 30 (2026-11-20).
+// NARRATION: the English voice (Brian, ElevenLabs) was recorded saying meetingMinutes = 30 (2026-11-21, "most people" story).
 // If meetingMinutes changes, re-record with build_audio.js (it reads meetingMinutes) and set this to match.
 // Until then the page plays the older recording, so the voice and the card would disagree.
 const NARRATION_RECORDED_MINUTES = 30;
@@ -395,17 +395,17 @@ en:{
     ['An uncertain future','That leaves the future feeling uncertain.'],
     ['Time slipping away','And every year we wait is a year our money is not growing.']],
   sayOut:'We believe every family deserves a plan. So we made this just for you.',
-  hi:n=>`Hi, <em>${n}</em>.`, forYou:'This is for you.', sentBy:p=>`Sent with care by ${p}`,
+  hi:n=>`Hi, <em>${n}</em>.`, forYou:'What most people never stop to look at.', sentBy:p=>`Sent with care by ${p}`,
   story:[
-    "This is Maria. It's 3:15 on a Tuesday, and she's asking permission to leave work early. Again.",
-    "Maria has a good job. She likes her job. The job just owns her clock. Every hour of her week is already sold before the week starts.",
-    "So the school play gets the empty seat. Dinner starts without her. And the game: she catches the last two minutes, in her work clothes.",
-    "Now the question nobody wants to sit with. If those checks stopped for three months… would her family be okay? For most families Maria knows, the honest answer is no.",
-    "It doesn't have to be a new job. It can start as one small stream of income that doesn't need her hours, one that grows while she's where she actually wants to be.",
-    "Same job. Same Maria. Just a bigger life around it. That's what we help families build, one step at a time.",
-    "If any of this felt familiar, it's worth {min} minutes to see what it could look like for your family. Pick a time below. No pressure. Just a look."],
-  meet:n=>`${n}, meet Maria.`, meetNo:'Meet Maria.', goodJob:'GOOD JOB', month:i=>`Month ${i}`,
-  bigger:'Same job. Bigger life.', worth:'Worth {min} minutes?', pick:'Pick a time ↓', skip:'Skip intro',
+    "Most people are working hard. Long days. Full weeks. And still, a lot of us feel like we're running in place.",
+    "For most of us, the money stops the day the work stops. Every hour of the week is already sold before the week even starts.",
+    "That leaves too little time for the people we love. And too many dreams get pushed to someday.",
+    "Here's the question most people never sit with. If the paychecks stopped for three months, would we be okay? For most households, the honest answer is no.",
+    "Most of us were never taught how money really works. So saving is hard, debt piles up, and every year we wait is a year our money isn't growing.",
+    "It doesn't have to mean a new job. It can start with a clear plan, and one small stream of income that doesn't need your hours. More time. More choices.",
+    "That's what Team RISE helps people build, one step at a time. If any of this sounded familiar, it's worth {min} minutes to see what it could look like for you. Pick a time below. No pressure. Just a look."],
+  most:'Most people…', goodJob:'GOOD JOB', month:i=>`Month ${i}`, someday:'SOMEDAY', money101:'MONEY 101', debt:'DEBT',
+  bigger:'More time. More choices.', worth:'Worth {min} minutes?', pick:'Pick a time ↓', skip:'Skip intro',
   welcome:'Welcome!', friend:'Friend', sayWelcome:n=>`Welcome! We are so glad you are here.`,
   chHead:'Most families today are working hard to...',
   pillars:['Grow their income','Grow their savings'],
@@ -495,17 +495,17 @@ es:{
     ['Un futuro incierto','Eso deja el futuro sintiéndose incierto.'],
     ['El tiempo se va','Y cada año que esperamos es un año en que nuestro dinero no crece.']],
   sayOut:'Creemos que cada familia merece un plan. Por eso hicimos esto para ti.',
-  hi:n=>`Hola, <em>${n}</em>.`, forYou:'Esto es para ti.', sentBy:p=>`Enviado con cariño por ${p}`,
+  hi:n=>`Hola, <em>${n}</em>.`, forYou:'Lo que casi nadie se detiene a mirar.', sentBy:p=>`Enviado con cariño por ${p}`,
   story:[
-    "Esta es María. Son las 3:15 de un martes, y está pidiendo permiso para salir temprano del trabajo. Otra vez.",
-    "María tiene un buen trabajo. Le gusta su trabajo. Pero el trabajo es dueño de su reloj. Cada hora de su semana ya está vendida antes de que la semana empiece.",
-    "Así que en la obra de la escuela queda un asiento vacío. La cena empieza sin ella. Y el partido: alcanza a ver los últimos dos minutos, con la ropa del trabajo.",
-    "Ahora, la pregunta que nadie quiere enfrentar. Si esos cheques se detuvieran por tres meses… ¿estaría bien su familia? Para la mayoría de las familias que María conoce, la respuesta honesta es no.",
-    "No tiene que ser un nuevo trabajo. Puede empezar como una pequeña fuente de ingresos que no necesita sus horas, una que crece mientras ella está donde de verdad quiere estar.",
-    "El mismo trabajo. La misma María. Solo una vida más grande a su alrededor. Eso es lo que ayudamos a las familias a construir, paso a paso.",
-    "Si algo de esto te sonó familiar, vale la pena tomar {min} minutos para ver cómo podría verse para tu familia. Elige una hora abajo. Sin presión. Solo un vistazo."],
-  meet:n=>`${n}, te presento a María.`, meetNo:'Te presento a María.', goodJob:'BUEN TRABAJO', month:i=>`Mes ${i}`,
-  bigger:'Mismo trabajo. Vida más grande.', worth:'¿Valen {min} minutos?', pick:'Elige una hora ↓', skip:'Saltar intro',
+    "La mayoría de la gente trabaja duro. Días largos. Semanas llenas. Y aun así, muchos sentimos que corremos sin avanzar.",
+    "Para la mayoría, el dinero se detiene el día que se detiene el trabajo. Cada hora de la semana ya está vendida antes de que la semana empiece.",
+    "Eso deja poco tiempo para la gente que amamos. Y demasiados sueños se quedan para algún día.",
+    "Esta es la pregunta que casi nadie se hace. Si los cheques se detuvieran por tres meses, ¿estaríamos bien? Para la mayoría de los hogares, la respuesta honesta es no.",
+    "A la mayoría nunca nos enseñaron cómo funciona el dinero. Así que ahorrar cuesta, las deudas crecen, y cada año que esperamos es un año en que nuestro dinero no crece.",
+    "No tiene que ser un nuevo trabajo. Puede empezar con un plan claro, y una pequeña fuente de ingresos que no necesita tus horas. Más tiempo. Más opciones.",
+    "Eso es lo que Team RISE ayuda a construir, paso a paso. Si algo de esto te sonó familiar, vale la pena tomar {min} minutos para ver cómo podría verse para ti. Elige una hora abajo. Sin presión. Solo un vistazo."],
+  most:'La mayoría…', goodJob:'BUEN TRABAJO', month:i=>`Mes ${i}`, someday:'ALGÚN DÍA', money101:'DINERO 101', debt:'DEUDA',
+  bigger:'Más tiempo. Más opciones.', worth:'¿Valen {min} minutos?', pick:'Elige una hora ↓', skip:'Saltar intro',
   welcome:'¡Bienvenido!', friend:'Amigo', sayWelcome:n=>`¡Bienvenido! Qué gusto tenerte aquí.`,
   chHead:'Hoy la mayoría de las familias trabaja duro para...',
   pillars:['Aumentar sus ingresos','Aumentar sus ahorros'],
@@ -759,8 +759,8 @@ const logo = () => { logoN++; return LOGO.replace(/rcgX/g, 'rcg' + logoN).replac
 document.querySelectorAll('.logo-slot').forEach(s => { s.innerHTML = logo(); s.firstChild.classList.add('logo'); if(s.classList.contains('big')) s.firstChild.classList.add('logo-big'); });
 $('#brandtag').innerHTML = logo() + '<span>Team RISE</span>';
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-splitText($('[data-k="splashHead"]'), prospectFirst ? L.hi(esc(prospectFirst)) : L.splashHead);
-$('#forYou').textContent = prospectFirst ? L.forYou : '';
+splitText($('[data-k="splashHead"]'), L.splashHead);
+$('#forYou').textContent = L.forYou;
 $('#sentBy').textContent = partnerName ? L.sentBy(partnerName) : '';
 $('#skip').textContent = L.skip; $('#stGoT').textContent = L.cont;
 $('#tapText').textContent = L.tap; $('#volText').textContent = L.vol;
@@ -786,7 +786,7 @@ function track(event, extra = {}){
 
 
 /* ---------- flow ---------- */
-/* ---------- Maria's story: a whiteboard drawing, about 60 seconds ---------- */
+/* ---------- the "most people" story: a whiteboard drawing, about 70 seconds. Nobody is singled out. ---------- */
 const CHALK = '#f4f8f9', GOLD = '#ffc46b', TEAL = '#46d9d2', RED = '#ff7b6b', LEAF = '#7bd88f', BOARD = '#0d2235';
 const circ = (cx, cy, r) => `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${2*r} 0a${r} ${r} 0 1 0 ${-2*r} 0`;
 const oval = (cx, cy, rx, ry) => `M${cx - rx} ${cy}a${rx} ${ry} 0 1 0 ${2*rx} 0a${rx} ${ry} 0 1 0 ${-2*rx} 0`;
@@ -847,30 +847,36 @@ const qmark = (x, y) => draw([{txt:'?', x, y, size:46, c:RED, t:.5}]);
 /* SCENE TIMINGS live here. dur = seconds on screen (a scene never ends before Brian finishes its line).
    Each drawing starts at "at" x dur. Scene 4 is the slow one on purpose. */
 const STORY = [
-  {dur:7.2, els:[
-    [0,   () => draw([...clock(60, 66, 30, 3, 15), {txt:'3:15', x:60, y:118, size:20, c:GOLD}])],
-    [.28, () => draw([`M10 232H350`, `M196 232V104H344V232`, `M186 108L270 56L354 108`, circ(270, 84, 7), box(252, 172, 34, 60), {d:'M281 204h.1', w:3.5, t:.1}, box(212, 128, 26, 22), box(302, 128, 26, 22)], {set:true})],
-    [.46, () => draw([{txt:prospectFirst ? L.meet(esc(prospectFirst)) : L.meetNo, x:180, y:28, size:20, c:GOLD, serif:true, t:.9}, ...fig(150, 232, {dress:true, hair:'pony', badge:true, phone:true, smile:false})], {t:.22})],
-    [.78, () => draw(['M128 74h44a8 8 0 0 1 8 8v16a8 8 0 0 1 -8 8h-14l-6 10l-2 -10h-22a8 8 0 0 1 -8 -8v-16a8 8 0 0 1 8 -8z', {txt:'?', x:150, y:97, size:20, c:GOLD, t:.3}])]]},
-  {dur:8.4, els:[
+  /* 1 most people: three different people, one treadmill, the clock keeps going */
+  {dur:7.4, els:[
+    [0,   () => draw([{txt:L.most, x:180, y:40, size:fitSize(L.most, 30, 300), c:GOLD, serif:true, t:1}])],
+    [.16, () => draw([`M10 252H350`, ...clock(316, 104, 26, 9, 0)], {set:true})],
+    [.26, () => draw([...fig(70, 232, {badge:true, bag:true, smile:null}), ...fig(150, 232, {dress:true, hair:'pony', phone:true, smile:null}), ...fig(230, 232, {s:.92, hair:'kid', smile:null})], {t:.2})],
+    [.6,  () => draw([`M34 234H266a8 8 0 0 1 0 16H34a8 8 0 0 1 0 -16z`, circ(42, 242, 4), circ(258, 242, 4)], {t:.5})],
+    [.74, () => draw([{d:'M40 150h-14M40 166h-20M40 182h-14M120 150h-14M120 166h-20M120 182h-14M202 158h-14M202 174h-20M202 190h-14', c:'rgba(244,248,249,.5)', t:.5},
+      {d:'M290 104a26 26 0 0 1 26 -26', c:RED, w:3.2, t:.6}])]]},
+  /* 2 the money stops when the work stops: the clock turns into bars */
+  {dur:8.0, els:[
     [0,   () => draw([`M10 240H350`, `M118 176H290`, `M128 176V240M280 176V240`, box(200, 124, 56, 42), `M228 166V176`], {set:true})],
-    [.2,  () => draw([...chair(110, 240), ...fig(110, 240, {sit:true, hair:'pony', badge:true, smile:true})], {t:.22})],
+    [.2,  () => draw([...chair(110, 240), ...fig(110, 240, {sit:true, badge:true, smile:true})], {t:.22})],
     [.42, () => draw([`M75 34L115 14L155 34`, box(30, 34, 170, 44)], {set:true}) + draw([{txt:L.goodJob, x:115, y:64, size:fitSize(L.goodJob, 22, 156), c:GOLD}])],
     [.62, () => draw(clock(180, 138, 104, 9, 0, GOLD).slice(0, 2), {t:.9}) + draw(clock(180, 138, 104, 9, 0, GOLD).slice(2), {cls:'hands', d0:.9})],
     [.84, svg => { svg.querySelector('.hands')?.classList.add('gone');
       return draw([[110, 77], [145, 98], [180, 104], [215, 98], [250, 77]].map(([x, h]) => ({d:`M${x} ${138 - h}V${138 + h}`, c:RED, w:5})), {set:true}); }]]},
-  {dur:9.1, els:[
-    [0,   () => draw([`M40 14H320`, `M40 14Q80 70 56 150`, `M320 14Q280 70 304 150`, `M14 150H346`, ...clock(338, 30, 14, 6, 0), ...fig(180, 150, {s:.6, hair:'kid', up:true})], {set:true})],
-    [.11, () => draw([...chair(100, 262), ...chair(240, 262), ...fig(100, 262, {sit:true, smile:true}), ...fig(240, 262, {sit:true, hair:'pony', smile:true})], {set:true})],
-    [.21, () => draw(gold(chair(170, 262)), {cls:'glow', t:.4})],
-    [.33, 'clear'],
-    [.34, () => draw([`M10 250H350`, `M80 190H280`, `M90 190V250M270 190V250`, oval(130, 184, 18, 5), oval(180, 184, 18, 5), oval(230, 184, 18, 5), ...clock(338, 30, 14, 6, 30)], {set:true})],
-    [.44, () => draw([...chair(50, 250), ...chair(312, 250, true), ...fig(50, 250, {sit:true, smile:null}), ...fig(312, 250, {sit:true, flip:true, s:.72, hair:'kid', smile:false})], {set:true})],
-    [.53, () => draw(gold([`M162 189V128M198 189V128M162 128H198M162 150H198`]), {cls:'glow', t:.5})],
-    [.63, 'clear'],
-    [.64, () => draw([`M10 232H350`, `M300 232V160H350`, `M300 160L350 176`, `M314 166V232M330 170V232`, box(24, 22, 96, 44), {txt:'0:02', x:72, y:54, size:24, c:GOLD}, ...clock(338, 30, 14, 7, 58), ...fig(232, 232, {s:.62, hair:'kid', up:true}), circ(264, 224, 7)], {set:true})],
-    [.79, () => draw([{d:'M40 152h-16M40 170h-22M40 188h-16', c:'rgba(244,248,249,.5)', t:.3}, ...fig(76, 232, {dress:true, hair:'pony', badge:true, bag:true, smile:false})], {t:.22})]]},
-  {dur:12.2, els:[
+  /* 3 too little time (the empty chair at dinner), dreams pushed to someday */
+  {dur:9.0, els:[
+    [0,   () => draw([`M10 250H350`, `M80 190H280`, `M90 190V250M270 190V250`, oval(130, 184, 18, 5), oval(180, 184, 18, 5), oval(230, 184, 18, 5), ...clock(338, 30, 14, 6, 30)], {set:true})],
+    [.1,  () => draw([...chair(50, 250), ...chair(312, 250, true), ...fig(50, 250, {sit:true, hair:'pony', smile:null}), ...fig(312, 250, {sit:true, flip:true, smile:false})], {set:true})],
+    [.2,  () => draw(gold([`M162 189V128M198 189V128M162 128H198M162 150H198`]), {cls:'glow', t:.5})],
+    [.3,  () => {}], [.38, () => {}], [.44, () => {}],   /* hold on the empty chair while Brian says "the people we love" */
+    [.5,  'clear'],
+    [.51, () => draw([`M10 250H350`, ...fig(80, 250, {dress:true, hair:'pony', smile:null})], {set:true})],
+    [.58, () => draw([circ(112, 132, 4), circ(130, 114, 7), oval(232, 76, 96, 50)], {t:.4})],
+    [.65, () => draw([{d:circ(282, 54, 11), c:GOLD, w:2.8}, {d:'M206 112q4 -22 -2 -46', c:LEAF, w:3}, {d:'M204 66q-16 -6 -26 4M204 66q14 -10 26 -2M204 66q-6 12 -18 16', c:LEAF, w:2.6},
+      {d:'M160 104q10 -6 20 0t20 0t20 0t20 0t20 0t20 0', c:TEAL, w:2.4}], {t:.35})],
+    [.8,  () => draw([box(156, 178, 150, 46), {txt:L.someday, x:231, y:210, size:fitSize(L.someday, 22, 140), c:RED}, {d:'M330 76h22m-8 -7l8 7l-8 7', c:RED, w:3}], {t:.4})]]},
+  /* 4 the three month question: the paycheck fades, the months pile up */
+  {dur:10.0, els:[
     [0,   () => draw([box(20, 26, 150, 72), {txt:'$', x:46, y:74, size:32, c:GOLD}, 'M74 50H156M74 66H148', {d:'M112 86q6 -8 10 0t10 0t10 0', t:.4}], {cls:'check', t:.5})],
     [.17, svg => { svg.querySelector('.check')?.classList.add('faded'); }],
     [.26, () => monthPage(0)],
@@ -882,21 +888,26 @@ const STORY = [
     [.71, () => qmark(62, 180)],
     [.81, () => qmark(176, 200)],
     [.9,  () => qmark(288, 196)]]},
-  {dur:9.4, els:[
+  /* 5 never taught money: the crossed out class, a thin piggy bank, debt stacking up, the hourglass */
+  {dur:10.2, els:[
+    [0,   () => draw([`M10 252H350`, box(20, 22, 156, 92), {txt:L.money101, x:98, y:76, size:fitSize(L.money101, 24, 140), c:GOLD}], {set:true})],
+    [.1,  () => draw([{d:'M30 32L166 104M166 32L30 104', c:RED, w:3.2, t:.5}, ...fig(98, 252, {hair:'kid', smile:false}), {txt:'?', x:132, y:146, size:28, c:RED, t:.3}], {t:.22})],
+    [.34, () => draw([oval(262, 64, 36, 24), 'M244 84v14M280 84v14', box(296, 56, 8, 14), 'M254 42h16', 'M238 48l6 -12l8 10', {d:'M280 58h.1', w:3.4, t:.1},
+      {d:circ(262, 22, 6), c:GOLD, w:2.4}], {t:.35})],
+    [.55, () => draw([0, 1, 2, 3].map(k => ({d:box(262, 236 - k * 15, 74, 13), c:RED, w:2.2})).concat([{txt:L.debt, x:299, y:168, size:fitSize(L.debt, 20, 80), c:RED}]), {t:.3})],
+    [.78, () => draw([{d:'M178 172H218L198 206L218 240H178L198 206Z', w:2.8}, {fill:GOLD, d:'M186 238H210L198 226Z'}, {fill:GOLD, d:'M184 178H212L198 196Z'}], {t:.4})]]},
+  /* 6 a different way: a plan, one small stream that grows, a life with more room in it */
+  {dur:10.8, els:[
     [0,   () => draw([box(20, 30, 110, 54), {txt:'$', x:40, y:67, size:24, c:GOLD}, 'M62 50H118M62 64H108'], {t:.4})],
     [.1,  () => draw([`M140 150L146 176H178L184 150Z`, `M136 150H188`, {d:'M162 150C160 120 168 100 162 58', c:LEAF, w:3.2, t:2.4}], {t:.4})],
-    [.28, () => draw([`M200 18H350`, `M212 18Q236 60 222 112`, `M340 18Q316 60 330 112`, `M204 112H346`, `M196 254H350`], {set:true}) + draw(fig(276, 112, {s:.5, hair:'kid', up:true}))],
-    [.44, () => draw([...chair(250, 254), ...fig(250, 254, {sit:true, hair:'pony', smile:true})], {t:.22})],
-    [.58, () => draw([{d:'M163 124q-22 -6 -26 -24q20 0 26 24', c:LEAF, w:2.8, t:.7}])],
-    [.7,  () => draw([{d:'M164 100q22 -8 28 -28q-22 2 -28 28', c:LEAF, w:2.8, t:.7}])],
-    [.82, () => draw([{d:circ(162, 48, 10), c:GOLD, w:2.8}, {txt:'$', x:162, y:54, size:14, c:GOLD, t:.3}])]]},
-  {dur:6.8, els:[
-    [0,   () => draw([...clock(66, 62, 28, 3, 15), {txt:'3:15', x:66, y:112, size:20, c:GOLD}])],
-    [.15, () => draw([`M10 250H350`, `M130 250V96H344V250`, `M120 100L237 40L354 100`, circ(237, 72, 7), `M150 124H324`, `M156 104Q166 116 160 124M318 104Q308 116 314 124`], {set:true})],
-    [.33, () => draw([...chair(196, 250), ...chair(262, 250)], {set:true}) + draw([ ...fig(196, 250, {sit:true, hair:'pony', smile:true}), ...fig(262, 250, {sit:true, s:.72, hair:'kid', smile:true}),
-      {d:'M240 150c-4 -6 -12 -2 -8 4l8 8l8 -8c4 -6 -4 -10 -8 -4', c:RED, w:2.4, t:.4}], {t:.22})],
-    [.62, () => draw([{txt:L.bigger, x:180, y:274, size:fitSize(L.bigger, 24, 340), c:GOLD, serif:true, t:1.4}])]]},
-  {dur:9.2, hold:true, els:[
+    [.26, () => draw([`M196 248H350`, {d:circ(316, 52, 16), c:GOLD, w:2.8}, {d:'M316 24v-10M316 80v10M288 52h-10M344 52h10M296 32l-7 -7M336 72l7 7M336 32l7 -7M296 72l-7 7', c:GOLD, w:2.2}], {set:true})],
+    [.4,  () => draw([...fig(248, 248, {up:true, smile:true}), {d:'M330 248V196', w:3}, {d:circ(330, 182, 18), c:LEAF, w:2.8}], {t:.22})],
+    [.56, () => draw([{d:'M163 124q-22 -6 -26 -24q20 0 26 24', c:LEAF, w:2.8, t:.7}])],
+    [.66, () => draw([{d:'M164 100q22 -8 28 -28q-22 2 -28 28', c:LEAF, w:2.8, t:.7}])],
+    [.74, () => draw([{d:circ(162, 48, 10), c:GOLD, w:2.8}, {txt:'$', x:162, y:54, size:14, c:GOLD, t:.3}])],
+    [.8,  () => draw([{txt:L.bigger, x:180, y:274, size:fitSize(L.bigger, 24, 340), c:GOLD, serif:true, t:1.2}])]]},
+  /* 7 worth a look: the calendar, one circled day */
+  {dur:13.4, hold:true, els:[
     [0,   () => draw([{txt:fillMin(L.worth), x:180, y:58, size:fitSize(fillMin(L.worth), 34, 330), c:GOLD, serif:true, t:1.3}])],
     [.16, () => draw([box(92, 84, 176, 132), `M92 108H268`, {d:'M124 78V92M236 78V92', w:3, t:.2},
       {d:[1, 2, 3, 4, 5, 6].map(k => `M${(92 + 176 / 7 * k).toFixed(1)} 108V216`).join('') + [1, 2, 3].map(k => `M92 ${108 + 27 * k}H268`).join(''), w:1.6, t:.9}], {set:true})],
@@ -981,7 +992,7 @@ async function story(id, from = 0){
   track('video_completed');
 }
 
-/* the old narrated slideshow (logo and lists) is no longer played; Maria's story replaces it */
+/* the old narrated slideshow (logo and lists) is no longer played; the "most people" whiteboard story replaces it */
 async function introOld(id){
   // logo in
   $('#capText').textContent = L.capIn; show('logo');

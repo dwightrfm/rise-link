@@ -17,12 +17,12 @@ window.RISE_AUDIO = {
   "And to grow their savings.": "audio/en/884bc1b0775a.mp3",
   "Team RISE brings a clear path forward on both.": "audio/en/720c248b9eba.mp3",
   "Tap continue when you are ready.": "audio/en/51537193c394.mp3",
-  "This is Maria. It's 3:15 on a Tuesday, and she's asking permission to leave work early. Again.": "audio/en/8cddc06baca2.mp3",
-  "Maria has a good job. She likes her job. The job just owns her clock. Every hour of her week is already sold before the week starts.": "audio/en/665cf067435d.mp3",
-  "So the school play gets the empty seat. Dinner starts without her. And the game: she catches the last two minutes, in her work clothes.": "audio/en/f56d20999306.mp3",
-  "Now the question nobody wants to sit with. If those checks stopped for three months… would her family be okay? For most families Maria knows, the honest answer is no.": "audio/en/0866bab5ee35.mp3",
-  "It doesn't have to be a new job. It can start as one small stream of income that doesn't need her hours, one that grows while she's where she actually wants to be.": "audio/en/38688ffe9bd0.mp3",
-  "Same job. Same Maria. Just a bigger life around it. That's what we help families build, one step at a time.": "audio/en/6f470d79c52d.mp3",
-  "If any of this felt familiar, it's worth 30 minutes to see what it could look like for your family. Pick a time below. No pressure. Just a look.": "audio/en/40e3a722885a.mp3"
+  "Most people are working hard. Long days. Full weeks. And still, a lot of us feel like we're running in place.": "audio/en/0cfd1e19bc1f.mp3",
+  "For most of us, the money stops the day the work stops. Every hour of the week is already sold before the week even starts.": "audio/en/668a29a96924.mp3",
+  "That leaves too little time for the people we love. And too many dreams get pushed to someday.": "audio/en/9b6bdcf5bbd5.mp3",
+  "Here's the question most people never sit with. If the paychecks stopped for three months, would we be okay? For most households, the honest answer is no.": "audio/en/7284f8576d7d.mp3",
+  "Most of us were never taught how money really works. So saving is hard, debt piles up, and every year we wait is a year our money isn't growing.": "audio/en/826468527f51.mp3",
+  "It doesn't have to mean a new job. It can start with a clear plan, and one small stream of income that doesn't need your hours. More time. More choices.": "audio/en/408ef4ad94f1.mp3",
+  "That's what Team RISE helps people build, one step at a time. If any of this sounded familiar, it's worth 30 minutes to see what it could look like for you. Pick a time below. No pressure. Just a look.": "audio/en/9be3e4cfdc64.mp3"
  }
 };
