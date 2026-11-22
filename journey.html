@@ -142,6 +142,11 @@ em,.em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing
 .opt{display:flex;align-items:center;width:100%;min-height:56px;padding:14px 20px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.07);
   font-size:18px;font-weight:600;line-height:1.3;text-align:left;transition:transform .2s var(--spring),background .2s,border-color .2s}
 @media (hover:hover){.opt:hover{border-color:color-mix(in oklab,var(--acc),transparent 40%)}}
+.opt.path{flex-direction:column;align-items:flex-start;gap:3px;padding:16px 20px}
+.opt.path b{font-size:19px;font-weight:700}
+.opt.path span{font-size:14.5px;opacity:.72;font-weight:500}
+.opts.yn{flex-direction:row}
+.opts.yn .opt{justify-content:center;font-size:19px;font-weight:700;min-height:64px}
 .opt.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#03070b;border-color:transparent;transform:scale(1.02)}
 .qnav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px}
 .tlink{background:none;border:0;padding:12px 4px;font-size:17px;font-weight:600;color:var(--mut);text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(255,255,255,.3)}
@@ -164,6 +169,7 @@ em,.em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing
 .embed{margin-top:16px;padding:6px;overflow:hidden}
 .embed iframe{display:block;width:100%;height:clamp(600px,84vh,800px);border:0;border-radius:16px;background:#fff}
 .calacts{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:18px}
+.donehint{color:var(--mut);font-size:14px;margin-top:6px;text-align:center}
 .calacts .btn{width:100%;white-space:normal;padding:16px 22px;line-height:1.25}
 
 /* confirmation */
@@ -304,7 +310,8 @@ body.storying #skip{display:block}
   <div class="wrap rwrap">
     <div class="rtop"><button type="button" class="tlink" id="rBack"></button><div class="qbar" aria-hidden="true"><span id="rFill"></span></div></div>
     <div class="rcard glass a" style="--d:.1s">
-      <h2 id="rHead"></h2>
+      <span class="eyebrow" id="rEyebrow"></span>
+      <h2 id="rHead" style="margin-top:14px"></h2>
       <div id="rLines"></div>
       <p class="rclose" id="rClose"></p>
     </div>
@@ -317,7 +324,8 @@ body.storying #skip{display:block}
       <div class="embed glass"><iframe id="bookFrame"></iframe></div>
       <div class="calacts">
         <button type="button" class="btn" id="booked"></button>
-        <button type="button" class="tlink" id="notYet"></button>
+        <small class="donehint" id="doneHint"></small>
+        <button type="button" class="tlink" id="notYet" hidden></button>
       </div>
     </div>
     <p class="foot" data-k="disclaimer"></p>
@@ -403,71 +411,51 @@ en:{
     "Here's the question most people never sit with. If the paychecks stopped for three months, would we be okay? For most households, the honest answer is no.",
     "Most of us were never taught how money really works. So saving is hard, debt piles up, and every year we wait is a year our money isn't growing.",
     "It doesn't have to mean a new job. It can start with a clear plan, and one small stream of income that doesn't need your hours. More time. More choices.",
-    "That's what Team RISE helps people build, one step at a time. If any of this sounded familiar, it's worth {min} minutes to see what it could look like for you. Tap continue for four quick questions, then pick your time. No pressure. Just a look."],
+    "That's what Team RISE helps people build, one step at a time. If any of this sounded familiar, it's worth {min} minutes to see what it could look like for you. Tap continue, answer a few quick questions, then pick your time. No pressure. Just a look."],
   most:'Most people…', goodJob:'GOOD JOB', month:i=>`Month ${i}`, someday:'SOMEDAY', money101:'MONEY 101', debt:'DEBT',
-  bigger:'More time. More choices.', worth:'Worth {min} minutes?', pick:'4 quick taps, then a time', skip:'Skip intro',
+  bigger:'More time. More choices.', worth:'Worth {min} minutes?', pick:'A few quick taps, then a time', skip:'Skip intro',
   welcome:'Welcome!', friend:'Friend', sayWelcome:n=>`Welcome! We are so glad you are here.`,
   chHead:'Most families today are working hard to...',
   pillars:['Grow their income','Grow their savings'],
   chLead:'Team RISE brings <strong>a clear path forward on both.</strong>',
   sayCh:'Most families today are working hard to grow their income. And to grow their savings. Team RISE brings a clear path forward on both. Tap continue when you are ready.',
   cont:'Continue', whereFallback:'your Team RISE contact',
-  /* QUICK CHECK. Option keys must match QUICK (in the script below). */
+  /* THE QUESTIONS: the original button version, proven. Pick a path, then Yes or No.
+     Income = 3, Savings = 3, Both = all 6. Just enough to spark a look; the real conversation happens on Zoom. */
   qc:{
-    intro:'Quick check: 4 taps, about 20 seconds. Your answers shape what we talk about. Nothing else.',
-    pill:k=>`Quick check • ${k} of 4`, back:'‹ Back', skip:'Just book a time ›',
-    qs:[
-      {q:'If you couldn\'t work for a month, what would pay the bills first?', opts:{job_pay:'My job would keep paying me', savings:'My savings', partner:'My partner\'s paycheck', borrow:'Credit cards or borrowing', nothing:'Nothing, honestly'}},
-      {q:'If work stopped tomorrow, how long would your money last?', opts:{lt1:'Less than a month', m1_3:'1 to 3 months', m3_6:'3 to 6 months', gt6:'More than 6 months', no_idea:'No idea, honestly'}},
-      {q:'What would you most like to get sorted first?', opts:{protect:'Protect my income', extra_income:'Build extra income', savings:'Get savings growing', debt:'Clear debt', understand:'Just understand where we stand'}},
-      {q:'When is best for a short Zoom chat?', opts:{weekday_evening:'Weekday evening', weekend_morning:'Weekend morning', lunchtime:'Lunchtime', daytime:'Daytime'}}]
+    pathPill:'Choose your path', pathHead:'Pick the one that speaks to you most', pathSub:'Tap one to keep going.',
+    pill:(i,n)=>`Question ${i} of ${n}`, back:'‹ Back', skip:'Just book a time ›', yes:'Yes', no:'No'
   },
-  /* RESULT TEMPLATES. Built only from their answers. No score, no advice. */
+  paths:{income:['Grow income','Build more streams'],savings:['Grow savings','Strengthen your future'],both:['Both','The best of both']},
+  badge:{income:'Grow Income',savings:'Grow Savings',both:'Income and Savings'},
+  incomeQs:[
+    'If there were a legitimate way to grow your income over the next 12 months, would you want to learn it?',
+    'Do you think having more than one stream of income matters in today\'s economy?',
+    'Would you want to build income that doesn\'t stop when you stop?'],
+  savingsQs:[
+    'Does saving money feel harder today than it used to?',
+    'Do you ever feel your savings are not growing as fast as you\'d like?',
+    'If you could start strengthening your family\'s financial future today, would you be open to learning how?'],
+  /* RESULT: the original button version's closing words */
   res:{
-    head:n=>`${n}, here's what I heard.`, headNoName:'Here\'s what I heard.', generic:'No check needed. Here\'s the next step.',
-    start:{
-      job_pay:'If you couldn\'t work, you\'d count on your job to keep paying you. That help is tied to the job.',
-      savings:'If you couldn\'t work, you\'d pay the bills from savings. That works, until the savings run down.',
-      partner:'If you couldn\'t work, you\'d lean on your partner\'s paycheck. That works, as long as that paycheck keeps coming.',
-      borrow:'If you couldn\'t work, the bills would go on credit cards or a loan. That buys time, but the debt keeps growing.',
-      nothing:'If you couldn\'t work, nothing would pay the bills right now. You said it plain, and that\'s where a first step helps most.'},
-    cushion:{
-      lt1:'And if work stopped tomorrow, the money would last less than a month. That is the gap.',
-      m1_3:'And if work stopped tomorrow, the money would last 1 to 3 months. There is a cushion, but it is thin.',
-      m3_6:'And if work stopped tomorrow, the money would last 3 to 6 months. That is a real cushion.',
-      gt6:'And if work stopped tomorrow, the money would last more than 6 months. That is a strong cushion.',
-      no_idea:'And you don\'t know how long the money would last if work stopped. Not knowing is the gap, and it is the easiest one to fix.'},
-    /* join: after a Q1 line the Q2 line drops its repeated "if work stopped" opener ("Even so" after nothing/borrow) */
-    joinFrom:'And if work stopped tomorrow, the money would last', joinAnd:'And the money would last', joinStill:'Even so, the money would last',
-    agenda:{protect:'protecting your income', extra_income:'building extra income alongside your job', savings:'getting your savings growing', debt:'clearing debt', understand:'a clear picture of where you stand'},
-    focus:a=>`So our chat starts with ${a}.`,
-    close:(m,h,a)=>`That's a ${m}-minute Zoom with ${h}. No cost, no obligation. Bring nothing, prepare nothing. We start with ${a}.`,
-    closeNoAgenda:(m,h)=>`That's a ${m}-minute Zoom with ${h}. No cost, no obligation. Bring nothing, prepare nothing.`
+    eyebrow:'Your next step', head:'Team RISE is helping families <em>every day.</em>',
+    lead:'Let\'s set up a quick chat so we can show you how it could work for you.',
+    say:'Thank you for your answers. Now pick the day and time that works best for you on the calendar. Your invite with the Zoom link will come by email.'
   },
   /* CALENDAR SECTION (guidance only: the page cannot read the calendar's open times) */
   cal:{
-    head:'Pick your time',
-    guide:{
-      weekday_evening:'You said weekday evenings suit you best. Look for an evening time in the next few days.',
-      weekend_morning:'You said weekend mornings suit you best. Look for a Saturday morning in the next week.',
-      lunchtime:'You said lunchtime suits you best. Look for a midday time in the next few days.',
-      daytime:'You said daytime suits you best. Look for a daytime slot in the next few days.'},
-    shared:'Pick the soonest time that works. Chats set for the next few days are the ones that happen.',
-    who:(p,h)=>`Sent to you by <b>${p}</b>. Your chat is with <b>${h}</b>.`, whoSelf:h=>`<b>${h}</b> will see you there.`,
-    booked:p=>`I've booked, let ${p} know ›`, bookedNoName:'I\'ve booked ›', notYet:'I didn\'t book yet, take me back up'
+    where:p=>`Pick a day and time on the calendar. The Zoom link comes in your invite. <b>${p}</b> will see you there.`,
+    doneBook:'I booked my time', doneHint:'Tap this after you confirm on the calendar.'
   },
   /* CONFIRMATION (honest: the page cannot see inside the Google calendar) */
   cf:{
-    head:n=>`Thanks, ${n}.`, headNoName:'Thanks.',
-    body:'If you picked a time above, your invite is on its way to your email from Google Calendar, with the Zoom link inside.',
+    head:'Thank <em>you</em>', when:'You\'re on the calendar.', line:'Your invite with the Zoom link is on its way to your email.',
+    say:'You are all set. We are looking forward to it. See you soon.',
     text:p=>`Text ${p}`, back:'‹ Back to the calendar', again:'Start over'
   },
-  /* SMS to the sender. gap = Q2 short label, me = Q3 agenda in first person */
+  /* SMS to the sender */
   sms:{
-    gap:{lt1:'less than a month', m1_3:'1 to 3 months', m3_6:'3 to 6 months', gt6:'more than 6 months'},
-    me:{protect:'protecting my income', extra_income:'building extra income alongside my job', savings:'getting my savings growing', debt:'clearing debt', understand:'a clear picture of where I stand'},
-    full:(s,n,g,a)=>`Hi ${s}${n?`, it's ${n}`:''}. I just booked a chat through the RISE page. My quick check: my money would last ${g}, and the first thing I want to sort is ${a}.`,
-    fullNoIdea:(s,n,a)=>`Hi ${s}${n?`, it's ${n}`:''}. I just booked a chat through the RISE page. My quick check: honestly, I don't know how long my money would last, and the first thing I want to sort is ${a}.`,
+    full:(s,n,b,y,t)=>`Hi ${s}${n?`, it's ${n}`:''}. I just booked a chat through the RISE page. I picked ${b}, and said yes to ${y} of ${t}.`,
     short:(s,n)=>`Hi ${s}${n?`, it's ${n}`:''}. I just booked a chat through the RISE page.`
   },
   disclaimer:'Team RISE is a team of independent financial professionals. This content is for educational purposes only. Nothing presented is professional advice, an offer, a solicitation, or a recommendation of any product, service, company, or business opportunity.'
@@ -503,9 +491,9 @@ es:{
     "Esta es la pregunta que casi nadie se hace. Si los cheques se detuvieran por tres meses, ¿estaríamos bien? Para la mayoría de los hogares, la respuesta honesta es no.",
     "A la mayoría nunca nos enseñaron cómo funciona el dinero. Así que ahorrar cuesta, las deudas crecen, y cada año que esperamos es un año en que nuestro dinero no crece.",
     "No tiene que ser un nuevo trabajo. Puede empezar con un plan claro, y una pequeña fuente de ingresos que no necesita tus horas. Más tiempo. Más opciones.",
-    "Eso es lo que Team RISE ayuda a construir, paso a paso. Si algo de esto te sonó familiar, vale la pena tomar {min} minutos para ver cómo podría verse para ti. Toca continuar para cuatro preguntas rápidas, y luego elige tu hora. Sin presión. Solo un vistazo."],
+    "Eso es lo que Team RISE ayuda a construir, paso a paso. Si algo de esto te sonó familiar, vale la pena tomar {min} minutos para ver cómo podría verse para ti. Toca continuar, responde unas preguntas rápidas, y luego elige tu hora. Sin presión. Solo un vistazo."],
   most:'La mayoría…', goodJob:'BUEN TRABAJO', month:i=>`Mes ${i}`, someday:'ALGÚN DÍA', money101:'DINERO 101', debt:'DEUDA',
-  bigger:'Más tiempo. Más opciones.', worth:'¿Valen {min} minutos?', pick:'4 toques y eliges tu hora', skip:'Saltar intro',
+  bigger:'Más tiempo. Más opciones.', worth:'¿Valen {min} minutos?', pick:'Unos toques y eliges tu hora', skip:'Saltar intro',
   welcome:'¡Bienvenido!', friend:'Amigo', sayWelcome:n=>`¡Bienvenido! Qué gusto tenerte aquí.`,
   chHead:'Hoy la mayoría de las familias trabaja duro para...',
   pillars:['Aumentar sus ingresos','Aumentar sus ahorros'],
@@ -513,55 +501,35 @@ es:{
   sayCh:'Hoy la mayoría de las familias trabaja duro para aumentar sus ingresos. Y para aumentar sus ahorros. Team RISE ofrece un camino claro para ambos. Toca continuar cuando estés listo.',
   cont:'Continuar', whereFallback:'tu contacto de Team RISE',
   qc:{
-    intro:'Revisión rápida: 4 toques, unos 20 segundos. Tus respuestas definen de qué hablamos. Nada más.',
-    pill:k=>`Revisión rápida • ${k} de 4`, back:'‹ Atrás', skip:'Solo reservar una hora ›',
-    qs:[
-      {q:'Si no pudieras trabajar por un mes, ¿qué pagaría las cuentas primero?', opts:{job_pay:'Mi trabajo me seguiría pagando', savings:'Mis ahorros', partner:'El sueldo de mi pareja', borrow:'Tarjetas de crédito o préstamos', nothing:'Nada, la verdad'}},
-      {q:'Si el trabajo se detuviera mañana, ¿cuánto tiempo duraría tu dinero?', opts:{lt1:'Menos de un mes', m1_3:'1 a 3 meses', m3_6:'3 a 6 meses', gt6:'Más de 6 meses', no_idea:'No tengo idea, la verdad'}},
-      {q:'¿Qué te gustaría resolver primero?', opts:{protect:'Proteger mis ingresos', extra_income:'Crear ingresos extra', savings:'Hacer crecer mis ahorros', debt:'Salir de deudas', understand:'Solo entender dónde estamos'}},
-      {q:'¿Cuándo te queda mejor una breve charla por Zoom?', opts:{weekday_evening:'Entre semana, en la noche', weekend_morning:'Fin de semana, en la mañana', lunchtime:'A la hora del almuerzo', daytime:'Durante el día'}}]
+    pathPill:'Elige tu camino', pathHead:'Elige el que más te interese', pathSub:'Toca uno para continuar.',
+    pill:(i,n)=>`Pregunta ${i} de ${n}`, back:'‹ Atrás', skip:'Solo reservar una hora ›', yes:'Sí', no:'No'
   },
+  paths:{income:['Aumentar ingresos','Crear más fuentes'],savings:['Aumentar ahorros','Fortalecer tu futuro'],both:['Ambos','Lo mejor de los dos']},
+  badge:{income:'Aumentar Ingresos',savings:'Aumentar Ahorros',both:'Ingresos y Ahorros'},
+  incomeQs:[
+    'Si existiera una forma legítima de aumentar tus ingresos en los próximos 12 meses, ¿te gustaría aprenderla?',
+    '¿Crees que tener más de una fuente de ingresos importa en la economía de hoy?',
+    '¿Te gustaría crear ingresos que no se detengan cuando tú te detienes?'],
+  savingsQs:[
+    '¿Sientes que ahorrar dinero es más difícil hoy que antes?',
+    '¿Alguna vez sientes que tus ahorros no crecen tan rápido como quisieras?',
+    'Si pudieras empezar hoy a fortalecer el futuro financiero de tu familia, ¿estarías abierto a aprender cómo?'],
   res:{
-    head:n=>`${n}, esto es lo que escuché.`, headNoName:'Esto es lo que escuché.', generic:'No hace falta la revisión. Este es el siguiente paso.',
-    start:{
-      job_pay:'Si no pudieras trabajar, contarías con que tu trabajo te siga pagando. Esa ayuda está atada al trabajo.',
-      savings:'Si no pudieras trabajar, pagarías las cuentas con tus ahorros. Eso funciona, hasta que los ahorros se acaban.',
-      partner:'Si no pudieras trabajar, contarías con el sueldo de tu pareja. Eso funciona, mientras ese sueldo siga llegando.',
-      borrow:'Si no pudieras trabajar, las cuentas irían a tarjetas de crédito o a un préstamo. Eso da tiempo, pero la deuda sigue creciendo.',
-      nothing:'Si no pudieras trabajar, nada pagaría las cuentas por ahora. Lo dijiste con claridad, y ahí es donde más ayuda un primer paso.'},
-    cushion:{
-      lt1:'Y si el trabajo se detuviera mañana, el dinero duraría menos de un mes. Esa es la brecha.',
-      m1_3:'Y si el trabajo se detuviera mañana, el dinero duraría de 1 a 3 meses. Hay un colchón, pero es delgado.',
-      m3_6:'Y si el trabajo se detuviera mañana, el dinero duraría de 3 a 6 meses. Es un colchón real.',
-      gt6:'Y si el trabajo se detuviera mañana, el dinero duraría más de 6 meses. Es un colchón fuerte.',
-      no_idea:'Y no sabes cuánto duraría el dinero si el trabajo se detuviera. No saberlo es la brecha, y es la más fácil de resolver.'},
-    joinFrom:'Y si el trabajo se detuviera mañana, el dinero duraría', joinAnd:'Y el dinero duraría', joinStill:'Aun así, el dinero duraría',
-    agenda:{protect:'proteger tus ingresos', extra_income:'crear ingresos extra además de tu trabajo', savings:'hacer crecer tus ahorros', debt:'salir de deudas', understand:'una idea clara de dónde estás'},
-    focus:a=>`Así que nuestra charla empieza por ${a}.`,
-    close:(m,h,a)=>`Es una charla de ${m} minutos por Zoom con ${h}. Sin costo, sin compromiso. No tienes que traer ni preparar nada. Empezamos por ${a}.`,
-    closeNoAgenda:(m,h)=>`Es una charla de ${m} minutos por Zoom con ${h}. Sin costo, sin compromiso. No tienes que traer ni preparar nada.`
+    eyebrow:'Tu siguiente paso', head:'Team RISE ayuda a familias <em>todos los días.</em>',
+    lead:'Hagamos una breve charla para mostrarte cómo podría funcionar para ti.',
+    say:'Gracias por tus respuestas. Ahora elige en el calendario el día y la hora que mejor te funcionen. Tu invitación con el enlace de Zoom llegará por correo.'
   },
   cal:{
-    head:'Elige tu hora',
-    guide:{
-      weekday_evening:'Dijiste que entre semana en la noche te queda mejor. Busca una hora en la noche en los próximos días.',
-      weekend_morning:'Dijiste que el fin de semana en la mañana te queda mejor. Busca un sábado en la mañana en la próxima semana.',
-      lunchtime:'Dijiste que a la hora del almuerzo te queda mejor. Busca una hora al mediodía en los próximos días.',
-      daytime:'Dijiste que durante el día te queda mejor. Busca una hora durante el día en los próximos días.'},
-    shared:'Elige la hora más pronta que te funcione. Las charlas para los próximos días son las que sí suceden.',
-    who:(p,h)=>`Te lo envió <b>${p}</b>. Tu charla es con <b>${h}</b>.`, whoSelf:h=>`<b>${h}</b> te verá allí.`,
-    booked:p=>`Ya reservé, avísale a ${p} ›`, bookedNoName:'Ya reservé ›', notYet:'Todavía no reservé, llévame arriba'
+    where:p=>`Elige un día y una hora en el calendario. El enlace de Zoom llega en tu invitación. <b>${p}</b> te verá allí.`,
+    doneBook:'Ya reservé mi hora', doneHint:'Toca aquí después de confirmar en el calendario.'
   },
   cf:{
-    head:n=>`Gracias, ${n}.`, headNoName:'Gracias.',
-    body:'Si elegiste una hora arriba, tu invitación va en camino a tu correo desde Google Calendar, con el enlace de Zoom adentro.',
+    head:'<em>Gracias</em>', when:'Ya estás en el calendario.', line:'Tu invitación con el enlace de Zoom llegará a tu correo.',
+    say:'Todo listo. Esperamos hablar contigo. Hasta pronto.',
     text:p=>`Escribirle a ${p}`, back:'‹ Volver al calendario', again:'Empezar de nuevo'
   },
   sms:{
-    gap:{lt1:'menos de un mes', m1_3:'de 1 a 3 meses', m3_6:'de 3 a 6 meses', gt6:'más de 6 meses'},
-    me:{protect:'proteger mis ingresos', extra_income:'crear ingresos extra además de mi trabajo', savings:'hacer crecer mis ahorros', debt:'salir de deudas', understand:'tener una idea clara de dónde estoy'},
-    full:(s,n,g,a)=>`Hola ${s}${n?`, soy ${n}`:''}. Acabo de reservar una charla en la página de RISE. Mi revisión rápida: mi dinero duraría ${g}, y lo primero que quiero resolver es ${a}.`,
-    fullNoIdea:(s,n,a)=>`Hola ${s}${n?`, soy ${n}`:''}. Acabo de reservar una charla en la página de RISE. Mi revisión rápida: la verdad no sé cuánto duraría mi dinero, y lo primero que quiero resolver es ${a}.`,
+    full:(s,n,b,y,t)=>`Hola ${s}${n?`, soy ${n}`:''}. Acabo de reservar una charla en la página de RISE. Elegí ${b}, y dije que sí a ${y} de ${t}.`,
     short:(s,n)=>`Hola ${s}${n?`, soy ${n}`:''}. Acabo de reservar una charla en la página de RISE.`
   },
   disclaimer:'Team RISE es un equipo de profesionales financieros independientes. Este contenido es solo para fines educativos. Nada de lo presentado constituye asesoría profesional, oferta, solicitud ni recomendación de ningún producto, servicio, compañía u oportunidad de negocio.'
@@ -771,8 +739,8 @@ setMuted(false);
 /* ---------- state: answers + current step, kept per link for this browser tab ---------- */
 /* The key carries a short hash of the whole link hash, so a different prospect's link never inherits answers. */
 const linkHash = (() => { let h = 5381; for(const ch of location.hash) h = (h * 33 ^ ch.charCodeAt(0)) >>> 0; return h.toString(36); })();
-const KEY = 'riseV3:' + linkHash;
-const qs = { step:null, a:{}, from:4 };   // step: 'q1'..'q4' | 'result' | 'confirm'.  a: {situation, gap, desire, time}
+const KEY = 'riseV4:' + linkHash;
+const qs = { step:null, a:{}, from:1 };   // step: 'q1' (path) 'q2'.. (Yes/No) | 'result' | 'confirm'.  a: {path, y:['yes'|'no', ...]}
 function save(){ try{ sessionStorage.setItem(KEY, JSON.stringify(qs)); }catch(e){} }
 function loadSaved(){ try{ const j = JSON.parse(sessionStorage.getItem(KEY) || 'null'); return j && j.step ? j : null; }catch(e){ return null; } }
 
@@ -907,7 +875,7 @@ const STORY = [
     [.74, () => draw([{d:circ(162, 48, 10), c:GOLD, w:2.8}, {txt:'$', x:162, y:54, size:14, c:GOLD, t:.3}])],
     [.8,  () => draw([{txt:L.bigger, x:180, y:274, size:fitSize(L.bigger, 24, 340), c:GOLD, serif:true, t:1.2}])]]},
   /* 7 worth a look: the calendar, one circled day */
-  {dur:15.4, hold:true, els:[
+  {dur:16.6, hold:true, els:[
     [0,   () => draw([{txt:fillMin(L.worth), x:180, y:58, size:fitSize(fillMin(L.worth), 34, 330), c:GOLD, serif:true, t:1.3}])],
     [.16, () => draw([box(92, 84, 176, 132), `M92 108H268`, {d:'M124 78V92M236 78V92', w:3, t:.2},
       {d:[1, 2, 3, 4, 5, 6].map(k => `M${(92 + 176 / 7 * k).toFixed(1)} 108V216`).join('') + [1, 2, 3].map(k => `M92 ${108 + 27 * k}H268`).join(''), w:1.6, t:.9}], {set:true})],
@@ -1058,41 +1026,56 @@ function orbSVG(){
   <g transform="translate(200 200)"><path d="M-70 40 Q -35 -10 0 10 T 70 -40" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".9" stroke-dasharray="200" stroke-dashoffset="200"><animate attributeName="stroke-dashoffset" from="200" to="0" dur="2.4s" begin=".6s" fill="freeze"/></path><circle cx="70" cy="-40" r="8" fill="#fff"><animate attributeName="opacity" values="0;0;1" keyTimes="0;.9;1" dur="3s" fill="freeze"/></circle></g></svg>`;
 }
 
-/* ---------- QUICK CHECK: 4 real choices, every answer changes the result or the agenda ---------- */
-const QUICK = [
-  {key:'situation', opts:['job_pay','savings','partner','borrow','nothing']},
-  {key:'gap',       opts:['lt1','m1_3','m3_6','gt6','no_idea']},
-  {key:'desire',    opts:['protect','extra_income','savings','debt','understand']},
-  {key:'time',      opts:['weekday_evening','weekend_morning','lunchtime','daytime']}
-];
-const PROGRESS = [55, 70, 85, 95];   // the video already counts as progress; result screen = 100
+/* ---------- THE QUESTIONS: pick a path (step 0), then Yes or No (steps 1..n). From the original button version. ---------- */
+const qList = () => qs.a.path === 'income' ? L.incomeQs : qs.a.path === 'savings' ? L.savingsQs : qs.a.path === 'both' ? [...L.incomeQs, ...L.savingsQs] : [];
 const mk = (tag, cls, text) => { const e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; };
 
 function quickCheck(){ hush(); renderQ(0); }
 function renderQ(k){
+  const list = qList(), n = list.length || 3;
   qs.step = 'q' + (k + 1); save();
-  if(!current || current.id !== 'check') show('check', k / 4);
-  else setSky('check', k / 4);
-  const Q = QUICK[k], txt = L.qc.qs[k], picked = qs.a[Q.key];
-  $('#qFill').style.width = PROGRESS[k] + '%'; $('#qBar').setAttribute('aria-valuenow', PROGRESS[k]);
-  $('#qPill').textContent = L.qc.pill(k + 1);
-  const box = mk('div', 'qin');
-  if(k === 0) box.appendChild(mk('p', 'qintro', L.qc.intro));
-  const h = mk('h2', 'qtext', txt.q); h.id = 'qHead'; h.tabIndex = -1; box.appendChild(h);
-  const opts = mk('div', 'opts'); opts.setAttribute('role', 'group'); opts.setAttribute('aria-labelledby', 'qHead');
-  let locked = false;
-  Q.opts.forEach(v => {
-    const b = mk('button', 'opt' + (picked === v ? ' on' : ''), txt.opts[v]);
-    b.type = 'button'; b.setAttribute('aria-pressed', String(picked === v));
-    b.onclick = () => {
-      if(locked) return; locked = true;
-      opts.querySelectorAll('.opt').forEach(o => { o.classList.toggle('on', o === b); o.setAttribute('aria-pressed', String(o === b)); });
-      qs.a[Q.key] = v; save();
-      track(`q${k + 1}_answered`, {answer:v});
-      setTimeout(() => k < 3 ? renderQ(k + 1) : showResult(), 250);
-    };
-    opts.appendChild(b);
-  });
+  const frac = k / (n + 1);
+  if(!current || current.id !== 'check') show('check', frac);
+  else setSky('check', frac);
+  const pct = Math.round(55 + 40 * frac);
+  $('#qFill').style.width = pct + '%'; $('#qBar').setAttribute('aria-valuenow', pct);
+  const box = mk('div', 'qin'), opts = mk('div', 'opts');
+  opts.setAttribute('role', 'group'); opts.setAttribute('aria-labelledby', 'qHead');
+  let h, locked = false;
+  const pick = (b, fn) => { if(locked) return; locked = true;
+    opts.querySelectorAll('.opt').forEach(o => { o.classList.toggle('on', o === b); o.setAttribute('aria-pressed', String(o === b)); });
+    setTimeout(fn, 250); };
+  if(k === 0){
+    $('#qPill').textContent = L.qc.pathPill;
+    h = mk('h2', 'qtext', L.qc.pathHead); box.appendChild(h);
+    box.appendChild(mk('p', 'qintro', L.qc.pathSub));
+    ['income', 'savings', 'both'].forEach(v => {
+      const b = mk('button', 'opt path' + (qs.a.path === v ? ' on' : ''));
+      b.type = 'button'; b.setAttribute('aria-pressed', String(qs.a.path === v));
+      b.append(mk('b', '', L.paths[v][0]), mk('span', '', L.paths[v][1]));
+      b.onclick = () => pick(b, () => {
+        if(qs.a.path !== v){ qs.a.path = v; qs.a.y = []; }
+        track('path_picked', {path:v}); save(); renderQ(1);
+      });
+      opts.appendChild(b);
+    });
+  } else {
+    const i = k - 1, cur = (qs.a.y || [])[i];
+    $('#qPill').textContent = L.qc.pill(k, n);
+    h = mk('h2', 'qtext', list[i]); box.appendChild(h);
+    opts.classList.add('yn');
+    ['yes', 'no'].forEach(v => {
+      const b = mk('button', 'opt' + (cur === v ? ' on' : ''), L.qc[v]);
+      b.type = 'button'; b.setAttribute('aria-pressed', String(cur === v));
+      b.onclick = () => pick(b, () => {
+        (qs.a.y = qs.a.y || [])[i] = v; save();
+        track(`q${k}_answered`, {path:qs.a.path, answer:v});
+        k < n ? renderQ(k + 1) : showResult();
+      });
+      opts.appendChild(b);
+    });
+  }
+  h.id = 'qHead'; h.tabIndex = -1;
   box.appendChild(opts);
   const nav = mk('div', 'qnav');
   if(k > 0){ const bk = mk('button', 'tlink', L.qc.back); bk.type = 'button'; bk.onclick = () => renderQ(k - 1); nav.appendChild(bk); }
@@ -1111,6 +1094,7 @@ function showResult(){
   qs.step = 'result'; save();
   renderResult();
   show('result');
+  const my = ++runId; wait(1200).then(() => { if(alive(my) && current && current.id === 'result') say(L.res.say); });
   track('result_shown', {answered:Object.keys(qs.a)});
   calSeen = false;
   if(!calObs && 'IntersectionObserver' in window){
@@ -1121,53 +1105,39 @@ function showResult(){
   }
 }
 function renderResult(){
-  const a = qs.a, R = L.res, lines = [];
-  if(R.start[a.situation]) lines.push(R.start[a.situation]);
-  let cush = R.cushion[a.gap];
-  if(cush && R.start[a.situation] && cush.startsWith(R.joinFrom))
-    cush = (['nothing','borrow'].includes(a.situation) && a.gap !== 'lt1' ? R.joinStill : R.joinAnd) + cush.slice(R.joinFrom.length);
-  if(cush) lines.push(cush);
-  const agenda = a.desire ? R.agenda[a.desire] : '';
-  if(agenda) lines.push(R.focus(agenda));
-  $('#rHead').textContent = !lines.length ? R.generic : prospectFirst ? R.head(prospectFirst) : R.headNoName;
-  $('#rLines').replaceChildren(...lines.map(t => mk('p', '', t)));
-  $('#rClose').textContent = agenda ? R.close(MIN, HOST.firstName, agenda) : R.closeNoAgenda(MIN, HOST.firstName);
+  const R = L.res;
+  $('#rEyebrow').textContent = R.eyebrow;
+  $('#rHead').innerHTML = R.head;
+  $('#rLines').replaceChildren(mk('p', '', R.lead));
+  $('#rClose').hidden = true;
   $('#rBack').textContent = L.qc.back;
   $('#rFill').style.width = '100%';
-  $('#calEyebrow').textContent = HOST.title;
-  $('#calHead').textContent = L.cal.head;
-  $('#calGuide').textContent = a.time ? L.cal.guide[a.time] : '';
-  $('#calGuide').hidden = !a.time;
-  $('#calShared').textContent = L.cal.shared;
-  $('#calWho').innerHTML = senderIsHost ? L.cal.whoSelf(esc(HOST.firstName)) : L.cal.who(esc(partnerName), esc(HOST.firstName));
+  ['#calEyebrow', '#calHead', '#calGuide', '#calShared'].forEach(k => $(k).hidden = true);
+  $('#calWho').innerHTML = L.cal.where(esc(partnerName || HOST.firstName));
   const f = $('#bookFrame'); f.title = HOST.title;
   if(f.getAttribute('src') !== HOST.calendarEmbedUrl) f.src = HOST.calendarEmbedUrl;
-  $('#booked').textContent = partnerFirst ? L.cal.booked(partnerFirst) : L.cal.bookedNoName;
-  $('#notYet').textContent = L.cal.notYet;
+  $('#booked').textContent = L.cal.doneBook;
+  $('#doneHint').textContent = L.cal.doneHint;
 }
-$('#rBack').onclick = () => renderQ(Math.min(4, Math.max(1, qs.from || 4)) - 1);
+$('#rBack').onclick = () => { hush(); renderQ(Math.max(0, (qs.from || 1) - 1)); };
 $('#notYet').onclick = () => {   /* scroll the screen itself, never the page body */
   const sc = $('#result');
   sc.scrollTo({top:sc.scrollTop + $('#cal').getBoundingClientRect().top - sc.getBoundingClientRect().top - 76, behavior:'smooth'});
 };
 $('#booked').onclick = () => {
-  track('booked_self_reported', {situation:qs.a.situation || null, gap:qs.a.gap || null, desire:qs.a.desire || null, time:qs.a.time || null});
+  track('booked_self_reported', {path:qs.a.path || null, yes:(qs.a.y || []).filter(x => x === 'yes').length, answered:(qs.a.y || []).filter(Boolean).length});
   showConfirm();
 };
 
 /* ---------- CONFIRMATION: honest, and the text to the sender is the real confirmation ---------- */
 function smsBody(){
-  const s = partnerFirst || L.whereFallback, n = prospectFirst, a = qs.a;
-  if(a.gap && a.desire){
-    const me = L.sms.me[a.desire];
-    return a.gap === 'no_idea' ? L.sms.fullNoIdea(s, n, me) : L.sms.full(s, n, L.sms.gap[a.gap], me);
-  }
-  return L.sms.short(s, n);
+  const s = partnerFirst || L.whereFallback, n = prospectFirst, a = qs.a, ys = (a.y || []).filter(Boolean);
+  return a.path && ys.length ? L.sms.full(s, n, L.badge[a.path], ys.filter(x => x === 'yes').length, qList().length) : L.sms.short(s, n);
 }
 function showConfirm(){
   qs.step = 'confirm'; save();
-  $('#cfHead').textContent = prospectFirst ? L.cf.head(prospectFirst) : L.cf.headNoName;
-  $('#cfBody').textContent = L.cf.body;
+  $('#cfHead').innerHTML = L.cf.head;
+  $('#cfBody').innerHTML = `${L.cf.when}<br>${L.cf.line}`;
   const to = (cfg.pp || '').replace(/[^\d+]/g, ''), t = $('#cfText');
   t.hidden = !to;
   if(to){
@@ -1178,6 +1148,7 @@ function showConfirm(){
   $('#cfBack').textContent = L.cf.back;
   $('#cfAgain').textContent = L.cf.again;
   show('confirm');
+  const my = ++runId; wait(1200).then(() => { if(alive(my) && current && current.id === 'confirm') say(L.cf.say); });
 }
 $('#cfText').onclick = () => track('text_sender_tapped');
 $('#cfBack').onclick = () => { qs.step = 'result'; save(); renderResult(); show('result'); };
@@ -1185,13 +1156,13 @@ $('#cfAgain').onclick = () => { hush(); try{ sessionStorage.removeItem(KEY); }ca
 
 /* ---------- coming back to the tab: restore their place ---------- */
 function resume(saved){
-  Object.assign(qs, {step:saved.step, a:saved.a || {}, from:saved.from || 4});
+  Object.assign(qs, {step:saved.step, a:saved.a || {}, from:saved.from || 1});
   begun = true; runId++;
   document.body.classList.add('started');
   addEventListener('pointerdown', () => { unlockSpeech(); startPad(); }, {once:true});
   if(qs.step === 'confirm') showConfirm();
   else if(qs.step === 'result') showResult();
-  else renderQ(Math.min(3, Math.max(0, +qs.step.slice(1) - 1 || 0)));
+  else renderQ(qs.a.path ? Math.min(qList().length, Math.max(0, +qs.step.slice(1) - 1 || 0)) : 0);
 }
 
 /* ---------- start ---------- */

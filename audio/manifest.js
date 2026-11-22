@@ -23,6 +23,8 @@ window.RISE_AUDIO = {
   "Here's the question most people never sit with. If the paychecks stopped for three months, would we be okay? For most households, the honest answer is no.": "audio/en/7284f8576d7d.mp3",
   "Most of us were never taught how money really works. So saving is hard, debt piles up, and every year we wait is a year our money isn't growing.": "audio/en/826468527f51.mp3",
   "It doesn't have to mean a new job. It can start with a clear plan, and one small stream of income that doesn't need your hours. More time. More choices.": "audio/en/408ef4ad94f1.mp3",
-  "That's what Team RISE helps people build, one step at a time. If any of this sounded familiar, it's worth 30 minutes to see what it could look like for you. Tap continue for four quick questions, then pick your time. No pressure. Just a look.": "audio/en/c362213f7afe.mp3"
+  "That's what Team RISE helps people build, one step at a time. If any of this sounded familiar, it's worth 30 minutes to see what it could look like for you. Tap continue, answer a few quick questions, then pick your time. No pressure. Just a look.": "audio/en/c8905ab9dc3e.mp3",
+  "Thank you for your answers. Now pick the day and time that works best for you on the calendar. Your invite with the Zoom link will come by email.": "audio/en/12ccc94f8b2d.mp3",
+  "You are all set. We are looking forward to it. See you soon.": "audio/en/28bb6b1f7d52.mp3"
  }
 };
