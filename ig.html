@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eef2f2">
+<meta name="robots" content="noindex,nofollow">
+<title>Team RISE | A 2 Minute Look</title>
+<meta name="description" content="Working hard and still feel like you're running in place? Take a 2 minute look at your income and your savings.">
+<meta property="og:title" content="Working hard and still running in place?">
+<meta property="og:description" content="A 2 minute look at your income and your savings. No sound needed.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ease:cubic-bezier(.16,1,.3,1);--spring:cubic-bezier(.34,1.56,.64,1);
+  --sans:"Inter","SF Pro Display",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Instrument Serif","New York",Georgia,serif;
+  --mono:"JetBrains Mono","SF Mono",ui-monospace,Menlo,monospace;
+  --ink:#16262b;--mut:#56676d;--dim:#7d8b90;
+  --acc:#0e7c7a;--acc2:#2fb3ae;--gold:#c98a1a;
+  --line:rgba(22,38,43,.12);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#eef2f2;color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+
+#sky{position:fixed;inset:0;z-index:0;overflow:hidden;background:radial-gradient(120% 90% at 50% 120%,#d9ecea 0%,#eef2f2 55%,#f5f7f7 100%)}
+#sky::before,#sky::after{content:"";position:absolute;border-radius:50%;filter:blur(20px)}
+#sky::before{width:62vmax;height:62vmax;left:-14vmax;top:-26vmax;background:radial-gradient(circle,#bfe3df,transparent 68%);animation:drift1 26s ease-in-out infinite alternate}
+#sky::after{width:52vmax;height:52vmax;right:-16vmax;bottom:-24vmax;background:radial-gradient(circle,#9fd5cf,transparent 66%);animation:drift2 32s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(8vmax,6vmax)}}
+@keyframes drift2{to{transform:translate(-7vmax,-5vmax)}}
+
+/* scenes */
+.scene{position:fixed;inset:0;z-index:5;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;
+  opacity:0;visibility:hidden;transform:translateY(24px);transition:opacity .5s var(--ease),transform .7s var(--ease),visibility 0s linear .7s}
+.scene.active{opacity:1;visibility:visible;transform:none;transition:opacity .6s var(--ease) .05s,transform .8s var(--ease),visibility 0s}
+.wrap{margin:auto;width:100%;max-width:600px;padding:clamp(64px,9vh,100px) 16px clamp(28px,6vh,60px)}
+.center{text-align:center}
+
+.a{opacity:0}
+.active .a{animation:rise .9s var(--ease) var(--d,0s) both}
+@keyframes rise{from{opacity:0;transform:translateY(26px);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+
+/* type */
+.eyebrow{font-family:var(--mono);font-weight:500;text-transform:uppercase;letter-spacing:.24em;font-size:12px;color:var(--acc);display:inline-flex;align-items:center;gap:12px}
+.eyebrow::before,.eyebrow::after{content:"";width:28px;height:1px;background:linear-gradient(90deg,transparent,var(--acc))}
+.eyebrow::after{transform:scaleX(-1)}
+.hook{font-size:clamp(38px,10.5vw,66px);font-weight:750;letter-spacing:-.045em;line-height:1.02;margin:18px 0 0;text-wrap:balance}
+.h2{font-size:clamp(28px,7.4vw,42px);font-weight:700;letter-spacing:-.035em;line-height:1.1;margin:0;text-wrap:balance}
+em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:-.01em;
+  background:linear-gradient(120deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding:0 .06em}
+
+.glass{position:relative;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.72));
+  border:1px solid rgba(255,255,255,.95);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 24px 56px -28px rgba(14,70,80,.35)}
+
+/* who card on the hook */
+.who{display:flex;align-items:center;gap:14px;margin:26px 0 0;padding:14px 16px;text-align:left}
+.face{flex:none;width:64px;height:64px;border-radius:50%;overflow:hidden;background:#fff;display:grid;place-items:center;box-shadow:0 0 0 3px #fff,0 0 0 5px color-mix(in oklab,var(--acc),transparent 55%)}
+.face img{width:100%;height:100%;object-fit:cover}
+.face svg{width:60px;height:60px}
+.who p{margin:0;font-size:16px;line-height:1.45;color:var(--mut)}
+.who b{color:var(--ink)}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:999px;padding:17px 30px;font-weight:700;font-size:18px;
+  background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;text-decoration:none;box-shadow:0 12px 36px color-mix(in oklab,var(--acc),transparent 62%);transition:transform .25s var(--spring)}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:rgba(255,255,255,.85);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn svg{width:20px;height:20px;flex:none}
+.btn.wide{width:100%;white-space:normal;line-height:1.25}
+.go{margin-top:24px}
+.small{margin:12px 0 0;font-size:14px;color:var(--dim)}
+.tlink{background:none;border:0;padding:12px 4px;font-size:16px;font-weight:600;color:var(--mut);text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(22,38,43,.3)}
+.stack{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:18px}
+
+/* story: the whiteboard, captions on screen (no audio) */
+.board{width:100%;aspect-ratio:360/280;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#fff;box-shadow:0 24px 56px -28px rgba(14,70,80,.4)}
+.board svg{display:block;width:100%;height:100%;transition:opacity .3s}
+.board svg.wipe{opacity:0}
+.board .el{transition:opacity 1.4s ease}
+.board .faded{opacity:.16}.board .gone{opacity:0}
+.board .ln{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1;opacity:0;animation:stDraw var(--t,.55s) ease-out var(--d,0s) forwards}
+.board .fl{opacity:0;animation:stFade .3s ease var(--d,0s) forwards}
+.board .tx{opacity:0;font-family:var(--sans);animation:stWrite var(--t,1s) ease-out var(--d,0s) forwards}
+.board .glow{animation:stGlow 1.6s ease-in-out infinite alternate}
+@keyframes stDraw{0%{stroke-dashoffset:1;opacity:0}2%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
+@keyframes stFade{to{opacity:1}}
+@keyframes stWrite{0%{opacity:0;clip-path:inset(-30% 100% -30% 0)}8%{opacity:1}100%{opacity:1;clip-path:inset(-30% 0 -30% 0)}}
+@keyframes stGlow{from{filter:drop-shadow(0 0 0 rgba(201,138,26,0))}to{filter:drop-shadow(0 0 5px rgba(201,138,26,.7))}}
+.dots{display:flex;justify-content:center;gap:8px;margin:16px 0 0}
+.dots i{width:28px;height:5px;border-radius:5px;background:rgba(22,38,43,.12);overflow:hidden;position:relative}
+.dots i.done{background:var(--acc)}
+.dots i.now::after{content:"";position:absolute;inset:0;background:var(--acc);transform-origin:left;animation:fillbar var(--dur,8s) linear both}
+@keyframes fillbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.cap{margin:14px auto 0;min-height:5.2em;font-size:clamp(20px,5.4vw,25px);line-height:1.38;font-weight:650;letter-spacing:-.015em;text-align:center;text-wrap:pretty}
+.cap.in{animation:rise .6s var(--ease) both}
+.storynav{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.storynav:has(#stSkip[hidden]){justify-content:center}
+#stGo{opacity:0;pointer-events:none;transition:opacity .5s}
+#stGo.on{opacity:1;pointer-events:auto}
+
+/* questions */
+.qprog{display:flex;align-items:center;gap:12px;margin:0 0 22px}
+.qbar{flex:1;height:8px;border-radius:8px;background:rgba(22,38,43,.1);overflow:hidden}
+.qbar span{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,var(--acc),var(--acc2));transition:width .45s var(--ease)}
+.qpill{flex:none;padding:7px 14px;border-radius:999px;font-size:14px;font-weight:600;color:var(--mut);white-space:nowrap}
+.qin{animation:rise .45s var(--ease) both}
+.qintro{margin:0 0 16px;font-size:17px;line-height:1.45;color:var(--mut)}
+.qtext{font-size:clamp(25px,6.6vw,38px);font-weight:680;letter-spacing:-.03em;line-height:1.14;margin:0 0 22px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;width:100%;min-height:58px;padding:14px 20px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.88);
+  font-size:18px;font-weight:600;line-height:1.3;text-align:left;transition:transform .2s var(--spring),background .2s}
+.opt.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent;transform:scale(1.02)}
+.opts.yn{flex-direction:row}
+.opts.yn .opt{justify-content:center;font-size:19px;font-weight:700;min-height:64px}
+.qnav{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+
+/* result */
+.rcard{padding:22px 20px}
+.rcard h2{font-size:clamp(28px,7vw,40px);font-weight:700;letter-spacing:-.035em;line-height:1.1;margin:12px 0 14px;text-wrap:balance}
+.rcard p{margin:0 0 12px;font-size:18px;line-height:1.5}
+.rcard p.mut{color:var(--mut)}
+.embed{margin-top:16px;padding:6px;overflow:hidden}
+.embed iframe{display:block;width:100%;height:clamp(600px,84vh,800px);border:0;border-radius:16px;background:#fff}
+.hint{color:var(--mut);font-size:14px;text-align:center;margin:4px 0 0}
+.foot{margin:30px 0 0;font-size:12px;line-height:1.55;color:var(--dim)}
+.copybox{margin-top:14px;padding:14px 16px;font-size:15px;line-height:1.45;color:var(--mut);user-select:all;-webkit-user-select:all}
+
+#brandtag{position:fixed;left:16px;top:16px;z-index:20;display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim)}
+#brandtag svg{width:30px;height:30px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);z-index:40;opacity:0;pointer-events:none;
+  padding:12px 20px;border-radius:999px;background:var(--ink);color:#fff;font-weight:600;font-size:15px;white-space:nowrap;transition:all .35s var(--ease)}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+[tabindex="-1"]:focus{outline:none}
+@media (prefers-reduced-motion:reduce){
+  .board .ln,.board .fl,.board .tx{animation-duration:.01s!important}
+  .scene,.scene.active{transition:opacity .3s!important;transform:none!important}
+  .active .a,.qin,.cap.in{animation:none!important;opacity:1!important}
+}
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<div id="brandtag"></div>
+
+<!-- 1 the hook: who Dwight is, readable with the sound off -->
+<section class="scene" id="hook">
+  <div class="wrap center">
+    <span class="eyebrow a">2 min · no sound needed</span>
+    <h1 class="hook a" style="--d:.1s">Working hard and still feel like you're <em>running in place?</em></h1>
+    <div class="who glass a" style="--d:.3s">
+      <div class="face" id="face"></div>
+      <p><b>Hi, I'm Dwight.</b> My wife Kander and I help families build a clear plan for their income and their savings.</p>
+    </div>
+    <button class="btn go a" style="--d:.45s" id="start">Show me <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    <p class="small a" style="--d:.55s">3 quick pictures, a few taps, and you'll see where you stand.</p>
+  </div>
+</section>
+
+<!-- 2 the story: 3 whiteboard scenes with captions -->
+<section class="scene" id="story">
+  <div class="wrap">
+    <div class="board"><svg id="boardSvg" viewBox="0 0 360 280" aria-hidden="true"></svg></div>
+    <div class="dots" id="dots"><i></i><i></i><i></i></div>
+    <p class="cap" id="cap" aria-live="polite"></p>
+    <div class="storynav">
+      <button type="button" class="tlink" id="stSkip">Skip</button>
+      <button type="button" class="btn" id="stGo">See where you stand <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- 3 the questions -->
+<section class="scene" id="check">
+  <div class="wrap">
+    <div class="qprog"><div class="qbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="qBar"><span id="qFill"></span></div><span class="qpill glass" id="qPill"></span></div>
+    <div id="qBody"></div>
+  </div>
+</section>
+
+<!-- 4 the result: fit, not yet, or outside the US -->
+<section class="scene" id="result">
+  <div class="wrap">
+    <div class="rcard glass">
+      <span class="eyebrow">Your result</span>
+      <h2 id="rHead"></h2>
+      <div id="rLines"></div>
+    </div>
+    <div id="rFit" hidden>
+      <div class="embed glass"><iframe id="bookFrame" title="Book a time with Dwight"></iframe></div>
+      <div class="stack">
+        <button type="button" class="btn wide" id="booked">I booked my time</button>
+        <p class="hint">Tap this after you confirm on the calendar.</p>
+        <button type="button" class="tlink" id="dmFit">Not ready to book? Send Dwight your result</button>
+      </div>
+    </div>
+    <div id="rOther" class="stack" hidden>
+      <button type="button" class="btn wide" id="dmOther">Send Dwight my result</button>
+      <a class="btn ghost wide" id="follow" target="_blank" rel="noopener">Follow on Instagram</a>
+    </div>
+    <div class="glass copybox" id="copyBox" hidden></div>
+    <div class="stack"><button type="button" class="tlink" id="redo">Change my answers</button></div>
+    <p class="foot" id="disc"></p>
+  </div>
+</section>
+
+<!-- 5 booked -->
+<section class="scene" id="confirm">
+  <div class="wrap center">
+    <h1 class="hook a">You're <em>set.</em></h1>
+    <p class="a" style="--d:.2s;font-size:19px;line-height:1.5;color:var(--mut);margin:16px 0 0">Your invite with the Zoom link is on its way to your email.</p>
+    <p class="a" style="--d:.3s;font-size:19px;line-height:1.5;margin:14px 0 0"><b>One last thing:</b> send Dwight a quick DM so he knows to look for you.</p>
+    <div class="stack a" style="--d:.45s">
+      <button type="button" class="btn wide" id="dmBooked">DM Dwight on Instagram</button>
+      <button type="button" class="tlink" id="cfBack">Back to the calendar</button>
+    </div>
+    <div class="glass copybox" id="copyBox2" hidden></div>
+  </div>
+</section>
+
+<div id="toast" role="status"></div>
+
+<script>
+/* ===== Team RISE: the Instagram version =====
+   Standalone. Built for someone who taps a link in Dwight's bio or a DM, and may not know him yet.
+   Differences from journey.html (the warm, personal link):
+   no name in the link, captions instead of a voice, 3 story scenes instead of 7,
+   a fit check before the calendar, an Instagram DM as the small next step, and ?src= to tag which post sent them.
+   Tag each post's link: ig.html?src=reel-capped , ig.html?src=bio , ig.html?src=story-1121 */
+
+/* ===== CONFIG ===== */
+const IG_CONFIG = {
+  igHandle: 'dwightpauldillon',
+  meetingMinutes: 30, // must match the Google appointment schedule below
+  calendarEmbedUrl: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1pxtieLq2QfkNKyiC_5ZwWt352jxmTHSk1narSebHl5IDbcqC3RGdK4JwquGaxwjMAF5HjSdJg?gv=true',
+  photo: 'ig/dwight.jpg', // drop a square headshot here; until then the Team RISE logo shows
+  analyticsEndpoint: ''   // empty = no network calls. Events still collect in window.__riseEvents
+};
+
+const LOGO = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Team RISE"><defs><clipPath id="rcX"><circle cx="100" cy="100" r="90"/></clipPath><radialGradient id="rcgX" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#3f8c9c"/><stop offset="1" stop-color="#25586a"/></radialGradient></defs><circle cx="100" cy="100" r="99" fill="#fff"/><circle cx="100" cy="100" r="91" fill="url(#rcgX)"/><g clip-path="url(#rcX)"><g fill="#fff"><polygon points="100,122 -49.6,110.5 -44.5,81.7"/><polygon points="100,122 -36.6,60.0 -22.0,34.7"/><polygon points="100,122 -7.2,17.1 15.3,-1.8"/><polygon points="100,122 35.2,-13.3 62.7,-23.3"/><polygon points="100,122 85.4,-27.3 114.6,-27.3"/><polygon points="100,122 137.3,-23.3 164.8,-13.3"/><polygon points="100,122 184.7,-1.8 207.2,17.1"/><polygon points="100,122 222.0,34.7 236.6,60.0"/><polygon points="100,122 244.5,81.7 249.6,110.5"/></g><path d="M-20 205 L100 110 L220 205Z" fill="#fff"/><path d="M62 140 q19 -9 38 -2 t38 -2" stroke="#33707f" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M-20 205 L100 110 L220 205" stroke="#33707f" stroke-width="3" fill="none"/><text x="100" y="181" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="800" fill="#33707f">RISE</text></g></svg>`;
+
+/* words the drawings write on the board */
+const L = { most:'Most people…', month:i => `Month ${i}`, bigger:'More time. More choices.' };
+
+const STORY_CAPS = [
+  "Most people are working hard. Long days, full weeks. And a lot of us still feel like we're running in place.",
+  "Here's the question most people never sit with: if the paychecks stopped for three months, would you be okay?",
+  "It doesn't have to mean a new job. It can start with a clear plan, and one small stream of income that doesn't need your hours."
+];
+
+const Q = {
+  pathHead:'Which one matters most to you right now?',
+  paths:{income:['Grow my income','More than one stream'],savings:['Grow my savings','A stronger future'],both:['Both','The best of both']},
+  badge:{income:'Grow Income',savings:'Grow Savings',both:'Income and Savings'},
+  incomeQs:[
+    'If there were a legitimate way to grow your income over the next 12 months, would you want to learn it?',
+    'Do you think having more than one stream of income matters in today\'s economy?',
+    'Would you want to build income that doesn\'t stop when you stop?'],
+  savingsQs:[
+    'Does saving money feel harder today than it used to?',
+    'Do you ever feel your savings are not growing as fast as you\'d like?',
+    'If you could start strengthening your family\'s financial future today, would you be open to learning how?'],
+  fitIntro:'Two last ones, so nobody wastes your time.',
+  where:{head:'Where do you live?', opts:[['us','In the US'],['out','Outside the US']]},
+  when:{head:'If something here made sense, when would you want to start?', opts:[['now','Now. I\'m ready for a change.'],['soon','In the next few months'],['curious','I\'m just curious']]}
+};
+
+const DISCLAIMER = 'Team RISE is a team of independent financial professionals. This content is for educational purposes only. Nothing presented is professional advice, an offer, a solicitation, or a recommendation of any product, service, company, or business opportunity.';
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const mk = (tag, cls, text) => { const e = document.createElement(tag); if(cls) e.className = cls; if(text != null) e.textContent = text; return e; };
+let runId = 0; const alive = id => id === runId;
+
+/* where they came from: ?src= on the link, kept for this tab */
+const SRC = (() => {
+  const raw = new URLSearchParams(location.search).get('src');
+  let v = (raw || '').toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 40);
+  try{ if(v) sessionStorage.setItem('riseIG:src', v); else v = sessionStorage.getItem('riseIG:src') || ''; }catch(e){}
+  return v;
+})();
+
+/* ---------- state ---------- */
+const KEY = 'riseIG:v1';
+const st = { step:'hook', path:null, y:[], where:null, when:null, booked:false };
+function save(){ try{ sessionStorage.setItem(KEY, JSON.stringify(st)); }catch(e){} }
+function load(){ try{ return JSON.parse(sessionStorage.getItem(KEY) || 'null'); }catch(e){ return null; } }
+
+window.__riseEvents = window.__riseEvents || [];
+function track(event, extra = {}){
+  const e = Object.assign({event, src:SRC, step:st.step, ts:new Date().toISOString()}, extra);
+  window.__riseEvents.push(e);
+  if(IG_CONFIG.analyticsEndpoint){ try{ fetch(IG_CONFIG.analyticsEndpoint, {method:'POST', body:JSON.stringify(e), keepalive:true}).catch(() => {}); }catch(err){} }
+}
+
+/* ---------- scenes ---------- */
+let current = null;
+function show(id){
+  const next = document.getElementById(id);
+  if(current && current !== next) current.classList.remove('active');
+  if(current === next){ next.classList.remove('active'); void next.offsetWidth; }
+  next.classList.add('active'); next.scrollTop = 0; current = next;
+}
+
+/* ---------- static bits ---------- */
+let logoN = 0;
+const logo = () => { logoN++; return LOGO.replace(/rcgX/g, 'rcg' + logoN).replace(/rcX/g, 'rc' + logoN); };
+$('#brandtag').innerHTML = logo() + '<span>Team RISE</span>';
+(function face(){
+  const f = $('#face'); f.innerHTML = logo();
+  const img = new Image(); img.alt = 'Dwight';
+  img.onload = () => f.replaceChildren(img);
+  img.src = IG_CONFIG.photo;
+})();
+$('#disc').textContent = DISCLAIMER;
+$('#follow').href = `https://www.instagram.com/${IG_CONFIG.igHandle}/`;
+
+const CHALK = '#16262b', GOLD = '#c98a1a', TEAL = '#0e7c7a', RED = '#c0573e', LEAF = '#3a9a5c', BOARD = '#ffffff';   /* marker colors on a white board */
+const circ = (cx, cy, r) => `M${cx - r} ${cy}a${r} ${r} 0 1 0 ${2*r} 0a${r} ${r} 0 1 0 ${-2*r} 0`;
+const oval = (cx, cy, rx, ry) => `M${cx - rx} ${cy}a${rx} ${ry} 0 1 0 ${2*rx} 0a${rx} ${ry} 0 1 0 ${-2*rx} 0`;
+const box = (x, y, w, h) => `M${x} ${y}h${w}v${h}h${-w}Z`;
+/* one drawing = strokes drawn one after another. A stroke is a path string, or {d, c color, w width, t seconds},
+   {fill, d} for a quick fill, or {txt, x, y, size, c, serif} for words that write themselves. */
+function draw(strokes, o = {}){
+  let d = o.d0 || 0;
+  return `<g class="el ${o.set ? 'set ' : ''}${o.cls || ''}">` + strokes.map(s => {
+    if(typeof s === 'string') s = {d:s};
+    const t = s.t || o.t || .5, at = d.toFixed(2);
+    if(s.fill) return `<path class="fl" d="${s.d}" fill="${s.fill}" style="--d:${at}s"/>`;
+    d += t * .7 + (o.gap ?? .03);
+    if(s.txt != null) return `<text class="tx" x="${s.x}" y="${s.y}" text-anchor="middle" font-size="${s.size || 20}" fill="${s.c || CHALK}"`
+      + (s.serif ? ` style="--d:${at}s;--t:${t}s;font-family:var(--serif);font-style:italic;font-weight:400"` : ` font-weight="700" style="--d:${at}s;--t:${t}s"`) + `>${s.txt}</text>`;
+    return `<path class="ln" pathLength="1" d="${s.d}" stroke="${s.c || CHALK}" stroke-width="${s.w || 2.6}" style="--d:${at}s;--t:${t}s"/>`;
+  }).join('') + `</g>`;
+}
+/* stick figure. x = center, y = feet. o: s scale, flip, hair 'pony'|'kid', dress, badge, phone, bag, up, sit, smile (true, false = frown, null = none) */
+function fig(x, y, o = {}){
+  const s = o.s || 1, f = o.flip ? -1 : 1;
+  const X = dx => +(x + dx * s * f).toFixed(1), Y = dy => +(y + dy * s).toFixed(1), q = v => +(v * s).toFixed(1);
+  const out = [circ(X(0), Y(-99), q(11))];
+  if(o.hair === 'pony') out.push(`M${X(-11)} ${Y(-101)}Q${X(-3)} ${Y(-116)} ${X(11)} ${Y(-103)}q${q(6)*f} ${q(4)} ${q(3)*f} ${q(15)}`);
+  if(o.hair === 'kid') out.push(`M${X(-10)} ${Y(-104)}q${q(10)*f} ${q(-12)} ${q(20)*f} 0`);
+  out.push({d:`M${X(-4)} ${Y(-101)}h.1M${X(4)} ${Y(-101)}h.1`, w:q(3.2), t:.15});
+  if(o.smile !== null) out.push({d:o.smile === false ? `M${X(-4)} ${Y(-93)}q${q(4)*f} ${q(-4)} ${q(8)*f} 0` : `M${X(-4.5)} ${Y(-95)}q${q(4.5)*f} ${q(5)} ${q(9)*f} 0`, w:q(2), t:.2});
+  if(o.sit){
+    out.push(`M${X(0)} ${Y(-88)}L${X(0)} ${Y(-46)}L${X(18)} ${Y(-46)}L${X(19)} ${Y(-1)}`);
+    out.push(o.up ? `M${X(-14)} ${Y(-114)}L${X(0)} ${Y(-80)}L${X(14)} ${Y(-114)}` : `M${X(0)} ${Y(-80)}L${X(14)} ${Y(-64)}L${X(28)} ${Y(-66)}`);
+  } else {
+    if(o.dress) out.push(`M${X(0)} ${Y(-88)}L${X(0)} ${Y(-80)}M${X(-2)} ${Y(-80)}L${X(-14)} ${Y(-44)}L${X(14)} ${Y(-44)}L${X(2)} ${Y(-80)}Z`, `M${X(-6)} ${Y(-44)}L${X(-8)} ${Y(-1)}M${X(6)} ${Y(-44)}L${X(8)} ${Y(-1)}`);
+    else out.push(`M${X(0)} ${Y(-88)}L${X(0)} ${Y(-48)}`, `M${X(0)} ${Y(-48)}L${X(-9)} ${Y(-1)}M${X(0)} ${Y(-48)}L${X(9)} ${Y(-1)}`);
+    out.push(o.up ? `M${X(-16)} ${Y(-114)}L${X(0)} ${Y(-82)}L${X(16)} ${Y(-114)}`
+      : o.phone ? `M${X(0)} ${Y(-82)}L${X(-15)} ${Y(-58)}M${X(0)} ${Y(-82)}L${X(16)} ${Y(-88)}L${X(10)} ${Y(-100)}`
+      : `M${X(-15)} ${Y(-58)}L${X(0)} ${Y(-82)}L${X(15)} ${Y(-58)}`);
+  }
+  if(o.phone) out.push({d:box(Math.min(X(8), X(14)), Y(-108), q(6), q(12)), c:TEAL, w:2});
+  if(o.badge) out.push({d:`M${X(-5)} ${Y(-88)}L${X(0)} ${Y(-74)}L${X(5)} ${Y(-88)}`, c:TEAL, w:1.6, t:.25}, {d:box(X(0) - q(4), Y(-74), q(8), q(10)), c:TEAL, w:2, t:.25});
+  if(o.bag) out.push({d:`${box(Math.min(X(-26), X(-14)), Y(-60), q(12), q(14))}M${X(-23)} ${Y(-60)}q${q(3)*f} ${q(-6)} ${q(6)*f} 0`, c:GOLD, w:2});
+  return out;
+}
+const chair = (x, y, flip) => { const f = flip ? -1 : 1, X = dx => x + dx * f;
+  return [`M${X(-6)} ${y - 46}H${X(20)}`, `M${X(-6)} ${y - 46}V${y - 86}`, `M${X(-4)} ${y - 46}V${y}M${X(18)} ${y - 46}V${y}`]; };
+function clock(cx, cy, r, h, m, c = CHALK){
+  const pt = (deg, len) => `${(cx + len * Math.sin(deg * Math.PI / 180)).toFixed(1)} ${(cy - len * Math.cos(deg * Math.PI / 180)).toFixed(1)}`;
+  return [{d:circ(cx, cy, r), c, w:r > 40 ? 4 : 2.6},
+    {d:[0, 90, 180, 270].map(a => `M${pt(a, r * .8)}L${pt(a, r * .94)}`).join(''), c, w:2, t:.25},
+    {d:`M${cx} ${cy}L${pt((h % 12) * 30 + m * .5, r * .5)}`, c, w:3, t:.25},
+    {d:`M${cx} ${cy}L${pt(m * 6, r * .78)}`, c, w:2.2, t:.25}];
+}
+const gold = list => list.map(d => ({d, c:GOLD, w:3.2}));
+const fitSize = (txt, max, width) => Math.min(max, Math.floor(width / (txt.length * .56)));
+const monthPage = i => draw([{fill:BOARD, d:box(196 + i*10, 20 + i*8, 118, 82)}, box(196 + i*10, 20 + i*8, 118, 82), `M${196 + i*10} ${40 + i*8}h118`,
+  {d:`M${222 + i*10} ${14 + i*8}v12M${288 + i*10} ${14 + i*8}v12`, w:3, t:.2}, {txt:L.month(i + 1), x:255 + i*10, y:82 + i*8, size:19, c:GOLD, t:.6}], {set:true});
+const qmark = (x, y) => draw([{txt:'?', x, y, size:46, c:RED, t:.5}]);
+
+const PACE = {SPEED:230, MIN_T:.12, TEXT_T:.1, SET_T:1.1, HOLD_T:.6, DONE:.92};
+const SVGNS = 'http://www.w3.org/2000/svg';
+let scratch = null;
+function inkTime(g){
+  if(g.classList.contains('set')) return {t:PACE.SET_T, parts:[...g.querySelectorAll('.ln,.tx,.fl')].map(e => [e, 0])};
+  const parts = [...g.querySelectorAll('.ln,.tx,.fl')].map(e => [e,
+    e.classList.contains('fl') ? 0 : e.classList.contains('tx') ? Math.max(.35, e.textContent.length * PACE.TEXT_T) : Math.max(PACE.MIN_T, e.getTotalLength() / PACE.SPEED)]);
+  return {t:parts.reduce((a, [, t]) => a + t, 0), parts};
+}
+function planScene(sc, durOverride){
+  if(!scratch){ scratch = document.createElementNS(SVGNS, 'svg'); scratch.setAttribute('viewBox', '0 0 360 280'); scratch.style.cssText = 'position:fixed;left:-9999px;top:0;width:360px;height:280px;visibility:hidden'; document.body.appendChild(scratch); }
+  let total = 0;
+  for(const [, f] of sc.els){
+    if(f === 'clear'){ total += .35; continue; }
+    scratch.innerHTML = ''; const out = f(scratch);
+    if(typeof out !== 'string'){ total += PACE.HOLD_T; continue; }
+    scratch.innerHTML = out; total += [...scratch.children].reduce((a, g) => a + inkTime(g).t, 0);
+  }
+  scratch.innerHTML = '';
+  return Math.max(1, total / ((durOverride || sc.dur) * PACE.DONE));   // 1 = steady speed; above 1 = this scene had to hurry
+}
+function inkIn(nodes, fast){
+  let d = 0;
+  nodes.forEach(g => {
+    const {t, parts} = inkTime(g), set = g.classList.contains('set');
+    parts.forEach(([e, dur]) => {
+      e.style.setProperty('--d', (set ? d : d) .toFixed(2) + 's');
+      e.style.setProperty('--t', ((set ? PACE.SET_T : dur) / fast).toFixed(2) + 's');
+      if(!set) d += dur / fast;
+    });
+    if(set) d += PACE.SET_T / fast;
+  });
+  return d;
+}
+
+/* the 3 scenes kept from the warm journey: the treadmill, the three month question, the small stream that grows */
+const STORY = [
+  {dur:7.4, els:[
+    [0,   () => draw([{txt:L.most, x:180, y:40, size:fitSize(L.most, 30, 300), c:GOLD, serif:true, t:1}])],
+    [.16, () => draw([`M10 252H350`, ...clock(316, 104, 26, 9, 0)], {set:true})],
+    [.26, () => draw([...fig(70, 232, {badge:true, bag:true, smile:null}), ...fig(150, 232, {dress:true, hair:'pony', phone:true, smile:null}), ...fig(230, 232, {s:.92, hair:'kid', smile:null})], {t:.2})],
+    [.6,  () => draw([`M34 234H266a8 8 0 0 1 0 16H34a8 8 0 0 1 0 -16z`, circ(42, 242, 4), circ(258, 242, 4)], {t:.5})],
+    [.74, () => draw([{d:'M40 150h-14M40 166h-20M40 182h-14M120 150h-14M120 166h-20M120 182h-14M202 158h-14M202 174h-20M202 190h-14', c:'rgba(22,38,43,.35)', t:.5},
+      {d:'M290 104a26 26 0 0 1 26 -26', c:RED, w:3.2, t:.6}])]]},
+  {dur:8.6, els:[
+    [0,   () => draw([box(20, 26, 150, 72), {txt:'$', x:46, y:74, size:32, c:GOLD}, 'M74 50H156M74 66H148', {d:'M112 86q6 -8 10 0t10 0t10 0', t:.4}], {cls:'check', t:.5})],
+    [.17, svg => { svg.querySelector('.check')?.classList.add('faded'); }],
+    [.26, () => monthPage(0)],
+    [.38, () => monthPage(1)],
+    [.5,  () => monthPage(2)],
+    [.6,  () => draw([{d:`M10 254H350`, t:.3}, `M30 254V214L62 188L94 214V254Z`, `M56 254V234H70V254`,
+      `M124 246V228L140 212H196L212 228H226V246Z`, circ(146, 248, 8), circ(204, 248, 8),
+      `M244 204H260L270 238H320L330 212H264`, circ(280, 248, 6), circ(312, 248, 6)], {t:.4})],
+    [.71, () => qmark(62, 180)],
+    [.81, () => qmark(176, 200)],
+    [.9,  () => qmark(288, 196)]]},
+  {dur:9.4, els:[
+    [0,   () => draw([box(20, 30, 110, 54), {txt:'$', x:40, y:67, size:24, c:GOLD}, 'M62 50H118M62 64H108'], {t:.4})],
+    [.1,  () => draw([`M140 150L146 176H178L184 150Z`, `M136 150H188`, {d:'M162 150C160 120 168 100 162 58', c:LEAF, w:3.2, t:2.4}], {t:.4})],
+    [.26, () => draw([`M196 248H350`, {d:circ(316, 52, 16), c:GOLD, w:2.8}, {d:'M316 24v-10M316 80v10M288 52h-10M344 52h10M296 32l-7 -7M336 72l7 7M336 32l7 -7M296 72l-7 7', c:GOLD, w:2.2}], {set:true})],
+    [.4,  () => draw([...fig(248, 248, {up:true, smile:true}), {d:'M330 248V196', w:3}, {d:circ(330, 182, 18), c:LEAF, w:2.8}], {t:.22})],
+    [.56, () => draw([{d:'M163 124q-22 -6 -26 -24q20 0 26 24', c:LEAF, w:2.8, t:.7}])],
+    [.66, () => draw([{d:'M164 100q22 -8 28 -28q-22 2 -28 28', c:LEAF, w:2.8, t:.7}])],
+    [.74, () => draw([{d:circ(162, 48, 10), c:GOLD, w:2.8}, {txt:'$', x:162, y:54, size:14, c:GOLD, t:.3}])],
+    [.8,  () => draw([{txt:L.bigger, x:180, y:274, size:fitSize(L.bigger, 24, 340), c:GOLD, serif:true, t:1.2}])]]}
+];
+
+/* ---------- the story: captions carry it, no audio ---------- */
+async function story(id){
+  st.step = 'story'; save();
+  const svg = $('#boardSvg'), dots = [...$('#dots').children];
+  $('#stGo').classList.remove('on'); svg.innerHTML = '';
+  show('story'); track('story_started');
+  for(let s = 0; s < STORY.length; s++){
+    const sc = STORY[s];
+    /* a scene stays up long enough to read its caption at an easy pace */
+    const dur = Math.max(sc.dur, STORY_CAPS[s].split(/\s+/).length * .34 + 2.5);
+    if(svg.childNodes.length){ svg.classList.add('wipe'); await wait(240); if(!alive(id)) return; }
+    svg.innerHTML = ''; svg.classList.remove('wipe');
+    const cap = $('#cap'); cap.classList.remove('in'); void cap.offsetWidth; cap.textContent = STORY_CAPS[s]; cap.classList.add('in');
+    dots.forEach((d, i) => { d.className = i < s ? 'done' : i === s ? 'now' : ''; });
+    dots[s].style.setProperty('--dur', dur + 's');
+    const fast = planScene(sc, dur), t0 = performance.now();
+    let cursor = 0;
+    for(const [, f] of sc.els){
+      const ms = t0 + cursor * 1000 - performance.now();
+      if(ms > 0) await wait(ms); if(!alive(id)) return;
+      const before = svg.children.length, out = f(svg);
+      if(typeof out !== 'string'){ cursor += PACE.HOLD_T / fast; continue; }
+      svg.insertAdjacentHTML('beforeend', out);
+      cursor += inkIn([...svg.children].slice(before), fast);
+    }
+    await wait(Math.max(0, t0 + dur * 1000 - performance.now())); if(!alive(id)) return;
+  }
+  dots.forEach(d => d.className = 'done');
+  $('#stGo').classList.add('on'); $('#stSkip').hidden = true;
+  track('story_completed');
+}
+$('#stSkip').onclick = () => { track('story_skipped'); runId++; renderQ(0); };
+$('#stGo').onclick = () => { runId++; renderQ(0); };
+
+/* ---------- the questions: path, Yes or No, then the two fit questions ---------- */
+const qList = () => st.path === 'income' ? Q.incomeQs : st.path === 'savings' ? Q.savingsQs : st.path === 'both' ? [...Q.incomeQs, ...Q.savingsQs] : Q.incomeQs;
+function renderQ(k){
+  const list = qList(), yn = list.length, total = 1 + yn + 2;
+  st.step = 'q' + k; save();
+  if(!current || current.id !== 'check') show('check');
+  const pct = Math.round(100 * k / total);
+  $('#qFill').style.width = pct + '%'; $('#qBar').setAttribute('aria-valuenow', pct);
+  $('#qPill').textContent = `${k + 1} of ${total}`;
+  const box = mk('div', 'qin'), opts = mk('div', 'opts');
+  opts.setAttribute('role', 'group'); opts.setAttribute('aria-labelledby', 'qHead');
+  let h, locked = false;
+  const pick = (b, fn) => { if(locked) return; locked = true;
+    opts.querySelectorAll('.opt').forEach(o => { o.classList.toggle('on', o === b); o.setAttribute('aria-pressed', String(o === b)); });
+    setTimeout(fn, 240); };
+  const option = (label, on, fn, sub) => {
+    const b = mk('button', 'opt' + (on ? ' on' : ''));
+    b.type = 'button'; b.setAttribute('aria-pressed', String(!!on));
+    if(sub){ b.style.cssText = 'flex-direction:column;align-items:flex-start;gap:3px'; b.append(mk('b', '', label), Object.assign(mk('span', '', sub), {style:'font-size:14.5px;opacity:.72;font-weight:500'})); }
+    else b.textContent = label;
+    b.onclick = () => pick(b, fn); opts.appendChild(b);
+  };
+  if(k === 0){
+    h = mk('h2', 'qtext', Q.pathHead);
+    ['income', 'savings', 'both'].forEach(v => option(Q.paths[v][0], st.path === v, () => {
+      if(st.path !== v){ st.path = v; st.y = []; } track('path_picked', {path:v}); save(); renderQ(1);
+    }, Q.paths[v][1]));
+  } else if(k <= yn){
+    const i = k - 1;
+    h = mk('h2', 'qtext', list[i]); opts.classList.add('yn');
+    [['yes', 'Yes'], ['no', 'No']].forEach(([v, t]) => option(t, st.y[i] === v, () => {
+      st.y[i] = v; save(); track('q_answered', {q:k, answer:v}); renderQ(k + 1);
+    }));
+  } else {
+    const which = k === yn + 1 ? 'where' : 'when', q = Q[which];
+    if(which === 'where') box.appendChild(mk('p', 'qintro', Q.fitIntro));
+    h = mk('h2', 'qtext', q.head);
+    q.opts.forEach(([v, t]) => option(t, st[which] === v, () => {
+      st[which] = v; save(); track(which + '_answered', {answer:v});
+      if(which === 'where' && v === 'out'){ st.when = null; save(); showResult(); }
+      else which === 'where' ? renderQ(k + 1) : showResult();
+    }));
+  }
+  h.id = 'qHead'; h.tabIndex = -1;
+  box.insertBefore(h, box.firstChild && box.firstChild.className === 'qintro' ? box.firstChild.nextSibling : box.firstChild);
+  box.appendChild(opts);
+  const nav = mk('div', 'qnav');
+  if(k > 0){ const bk = mk('button', 'tlink', '‹ Back'); bk.type = 'button'; bk.onclick = () => renderQ(k - 1); nav.appendChild(bk); }
+  box.appendChild(nav);
+  $('#qBody').replaceChildren(box);
+  $('#check').scrollTop = 0;
+  h.focus({preventScroll:true});
+}
+
+/* ---------- the fit check: who sees the calendar ----------
+   US AND ready (now or the next few months) AND yes to at least half = the calendar.
+   Everyone else still gets a way to reach Dwight, just not a 30 minute slot. */
+function score(){
+  const n = qList().length, yes = st.y.slice(0, n).filter(x => x === 'yes').length;
+  const kind = st.where === 'out' ? 'outside' : (st.when !== 'curious' && yes / n >= .5) ? 'fit' : 'notyet';
+  return {n, yes, kind};
+}
+function showResult(){
+  st.step = 'result'; save();
+  const {n, yes, kind} = score(), badge = Q.badge[st.path] || Q.badge.income;
+  const lines = [];
+  if(kind === 'fit'){
+    $('#rHead').innerHTML = `You're a <em>good fit</em> for a ${IG_CONFIG.meetingMinutes} minute look.`;
+    lines.push([`You picked ${badge}, and said yes to ${yes} of ${n}.`, ''],
+      [`Pick a time below. It's a relaxed Zoom with Dwight. No pressure, just a look at what this could mean for you. The Zoom link comes in your email invite.`, 'mut']);
+    const f = $('#bookFrame'); if(f.getAttribute('src') !== IG_CONFIG.calendarEmbedUrl) f.src = IG_CONFIG.calendarEmbedUrl;
+  } else if(kind === 'notyet'){
+    $('#rHead').innerHTML = 'Thanks for taking a <em>look.</em>';
+    lines.push([`You picked ${badge}, and said yes to ${yes} of ${n}.`, ''],
+      ['Sounds like now might not be the right time, and that is completely fine.', 'mut'],
+      ['If that changes, send Dwight your result and he will reach out.', 'mut']);
+  } else {
+    $('#rHead').innerHTML = 'Thanks for taking a <em>look.</em>';
+    lines.push(['Right now Dwight\'s team can only help people who live in the US.', ''],
+      ['Follow along on Instagram for ideas you can use wherever you are.', 'mut']);
+  }
+  $('#rLines').replaceChildren(...lines.map(([t, c]) => mk('p', c, t)));
+  $('#rFit').hidden = kind !== 'fit';
+  $('#rOther').hidden = kind === 'fit';
+  $('#dmOther').hidden = kind === 'outside';
+  $('#copyBox').hidden = true;
+  show('result');
+  track('result_shown', {kind, path:st.path, yes, n, where:st.where, when:st.when});
+}
+$('#redo').onclick = () => renderQ(0);
+$('#booked').onclick = () => { st.booked = true; save(); track('booked_self_reported', score()); showConfirm(); };
+function showConfirm(){ st.step = 'confirm'; save(); $('#copyBox2').hidden = true; show('confirm'); }
+$('#cfBack').onclick = () => showResult();
+
+/* ---------- the small step: copy their result, open a DM to Dwight ---------- */
+function dmText(){
+  const {n, yes} = score(), badge = Q.badge[st.path] || Q.badge.income;
+  const ready = {now:'ready now', soon:'in the next few months', curious:'just curious for now'}[st.when] || '';
+  let t = `Hi Dwight! I just went through your 2 minute RISE page. I picked ${badge} and said yes to ${yes} of ${n}.`;
+  if(ready) t += ` Timing: ${ready}.`;
+  t += st.booked ? ' I booked a time.' : ' Not booked yet.';
+  if(SRC) t += ` (ref: ${SRC})`;
+  return t;
+}
+function copyText(t){
+  if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t).then(() => true, () => legacyCopy(t));
+  return Promise.resolve(legacyCopy(t));
+}
+function legacyCopy(t){
+  try{ const a = mk('textarea'); a.value = t; a.setAttribute('readonly', ''); a.style.cssText = 'position:fixed;top:-100px;opacity:0';
+    document.body.appendChild(a); a.select(); a.setSelectionRange(0, t.length); const ok = document.execCommand('copy'); a.remove(); return ok; }catch(e){ return false; }
+}
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), 2600); }
+async function sendDM(boxSel, where){
+  const t = dmText(), ok = await copyText(t);
+  const b = $(boxSel); b.textContent = t; b.hidden = false;
+  track('dm_tapped', {where, copied:ok});
+  toast(ok ? 'Copied. Paste it in the DM.' : 'Copy the message below, then paste it in the DM.');
+  await wait(ok ? 1100 : 2200);
+  location.href = `https://ig.me/m/${IG_CONFIG.igHandle}`;
+}
+$('#dmFit').onclick = () => sendDM('#copyBox', 'fit_not_ready');
+$('#dmOther').onclick = () => sendDM('#copyBox', 'not_yet');
+$('#dmBooked').onclick = () => sendDM('#copyBox2', 'booked');
+$('#follow').onclick = () => track('follow_tapped');
+
+/* ---------- start, or pick up where they left off ---------- */
+$('#start').onclick = () => { runId++; track('started'); story(runId); };
+const saved = load();
+if(saved && saved.step && saved.step !== 'hook'){
+  Object.assign(st, saved);
+  if(st.step === 'confirm') showConfirm();
+  else if(st.step === 'result') showResult();
+  else if(st.step === 'story'){ runId++; story(runId); }
+  else renderQ(Math.max(0, +st.step.slice(1) || 0));
+} else { show('hook'); track('page_opened'); }
+</script>
+</body>
+</html>
